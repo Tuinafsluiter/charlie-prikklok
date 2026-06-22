@@ -91,5 +91,22 @@ async function saveWorker(id){try{let body={naam:$('editName').value.trim(),pinc
 
 function datesBetween(start,end,skipWeekend){let out=[],a=new Date(start+'T12:00:00'),b=new Date(end+'T12:00:00');if(isNaN(a)||isNaN(b)||a>b)return out;for(let d=new Date(a);d<=b;d.setDate(d.getDate()+1)){let day=d.getDay();if(skipWeekend&&(day===0||day===6))continue;out.push(d.toISOString().slice(0,10))}return out}
 async function saveSpecial(type){try{let uid=Number($('mUser').value);let rows=[];if(type==='recup'){let date=$('mDate').value,val=Number($('mAmount').value);rows=[{medewerker_id:uid,datum:date,pauze_minuten:0,totaal_minuten:val,uitkloktijd:iso()}]}else{let ds=datesBetween($('mStart').value,$('mEnd').value,$('mSkipWeekend').checked);if(!ds.length)return msg('Geen geldige dagen gekozen.');let val=type==='verlof'?480:0;rows=ds.map(date=>({medewerker_id:uid,datum:date,pauze_minuten:0,totaal_minuten:val,uitkloktijd:iso()}))}await sb('/urenregistratie',{method:'POST',headers:{Prefer:'return=representation'},body:JSON.stringify(rows)});msg((type==='recup'?'Recup':type)+' opgeslagen: '+rows.length+' dag(en).');$('adminModal').classList.remove('show');await load()}catch(e){msg('Opslagfout: '+err(e))}}
+
+function csvEscape(v){v=(v===null||v===undefined)?'':String(v);return '"'+v.replaceAll('"','""')+'"'}
+function exportCsv(){try{if(!records.length){msg('Geen gegevens om te exporteren.');return}
+ let userById=Object.fromEntries(users.map(u=>[Number(u.id),u.naam]));
+ let rows=[['Datum','Werknemer','Type','Incheck','Uitcheck','Schoft','Gewerkt','Saldo']];
+ records.slice().sort((a,b)=>String(a.datum||'').localeCompare(String(b.datum||'')) || String(a.inkloktijd||'').localeCompare(String(b.inkloktijd||''))).forEach(r=>{
+  let c=calc(r), naam=userById[Number(r.medewerker_id)]||('ID '+r.medewerker_id);
+  rows.push([r.datum||'',naam,c.type||'Werkdag',hm(r.inkloktijd),hm(r.uitkloktijd),dur(c.pause),dur(c.worked),sal(c.balance)]);
+ });
+ let csv='\ufeff'+rows.map(row=>row.map(csvEscape).join(';')).join('\n');
+ let blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
+ let url=URL.createObjectURL(blob), a=document.createElement('a');
+ a.href=url; a.download='tuinafsluiter-uren-'+today()+'.csv'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+ msg('📄 Excel-export gemaakt. Charlie heeft alles netjes verpakt.');
+}catch(e){msg('Exportfout: '+err(e))}}
+if($('exportBtn'))$('exportBtn').onclick=exportCsv;
+
 load().then(()=>setCharlieQuote('open')).catch(e=>msg('Supabase fout: '+err(e)));
 </script></body></html>

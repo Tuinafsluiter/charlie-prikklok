@@ -1,2 +1,3 @@
-Charlie Prikklok v4.0 - rebranding logo + plusuren/recup verbeterd
-Upload index.html én assets/tuinafsluiter-rebrand.svg (of de hele zip) naar GitHub.
+Charlie Prikklok v4.4 - Excel/CSV export fix
+
+- Excel export knop werkt nu en downloadt een CSV-bestand voor Excel.
