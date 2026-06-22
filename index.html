@@ -78,52 +78,6 @@ body {
   }
 }
 
-
-/* v2.0 final touch: vloeiender iPhone scroll + badges */
-html, body {
-  height: auto !important;
-  min-height: 100% !important;
-  overflow-x: hidden !important;
-  overflow-y: auto !important;
-  -webkit-overflow-scrolling: touch !important;
-  touch-action: pan-y !important;
-}
-.app {
-  height: auto !important;
-  min-height: 100dvh !important;
-  overflow-x: hidden !important;
-  overflow-y: visible !important;
-  -webkit-overflow-scrolling: touch !important;
-}
-.shell, main, #workView, #loginView {
-  height: auto !important;
-  overflow: visible !important;
-}
-.modal.show { overflow-y: auto !important; -webkit-overflow-scrolling: touch !important; align-items:flex-start !important; }
-.modalBox { margin: max(18px, env(safe-area-inset-top)) auto max(18px, env(safe-area-inset-bottom)); }
-.badgeCount{
-  display:inline-flex;align-items:center;justify-content:center;
-  min-width:24px;height:24px;padding:0 8px;margin-left:8px;
-  border-radius:999px;background:#ff3b30;color:#fff;font-size:13px;font-weight:950;
-  box-shadow:0 5px 14px rgba(0,0,0,.25)
-}
-.hubNotice{
-  margin:12px 0 0;padding:12px 14px;border-radius:16px;
-  background:rgba(45,181,107,.18);border:1px solid rgba(45,181,107,.35);
-  color:#eafff4;font-weight:850
-}
-.chatBox{display:grid;gap:12px;margin-top:16px}.chatMsg{background:#fff;border:1px solid #dce7e0;border-radius:16px;padding:12px 14px}.chatMsg b{color:#003b2e}.chatMsg small{display:block;color:#6b8178;margin-top:4px}.chatMsg.admin{border-left:5px solid #2db56b}.chatInput{display:grid;grid-template-columns:1fr auto;gap:10px;margin-top:14px}.readList{font-size:13px;color:#557067;margin-top:8px}
-@media (max-width: 780px){
-  main{display:block!important;padding:0 16px 110px!important}
-  header{padding:22px 20px 8px!important}
-  .hero{min-height:310px!important;max-height:360px!important;margin-bottom:22px!important}
-  .panel{max-width:100%!important}
-  .adminBtns{grid-template-columns:1fr!important}
-  .tile{min-height:78px!important}
-  .modal{padding:10px!important}
-  .modalBox{max-height:86dvh!important;overflow-y:auto!important;-webkit-overflow-scrolling:touch!important;border-radius:22px!important}
-}
-
 </style>
 </head>
 <body><div class="app"><div class="shell">
@@ -200,32 +154,6 @@ async function audit(message,meta={}){
   try{await postHubItem('audit',message,{target:'jos',meta})}catch(e){console.warn('audit mislukt',e)}
 }
 function readByArray(item){try{return Array.isArray(item.read_by)?item.read_by:JSON.parse(item.read_by||'[]')}catch(e){return []}}
-
-function chatReadKey(){return 'hub_chat_read_'+(current?.id||'gast')}
-function lastChatRead(){return Number(localStorage.getItem(chatReadKey())||0)}
-function setChatReadNow(){localStorage.setItem(chatReadKey(), String(Date.now()))}
-function unreadCounts(){
-  if(!current) return {chat:0,ann:0,total:0};
-  let chat = hubItems.filter(i=>i.type==='chat' && Number(new Date(i.created_at).getTime())>lastChatRead() && Number(i.author_id)!==Number(current.id)).length;
-  let ann = hubItems.filter(i=>i.type==='announcement' && !readByArray(i).includes(current.naam)).length;
-  let total=chat+ann;
-  return {chat,ann,total};
-}
-function badgeHtml(n){return n>0?` <span class="badgeCount">${n}</span>`:''}
-function updateUnreadBadges(){
-  let c=unreadCounts();
-  let tc=$('teamchatBtn'); if(tc) tc.innerHTML='💬 Teamchat'+badgeHtml(c.chat);
-  let te=$('teamchatEmployeeBtn'); if(te) te.querySelector('h3').innerHTML='Teamchat'+badgeHtml(c.chat);
-  let ab=$('announcementsBtn'); if(ab) ab.innerHTML='📢 Mededelingen'+badgeHtml(c.ann);
-  let ae=$('announcementsEmployeeBtn'); if(ae) ae.querySelector('h3').innerHTML='Mededelingen'+badgeHtml(c.ann);
-  if(c.total && $('adminStats') && isAdmin()){
-    // Keep app badge if supported while app is open
-  }
-  if('setAppBadge' in navigator){
-    try{ c.total ? navigator.setAppBadge(c.total) : navigator.clearAppBadge(); }catch(e){}
-  }
-}
-
 async function markHubRead(id){
   let item=hubItems.find(x=>Number(x.id)===Number(id)); if(!item||!current)return;
   let arr=readByArray(item); if(!arr.includes(current.naam))arr.push(current.naam);
@@ -235,20 +163,7 @@ async function markHubRead(id){
 
 function msg(t){$('message').textContent=t;$('message').classList.remove('hidden');setTimeout(()=>$('message').classList.add('hidden'),5200)}function err(e){return String(e.message||e).slice(0,220)}
 function drawDots(){[...$('dots').children].forEach((s,i)=>s.textContent=pin[i]?'•':'–')}function keypad(){['1','2','3','4','5','6','7','8','9','0','⌫'].forEach(n=>{let b=document.createElement('button');b.textContent=n;if(n==='0')b.className='wide';if(n==='⌫')b.className='del';b.onclick=()=>{if(n==='⌫')pin=pin.slice(0,-1);else if(pin.length<4)pin+=n;drawDots();if(pin.length===4)setTimeout(login,120)};$('keypad').appendChild(b)})}keypad();$('loginBtn').onclick=login;
-async async function load(){
- users=await sb('/werknemers?select=*&actief=eq.true&order=id.asc');
- records=await sb('/urenregistratie?select=*&order=datum.desc,inkloktijd.desc&limit=300');
- if(typeof loadHubItems==='function') await loadHubItems();
- if(current && !users.find(u=>Number(u.id)===Number(current.id))){
-   current=null;activeEntry=null;
-   $('workView').classList.add('hidden');$('loginView').classList.remove('hidden');
-   msg('Account gedeactiveerd. Neem contact op met de beheerder.');
-   return;
- }
- if(current)activeEntry=await getActive(current.id);
- render();
- if(typeof updateUnreadBadges==='function') updateUnreadBadges();
-}
+async function load(){users=await sb('/werknemers?select=*&actief=eq.true&order=id.asc');records=await sb('/urenregistratie?select=*&order=datum.desc,inkloktijd.desc&limit=300');if(current)activeEntry=await getActive(current.id);render()}
 async function getActive(uid){let r=await sb(`/urenregistratie?select=*&medewerker_id=eq.${uid}&datum=eq.${today()}&uitkloktijd=is.null&inkloktijd=not.is.null&order=inkloktijd.desc&limit=1`);return r[0]||null}
 async function login(){try{let r=await sb('/werknemers?select=*&pincode=eq.'+encodeURIComponent(pin)+'&actief=eq.true&limit=1');if(!r[0]){msg('🐕 Charlie kent deze pincode niet.');pin='';drawDots();return}current=r[0];pin='';drawDots();$('loginView').classList.add('hidden');$('workView').classList.remove('hidden');$('hello').textContent=current.naam;let admin=isAdmin();$('roleBadge').classList.toggle('hidden',!admin);$('employeePanel').classList.toggle('hidden',admin);$('adminPanel').classList.toggle('hidden',!admin);await load();setCharlieQuote('login');msg('🐕 '+pick(CHARLIE_QUOTES.login)+' Welkom '+current.naam+'.')}catch(e){msg('Loginfout: '+err(e))}}
 function isAdmin(){let r=String(current?.rol||'').toLowerCase();return r.includes('admin')||r.includes('beheer')||current?.naam?.toLowerCase()==='jos'}
@@ -265,7 +180,7 @@ function renderAdminHome(){
  let ziek=todayRows.filter(r=>calc(r).type==='Ziekte').length;
  let worked=todayRows.reduce((s,r)=>s+calc(r).worked,0);
  let pendingReq=records.filter(r=>Number(r.pauze_minuten)===PENDING_LEAVE).length;
- if($('adminStats')){let uc=typeof unreadCounts==='function'?unreadCounts():{total:0};$('adminStats').innerHTML=`<div class="mini"><span>Actief</span><b>${active}</b></div><div class="mini"><span>Uitgecheckt</span><b>${checked}</b></div><div class="mini"><span>Verlof / ziek</span><b>${verlof}/${ziek}</b></div><div class="mini"><span>Aanvragen</span><b>${pendingReq}</b></div><div class="mini"><span>Vandaag gewerkt</span><b>${dur(worked)}</b></div>${uc.total?`<div class="hubNotice">🐕 Charlie heeft ${uc.total} nieuwe melding${uc.total===1?'':'en'} voor jou.</div>`:''}`;}
+ if($('adminStats'))$('adminStats').innerHTML=`<div class="mini"><span>Actief</span><b>${active}</b></div><div class="mini"><span>Uitgecheckt</span><b>${checked}</b></div><div class="mini"><span>Verlof / ziek</span><b>${verlof}/${ziek}</b></div><div class="mini"><span>Aanvragen</span><b>${pendingReq}</b></div><div class="mini"><span>Vandaag gewerkt</span><b>${dur(worked)}</b></div>`;
  $('adminToday').innerHTML=list.map(u=>{let open=userRecs(u.id).find(r=>r.datum===today()&&!r.uitkloktijd&&r.inkloktijd);let special=userRecs(u.id).find(r=>r.datum===today()&&!r.inkloktijd&&r.totaal_minuten!==null);let status=open?'Aan het werk':special?calc(special).type:'Vandaag';let w=dayWork(u.id);let s=monthSaldo(u.id);return `<div class="emp"><div class="avatar">${u.naam[0]}</div><div><b>${u.naam}</b><small>${status}</small><small>Saldo maand</small></div><div><b>${dur(w)}</b><small class="${s>=0?'plus':'minus'}">${sal(s)}</small></div></div>`}).join('')||'<div class="emp">Geen werknemers gevonden</div>'}
 async function action(a){try{let r=await getActive(current.id);if(a==='in'){if(r)return msg('Je bent al ingecheckt.');await sb('/urenregistratie',{method:'POST',headers:{Prefer:'return=representation'},body:JSON.stringify({medewerker_id:current.id,datum:today(),inkloktijd:iso(),pauze_minuten:0})});setCharlieQuote('in');msg('🐕 '+pick(CHARLIE_QUOTES.in))}
 if(a==='breakStart'){if(!r)return msg('Eerst inchecken.');localStorage.setItem('pause_'+r.id,iso());setCharlieQuote('breakStart');msg('☕ '+pick(CHARLIE_QUOTES.breakStart))}
@@ -291,7 +206,7 @@ $('workersBtn').onclick=()=>workersModal();
 if($('registrationsBtn'))$('registrationsBtn').onclick=()=>registrationsModal();
 
 if($('settingsBtn'))$('settingsBtn').onclick=()=>settingsModal();
-function settingsModal(){let rows=users.filter(u=>!isAdminUser(u)).map(u=>{let start=userRecs(u.id).filter(r=>Number(r.pauze_minuten)===9999).reduce((s,r)=>s+Number(r.totaal_minuten||0),0);return `<tr><td>${u.naam}</td><td>${sal(start)}</td><td><button class="btn light" onclick="editStartSaldo(${u.id})">Wijzig</button></td></tr>`}).join('');openModal('Instellingen',`<div class="two"><div><h3>Basisinstellingen</h3><table class="table"><tr><th>Instelling</th><th>Waarde</th></tr><tr><td>Standaard werkdag</td><td>8u00</td></tr><tr><td>Volledige recupdag</td><td>-8u00</td></tr><tr><td>Halve recupdag</td><td>-4u00</td></tr><tr><td>Quotes</td><td>Charlie quotes actief</td></tr><tr><td>Versie</td><td>Tuinafsluiter Hub v2.0 Final</td></tr></table><h3>Beginsaldo plus/minuren</h3><table class="table"><tr><th>Werknemer</th><th>Beginsaldo</th><th></th></tr>${rows}</table><p class="warn">Vul hier de bestaande plus- of minuren in. Charlie rekent daarna verder vanaf dit saldo.</p></div><div><h3>App status</h3><button class="btn green" onclick="enableLocalNotifications()">🔔 Meldingen op dit toestel aanzetten</button><p class="warn">Let op: dit zijn lokale browsermeldingen. Echte iPhone-pushmeldingen naar Jos zonder de app te openen maken we als aparte koppeling.</p><div class="warn">✅ Prikklok actief<br>✅ Supabase gekoppeld<br>✅ Plusuren actief<br>✅ Excel-export actief<br>✅ Registraties beheren actief<br>✅ Mobiele weergave verbeterd<br>✅ Verlofaanvragen actief<br>✅ Meldingen voor Jos actief</div></div></div>`)}
+function settingsModal(){let rows=users.filter(u=>!isAdminUser(u)).map(u=>{let start=userRecs(u.id).filter(r=>Number(r.pauze_minuten)===9999).reduce((s,r)=>s+Number(r.totaal_minuten||0),0);return `<tr><td>${u.naam}</td><td>${sal(start)}</td><td><button class="btn light" onclick="editStartSaldo(${u.id})">Wijzig</button></td></tr>`}).join('');openModal('Instellingen',`<div class="two"><div><h3>Basisinstellingen</h3><table class="table"><tr><th>Instelling</th><th>Waarde</th></tr><tr><td>Standaard werkdag</td><td>8u00</td></tr><tr><td>Volledige recupdag</td><td>-8u00</td></tr><tr><td>Halve recupdag</td><td>-4u00</td></tr><tr><td>Quotes</td><td>Charlie quotes actief</td></tr><tr><td>Versie</td><td>Tuinafsluiter Hub v1.2</td></tr></table><h3>Beginsaldo plus/minuren</h3><table class="table"><tr><th>Werknemer</th><th>Beginsaldo</th><th></th></tr>${rows}</table><p class="warn">Vul hier de bestaande plus- of minuren in. Charlie rekent daarna verder vanaf dit saldo.</p></div><div><h3>App status</h3><button class="btn green" onclick="enableLocalNotifications()">🔔 Meldingen op dit toestel aanzetten</button><p class="warn">Let op: dit zijn lokale browsermeldingen. Echte iPhone-pushmeldingen naar Jos zonder de app te openen maken we als aparte koppeling.</p><div class="warn">✅ Prikklok actief<br>✅ Supabase gekoppeld<br>✅ Plusuren actief<br>✅ Excel-export actief<br>✅ Registraties beheren actief<br>✅ Mobiele weergave verbeterd<br>✅ Verlofaanvragen actief<br>✅ Meldingen voor Jos actief</div></div></div>`)}
 function editStartSaldo(uid){let u=users.find(x=>Number(x.id)===Number(uid));let start=userRecs(uid).filter(r=>Number(r.pauze_minuten)===9999).reduce((s,r)=>s+Number(r.totaal_minuten||0),0);openModal('Beginsaldo '+(u?.naam||''),`<div class="form"><label>Plus/minuren in minuten</label><input id="startSaldoMin" type="number" value="${start}"><p class="warn">Voorbeelden: +2u30 = 150, -3u15 = -195, +8u00 = 480.</p><button class="btn green" id="saveStartSaldoBtn">Opslaan</button><button class="btn light" id="backSettingsBtn">Terug</button></div>`);$('saveStartSaldoBtn').onclick=()=>saveStartSaldo(uid);$('backSettingsBtn').onclick=settingsModal}
 async function saveStartSaldo(uid){try{let val=Number($('startSaldoMin').value||0);let existing=userRecs(uid).filter(r=>Number(r.pauze_minuten)===9999);for(let r of existing){await sb('/urenregistratie?id=eq.'+r.id,{method:'DELETE'})}if(val!==0){await sb('/urenregistratie',{method:'POST',headers:{Prefer:'return=representation'},body:JSON.stringify({medewerker_id:uid,datum:'2026-01-01',pauze_minuten:9999,totaal_minuten:val,uitkloktijd:iso()})})}msg('Beginsaldo opgeslagen.');await load();settingsModal()}catch(e){msg('Opslagfout: '+err(e))}}
 function workersModal(){let rows=users.map(u=>`<tr><td>${u.naam}</td><td>${u.pincode||''}</td><td>${u.rol||''}</td><td>${u.actief?'Actief':'Inactief'}</td><td><button class="btn light" onclick="editWorker(${u.id})">Wijzig</button></td></tr>`).join('');openModal('Werknemers beheren',`<div class="two"><div><h3>Bestaande werknemers</h3><table class="table"><tr><th>Naam</th><th>Pincode</th><th>Rol</th><th>Status</th><th></th></tr>${rows}</table></div><div><h3>Nieuwe werknemer</h3><div class="form"><input id="newName" placeholder="Naam"><input id="newPin" placeholder="Pincode, bv. 1234" maxlength="4"><select id="newRole"><option value="chauffeur">chauffeur</option><option value="magazijnier">magazijnier</option><option value="admin">admin</option></select><button class="btn green" id="addWorkerBtn">Toevoegen</button></div><p class="warn">Pincode moet uniek zijn. Zet werknemers liever op inactief dan te verwijderen.</p></div></div>`);$('addWorkerBtn').onclick=addWorker}
@@ -342,8 +257,6 @@ async function saveSpecial(type){try{let uid=Number($('mUser').value);let rows=[
 function hubTime(x){return x?new Date(x).toLocaleString('nl-BE',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}):''}
 function teamchatModal(){
  try{
-  setChatReadNow();
-  updateUnreadBadges();
   let chats=hubItems.filter(i=>i.type==='chat').sort((a,b)=>String(a.created_at||'').localeCompare(String(b.created_at||'')));
   let list=chats.length?chats.map(i=>`<div class="chatMsg ${isAdminUser({naam:i.author_name,rol:''})?'admin':''}"><b>${i.author_name||'Onbekend'}</b><div>${String(i.message||'').replace(/[<>&]/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;'}[c]))}</div><small>${hubTime(i.created_at)}</small></div>`).join(''):'<div class="warn">Nog geen berichten.</div>';
   openModal('Teamchat',`<div class="chatBox" id="chatList">${list}</div><div class="chatInput"><input id="chatText" placeholder="Typ een bericht voor het team..."><button class="btn green" id="sendChatBtn">Verstuur</button></div><p class="warn">Iedereen in Tuinafsluiter Hub kan teamberichten lezen en antwoorden.</p>`);
@@ -355,7 +268,7 @@ async function sendChat(){
   let t=$('chatText').value.trim(); if(!t)return msg('Typ eerst een bericht.');
   await postHubItem('chat',t,{target:'all'});
   msg('Bericht verstuurd. Iedereen ziet dit in de Teamchat.');
-  await load(); updateUnreadBadges(); teamchatModal();
+  await load(); teamchatModal();
  }catch(e){openModal('Teamchat',hubSqlHelp())}
 }
 function announcementsModal(){
@@ -378,11 +291,11 @@ async function sendAnnouncement(){
   await postHubItem('announcement',t,{target:'all',pinned:true,read_by:[]});
   msg('Mededeling geplaatst. Iedereen ziet deze in de Hub.');
   await audit('Mededeling geplaatst door '+current.naam,{message:t});
-  await load(); updateUnreadBadges(); announcementsModal();
+  await load(); announcementsModal();
  }catch(e){openModal('Mededelingen',hubSqlHelp())}
 }
 async function markAnnouncementRead(id){
- try{await markHubRead(id); updateUnreadBadges(); msg('Gelezen bevestigd.'); announcementsModal()}catch(e){msg('Kon gelezen-status niet opslaan.')}
+ try{await markHubRead(id); msg('Gelezen bevestigd.'); announcementsModal()}catch(e){msg('Kon gelezen-status niet opslaan.')}
 }
 function activityModal(){
  try{
