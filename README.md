@@ -1,16 +1,14 @@
-# Tuinafsluiter Hub v1.8 Teamchat
+# Tuinafsluiter Hub v1.7 logo restore + lichte scroll fix
 
-Veilige update op de stabiele basis.
-
-Nieuw:
-- Teamchat voor Jos en werknemers
-- Berichten versturen en lezen
-- Ongelezen teller op Teamchat
-- Geen pushdienst, geen extra kosten
-- Login, klok en pincode zijn niet aangepast
+Aanpassingen:
+- iPhone/appnaam blijft: Tuinafsluiter Hub
+- Het betere Tuinafsluiter app-icoon/logo uit v1.5 is behouden
+- De agressieve scroll-fix uit v1.6 is vervangen door een lichtere fix
+- Startscherm/logo-layout wordt niet meer aangepast
 
 Upload/overschrijf:
 - index.html
-- README.md
+- manifest.webmanifest
 
-Supabase tabel hub_items moet bestaan. Die had je al aangemaakt.
+Laat assets staan zoals ze waren in v1.5.
+Als iPhone het oude icoon blijft tonen: oude app van beginscherm verwijderen en opnieuw toevoegen via Safari.

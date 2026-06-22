@@ -78,15 +78,6 @@ body {
   }
 }
 
-
-/* v1.8 teamchat - veilige module */
-.chatBox{display:grid;gap:12px;margin-top:16px}
-.chatMsg{background:#fff;border:1px solid #dce7e0;border-radius:16px;padding:12px 14px}
-.chatMsg b{color:#003b2e}
-.chatMsg small{display:block;color:#6b8178;margin-top:4px}
-.chatInput{display:grid;grid-template-columns:1fr auto;gap:10px;margin-top:14px}
-.badgeCount{display:inline-flex;align-items:center;justify-content:center;min-width:22px;height:22px;padding:0 7px;border-radius:999px;background:#ff3b30;color:#fff;font-size:12px;font-weight:900;margin-left:6px}
-
 </style>
 </head>
 <body><div class="app"><div class="shell">
@@ -172,7 +163,7 @@ async function markHubRead(id){
 
 function msg(t){$('message').textContent=t;$('message').classList.remove('hidden');setTimeout(()=>$('message').classList.add('hidden'),5200)}function err(e){return String(e.message||e).slice(0,220)}
 function drawDots(){[...$('dots').children].forEach((s,i)=>s.textContent=pin[i]?'•':'–')}function keypad(){['1','2','3','4','5','6','7','8','9','0','⌫'].forEach(n=>{let b=document.createElement('button');b.textContent=n;if(n==='0')b.className='wide';if(n==='⌫')b.className='del';b.onclick=()=>{if(n==='⌫')pin=pin.slice(0,-1);else if(pin.length<4)pin+=n;drawDots();if(pin.length===4)setTimeout(login,120)};$('keypad').appendChild(b)})}keypad();$('loginBtn').onclick=login;
-async async function load(){users=await sb('/werknemers?select=*&actief=eq.true&order=id.asc');records=await sb('/urenregistratie?select=*&order=datum.desc,inkloktijd.desc&limit=300');if(typeof loadHubItems==='function')await loadHubItems();if(current)activeEntry=await getActive(current.id);render();if(typeof updateChatBadges==='function')updateChatBadges()}
+async function load(){users=await sb('/werknemers?select=*&actief=eq.true&order=id.asc');records=await sb('/urenregistratie?select=*&order=datum.desc,inkloktijd.desc&limit=300');if(current)activeEntry=await getActive(current.id);render()}
 async function getActive(uid){let r=await sb(`/urenregistratie?select=*&medewerker_id=eq.${uid}&datum=eq.${today()}&uitkloktijd=is.null&inkloktijd=not.is.null&order=inkloktijd.desc&limit=1`);return r[0]||null}
 async function login(){try{let r=await sb('/werknemers?select=*&pincode=eq.'+encodeURIComponent(pin)+'&actief=eq.true&limit=1');if(!r[0]){msg('🐕 Charlie kent deze pincode niet.');pin='';drawDots();return}current=r[0];pin='';drawDots();$('loginView').classList.add('hidden');$('workView').classList.remove('hidden');$('hello').textContent=current.naam;let admin=isAdmin();$('roleBadge').classList.toggle('hidden',!admin);$('employeePanel').classList.toggle('hidden',admin);$('adminPanel').classList.toggle('hidden',!admin);await load();setCharlieQuote('login');msg('🐕 '+pick(CHARLIE_QUOTES.login)+' Welkom '+current.naam+'.')}catch(e){msg('Loginfout: '+err(e))}}
 function isAdmin(){let r=String(current?.rol||'').toLowerCase();return r.includes('admin')||r.includes('beheer')||current?.naam?.toLowerCase()==='jos'}
