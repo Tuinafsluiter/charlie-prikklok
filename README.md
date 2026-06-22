@@ -1,1 +1,2 @@
-Charlie Prikklok v3.8 - zichtbare header en werknemersbeheer
+Charlie Prikklok v4.0 - rebranding logo + plusuren/recup verbeterd
+Upload index.html én assets/tuinafsluiter-rebrand.svg (of de hele zip) naar GitHub.
