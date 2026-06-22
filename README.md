@@ -1,9 +1,3 @@
-# Charlie Prikklok v1.0 Final
+# Charlie Prikklok v1.1
 
-Finishing touch release:
-- Registraties beheren: bekijken, aanpassen, verwijderen
-- Dashboard statistieken bovenaan
-- Plusuren/recup/verlof/ziekte/export behouden
-- Instellingen tonen app-status en v1.0 Final
-
-Upload naar GitHub: index.html en eventuele assets-map indien gevraagd.
+Mobiele weergave verbeterd en beginsaldo plus/minuren toegevoegd in Instellingen.
