@@ -1,10 +1,10 @@
-# Tuinafsluiter Hub v3.2 Scroll Fix
+# Tuinafsluiter Hub v3.3 Modal Fix
 
-Nieuw:
-- Mobiel scrollen soepeler gemaakt.
-- Zware blur-effecten op gsm uitgezet.
-- Scroll-listener uit automatische vergrendeling gehaald.
-- Minder hapering tussen eerste en tweede schermdeel.
+Opgelost:
+- Live Start popup toont niet meer letterlijk `${sql}`.
+- SQL wordt correct in het vak geplaatst.
+- Achtergrond wordt geblokkeerd wanneer een popup open staat.
+- iPhone popup is beter leesbaar en scrollt vlotter.
 - Geen Supabase-wijziging nodig.
 
 Upload/overschrijf:

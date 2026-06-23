@@ -238,6 +238,53 @@ html,body{
   }
 }
 
+
+/* v3.3 modal/live-start fix */
+body.modalOpen{
+  overflow:hidden!important;
+  position:fixed!important;
+  width:100%!important;
+}
+.modal{
+  background:rgba(0,20,16,.92)!important;
+  overflow-y:auto!important;
+  -webkit-overflow-scrolling:touch!important;
+  align-items:flex-start!important;
+}
+.modal.show{
+  display:flex!important;
+}
+.modalBox{
+  margin:max(18px,env(safe-area-inset-top)) auto max(28px,env(safe-area-inset-bottom))!important;
+  max-height:none!important;
+  overflow:visible!important;
+}
+#liveSql{
+  width:100%!important;
+  min-height:320px!important;
+  font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace!important;
+  font-size:14px!important;
+  line-height:1.35!important;
+  color:#092820!important;
+  background:#fff!important;
+}
+@media(max-width:780px){
+  .modal{padding:12px!important}
+  .modalBox{
+    width:100%!important;
+    border-radius:22px!important;
+    padding:18px!important;
+    max-height:none!important;
+  }
+  .modalBox .two{
+    display:block!important;
+  }
+  #liveSql{
+    min-height:360px!important;
+    font-size:13px!important;
+  }
+}
+
 </style>
 </head>
 <body><div class="app"><div class="shell">
@@ -502,7 +549,22 @@ function noteActivity(){lastActivity=Date.now()}
 setInterval(()=>{if(current && Date.now()-lastActivity>AUTO_LOCK_MS)lockApp('Automatisch vergrendeld na 5 minuten inactiviteit.')},30000);
 document.addEventListener('visibilitychange',()=>{if(document.hidden && current){sessionStorage.setItem('hub_went_hidden_at',String(Date.now()))}else if(current){let t=Number(sessionStorage.getItem('hub_went_hidden_at')||0);if(t && Date.now()-t>2*60*1000)lockApp('Vergrendeld omdat de app even gesloten was.')}})
 
-function openModal(title,html){$('modalTitle').textContent=title;$('modalContent').innerHTML=html;$('adminModal').classList.add('show')} $('closeModal').onclick=()=>$('adminModal').classList.remove('show');
+let __modalScrollY=0;
+function openModal(title,html){
+ __modalScrollY=window.scrollY||document.documentElement.scrollTop||0;
+ $('modalTitle').textContent=title;
+ $('modalContent').innerHTML=html;
+ document.body.classList.add('modalOpen');
+ document.body.style.top='-'+__modalScrollY+'px';
+ $('adminModal').classList.add('show');
+}
+function closeModal(){
+ closeModal();
+ document.body.classList.remove('modalOpen');
+ document.body.style.top='';
+ window.scrollTo(0,__modalScrollY||0);
+}
+$('closeModal').onclick=closeModal;
 $('plusBtn').onclick=()=>{let rows=users.filter(u=>!isAdminUser(u)).map(u=>{let m=monthSaldo(u.id),w=weekSaldo(u.id),t=totalSaldo(u.id);return `<tr><td>${u.naam}</td><td>${dur(dayWork(u.id))}</td><td class="${w>=0?'plus':'minus'}">${sal(w)}</td><td class="${m>=0?'plus':'minus'}">${sal(m)}</td><td class="${t>=0?'plus':'minus'}">${sal(t)}</td><td>${recupDays(t)} dag(en)</td></tr>`}).join('');openModal('Plusuren',`<table class="table"><tr><th>Werknemer</th><th>Vandaag</th><th>Deze week</th><th>Deze maand</th><th>Totaal saldo</th><th>Recup mogelijk</th></tr>${rows}</table><p class="warn">Regel: 8u00 per werkdag is nul. Meer is plus, minder is min. Recup mogelijk wordt berekend op het totale positieve saldo.</p>`)};
 
 const DEFAULT_VAKANTIEDAGEN=20;
@@ -536,7 +598,7 @@ if($('requestLeaveBtn'))$('requestLeaveBtn').onclick=()=>employeeLeaveRequestMod
 if($('notificationsBtn'))$('notificationsBtn').onclick=()=>notificationsModal();
 function employeeLeaveRequestModal(){openModal('Verlof aanvragen',`<div class="two"><div><div class="form"><label>Van</label><input id="reqStart" type="date" value="${today()}"><label>Tot en met <small style="font-weight:700;color:#557067">(optioneel bij 1 dag)</small></label><input id="reqEnd" type="date" placeholder="Leeg laten voor 1 dag"><label class="check"><input id="reqSkipWeekend" type="checkbox" checked> Weekends overslaan</label><textarea id="reqNote" rows="2" placeholder="Opmerking voor Jos (optioneel)"></textarea><button class="btn green" id="reqSave">Aanvraag verzenden</button></div><p class="warn">Voor 1 verlofdag vul je alleen <b>Van</b> in. Voor meerdere dagen vul je ook <b>Tot en met</b> in.</p></div><div><h3>Uw aanvragen</h3><div id="myReqs"></div></div></div>`);$('reqStart').onchange=()=>{if(!$('reqEnd').value)$('reqEnd').value=''};$('reqSave').onclick=saveLeaveRequest;renderMyRequests()}
 function renderMyRequests(){let mine=userRecs(current.id).filter(r=>Number(r.pauze_minuten)===PENDING_LEAVE||Number(r.pauze_minuten)===DENIED_LEAVE).sort((a,b)=>String(b.datum||'').localeCompare(String(a.datum||'')));$('myReqs').innerHTML=mine.length?`<table class="table"><tr><th>Datum</th><th>Status</th></tr>${mine.map(r=>`<tr><td>${r.datum}</td><td>${Number(r.pauze_minuten)===PENDING_LEAVE?'⏳ In behandeling':'❌ Afgekeurd'}</td></tr>`).join('')}</table>`:'<div class="warn">Geen openstaande aanvragen.</div>'}
-async function saveLeaveRequest(){try{let start=$('reqStart').value,end=$('reqEnd').value||start;let ds=datesBetween(start,end,$('reqSkipWeekend').checked);if(!ds.length)return msg('Geen geldige dagen gekozen.');let rows=ds.map(date=>({medewerker_id:current.id,datum:date,pauze_minuten:PENDING_LEAVE,totaal_minuten:0,uitkloktijd:iso()}));await sb('/urenregistratie',{method:'POST',headers:{Prefer:'return=representation'},body:JSON.stringify(rows)});setCharlieQuote('request');actionBanner('📨 VERLOFAANVRAAG VERZONDEN', ds.length+' dag(en) aangevraagd','info',pick(CHARLIE_QUOTES.request));msg('Verlofaanvraag verzonden.'); await audit(current.naam+' diende een verlofaanvraag in ('+ds.length+' dag(en))',{actie:'verlofaanvraag',dagen:ds.length});$('adminModal').classList.remove('show');await load()}catch(e){msg('Aanvraagfout: '+err(e))}}
+async function saveLeaveRequest(){try{let start=$('reqStart').value,end=$('reqEnd').value||start;let ds=datesBetween(start,end,$('reqSkipWeekend').checked);if(!ds.length)return msg('Geen geldige dagen gekozen.');let rows=ds.map(date=>({medewerker_id:current.id,datum:date,pauze_minuten:PENDING_LEAVE,totaal_minuten:0,uitkloktijd:iso()}));await sb('/urenregistratie',{method:'POST',headers:{Prefer:'return=representation'},body:JSON.stringify(rows)});setCharlieQuote('request');actionBanner('📨 VERLOFAANVRAAG VERZONDEN', ds.length+' dag(en) aangevraagd','info',pick(CHARLIE_QUOTES.request));msg('Verlofaanvraag verzonden.'); await audit(current.naam+' diende een verlofaanvraag in ('+ds.length+' dag(en))',{actie:'verlofaanvraag',dagen:ds.length});closeModal();await load()}catch(e){msg('Aanvraagfout: '+err(e))}}
 function pendingGroups(){let userById=Object.fromEntries(users.map(u=>[Number(u.id),u.naam]));let rows=records.filter(r=>Number(r.pauze_minuten)===PENDING_LEAVE).sort((a,b)=>String(a.datum||'').localeCompare(String(b.datum||'')));let groups={};rows.forEach(r=>{let key=String(r.medewerker_id)+'_'+String(r.created_at||'').slice(0,19);if(!groups[key])groups[key]={ids:[],uid:Number(r.medewerker_id),naam:userById[Number(r.medewerker_id)]||('ID '+r.medewerker_id),dates:[],created:r.created_at};groups[key].ids.push(r.id);groups[key].dates.push(r.datum)});return Object.values(groups)}
 function notificationsModal(){let groups=pendingGroups();let userById=Object.fromEntries(users.map(u=>[Number(u.id),u.naam]));let recent=records.slice().sort((a,b)=>String(b.created_at||b.inkloktijd||'').localeCompare(String(a.created_at||a.inkloktijd||''))).slice(0,30);let requests=groups.length?groups.map((g,i)=>`<div class="warn"><b>🌴 Verlofaanvraag van ${g.naam}</b><br>${g.dates[0]}${g.dates.length>1?' t.e.m. '+g.dates[g.dates.length-1]:''} (${g.dates.length} dag(en))<br><br><button class="btn green" onclick="approveLeaveRequest(${i})">Goedkeuren</button> <button class="btn light" onclick="denyLeaveRequest(${i})">Afkeuren</button></div>`).join(''):'<div class="warn">Geen openstaande verlofaanvragen.</div>';window._pendingGroups=groups;let events=recent.map(r=>{let c=calc(r),naam=userById[Number(r.medewerker_id)]||('ID '+r.medewerker_id);if(c.type==='Verlofaanvraag')return `🌴 ${naam} vroeg verlof aan voor ${r.datum}`;if(c.type==='Verlof')return `✅ ${naam} heeft verlof op ${r.datum}`;if(c.type==='Ziekte')return `♡ ${naam} staat ziek op ${r.datum}`;if(r.inkloktijd&&r.uitkloktijd)return `🏠 ${naam} checkte uit op ${r.datum} om ${hm(r.uitkloktijd)} (${dur(c.worked)})`;if(r.inkloktijd&&!r.uitkloktijd)return `↪ ${naam} is ingecheckt sinds ${hm(r.inkloktijd)}`;if(c.type==='Recupdag'||c.type==='Halve recup')return `📅 ${naam} heeft ${c.type.toLowerCase()} op ${r.datum}`;return `• ${naam}: ${c.type} op ${r.datum}`}).join('<br>');openModal('Meldingen en aanvragen',`<div class="two"><div><h3>Openstaande aanvragen</h3>${requests}</div><div><h3>Recente meldingen</h3><div class="warn">${events||'Nog geen meldingen.'}</div><p class="warn">Deze meldingen zijn alleen zichtbaar voor Jos/beheerder.</p></div></div>`)}
 async function approveLeaveRequest(i){try{let g=window._pendingGroups?.[i];if(!g)return;await sb('/urenregistratie?id=in.('+g.ids.join(',')+')',{method:'PATCH',headers:{Prefer:'return=representation'},body:JSON.stringify({pauze_minuten:0,totaal_minuten:480,uitkloktijd:iso()})});actionBanner('✅ VERLOF GOEDGEKEURD',g.naam,'ok','Charlie heeft het verlof verwerkt.');msg('Verlofaanvraag goedgekeurd.');await audit('Verlofaanvraag goedgekeurd voor '+g.naam,{actie:'verlof_goedgekeurd'});await load();notificationsModal()}catch(e){msg('Goedkeurfout: '+err(e))}}
@@ -546,7 +608,7 @@ $('workersBtn').onclick=()=>workersModal();
 if($('registrationsBtn'))$('registrationsBtn').onclick=()=>registrationsModal();
 
 if($('settingsBtn'))$('settingsBtn').onclick=()=>settingsModal();
-function settingsModal(){let rows=users.filter(u=>!isAdminUser(u)).map(u=>{let start=userRecs(u.id).filter(r=>Number(r.pauze_minuten)===9999).reduce((s,r)=>s+Number(r.totaal_minuten||0),0);return `<tr><td>${u.naam}</td><td>${sal(start)}</td><td><button class="btn light" onclick="editStartSaldo(${u.id})">Wijzig</button></td></tr>`}).join('');openModal('Instellingen',`<div class="two"><div><h3>Basisinstellingen</h3><table class="table"><tr><th>Instelling</th><th>Waarde</th></tr><tr><td>Standaard werkdag</td><td>8u00</td></tr><tr><td>Volledige recupdag</td><td>-8u00</td></tr><tr><td>Halve recupdag</td><td>-4u00</td></tr><tr><td>Quotes</td><td>Charlie quotes actief</td></tr><tr><td>Versie</td><td>Tuinafsluiter Hub v3.2 Scroll Fix</td></tr></table><h3>Beginsaldo plus/minuren</h3><table class="table"><tr><th>Werknemer</th><th>Beginsaldo</th><th></th></tr>${rows}</table><p class="warn">Vul hier de bestaande plus- of minuren in. Charlie rekent daarna verder vanaf dit saldo.</p></div><div><h3>App status</h3><button class="btn green" onclick="enableLocalNotifications()">🔔 Meldingen op dit toestel aanzetten</button><p class="warn">Let op: dit zijn lokale browsermeldingen. Echte iPhone-pushmeldingen naar Jos zonder de app te openen maken we als aparte koppeling.</p><div class="warn">✅ Prikklok actief<br>✅ Supabase gekoppeld<br>✅ Plusuren actief<br>✅ Excel-export actief<br>✅ Registraties beheren actief<br>✅ Mobiele weergave verbeterd<br>✅ Rhani meekijkrol voorbereid<br>✅ Ongelezen tellers actief<br>✅ Automatische app-vergrendeling actief<br>✅ Open registraties van vorige dag worden correct afgehandeld<br>✅ Verlofaanvraag meldingbadge actief<br>✅ Live start checklist toegevoegd<br>✅ Vakantiesaldo toegevoegd<br>✅ Duidelijke actiebanners toegevoegd<br>✅ Pincode sneller en gevoeliger op gsm<br>✅ Werknemer-dashboard toegevoegd<br>✅ Scrollen op gsm versoepeld<br>✅ Activiteitenlog uitgebreid<br>✅ Verlofaanvragen actief<br>✅ Meldingen voor Jos actief</div></div></div>`)}
+function settingsModal(){let rows=users.filter(u=>!isAdminUser(u)).map(u=>{let start=userRecs(u.id).filter(r=>Number(r.pauze_minuten)===9999).reduce((s,r)=>s+Number(r.totaal_minuten||0),0);return `<tr><td>${u.naam}</td><td>${sal(start)}</td><td><button class="btn light" onclick="editStartSaldo(${u.id})">Wijzig</button></td></tr>`}).join('');openModal('Instellingen',`<div class="two"><div><h3>Basisinstellingen</h3><table class="table"><tr><th>Instelling</th><th>Waarde</th></tr><tr><td>Standaard werkdag</td><td>8u00</td></tr><tr><td>Volledige recupdag</td><td>-8u00</td></tr><tr><td>Halve recupdag</td><td>-4u00</td></tr><tr><td>Quotes</td><td>Charlie quotes actief</td></tr><tr><td>Versie</td><td>Tuinafsluiter Hub v3.3 Modal Fix</td></tr></table><h3>Beginsaldo plus/minuren</h3><table class="table"><tr><th>Werknemer</th><th>Beginsaldo</th><th></th></tr>${rows}</table><p class="warn">Vul hier de bestaande plus- of minuren in. Charlie rekent daarna verder vanaf dit saldo.</p></div><div><h3>App status</h3><button class="btn green" onclick="enableLocalNotifications()">🔔 Meldingen op dit toestel aanzetten</button><p class="warn">Let op: dit zijn lokale browsermeldingen. Echte iPhone-pushmeldingen naar Jos zonder de app te openen maken we als aparte koppeling.</p><div class="warn">✅ Prikklok actief<br>✅ Supabase gekoppeld<br>✅ Plusuren actief<br>✅ Excel-export actief<br>✅ Registraties beheren actief<br>✅ Mobiele weergave verbeterd<br>✅ Rhani meekijkrol voorbereid<br>✅ Ongelezen tellers actief<br>✅ Automatische app-vergrendeling actief<br>✅ Open registraties van vorige dag worden correct afgehandeld<br>✅ Verlofaanvraag meldingbadge actief<br>✅ Live start checklist toegevoegd<br>✅ Vakantiesaldo toegevoegd<br>✅ Duidelijke actiebanners toegevoegd<br>✅ Pincode sneller en gevoeliger op gsm<br>✅ Werknemer-dashboard toegevoegd<br>✅ Scrollen op gsm versoepeld<br>✅ Live Start popup hersteld<br>✅ Activiteitenlog uitgebreid<br>✅ Verlofaanvragen actief<br>✅ Meldingen voor Jos actief</div></div></div>`)}
 function editStartSaldo(uid){let u=users.find(x=>Number(x.id)===Number(uid));let start=userRecs(uid).filter(r=>Number(r.pauze_minuten)===9999).reduce((s,r)=>s+Number(r.totaal_minuten||0),0);openModal('Beginsaldo '+(u?.naam||''),`<div class="form"><label>Plus/minuren in minuten</label><input id="startSaldoMin" type="number" value="${start}"><p class="warn">Voorbeelden: +2u30 = 150, -3u15 = -195, +8u00 = 480.</p><button class="btn green" id="saveStartSaldoBtn">Opslaan</button><button class="btn light" id="backSettingsBtn">Terug</button></div>`);$('saveStartSaldoBtn').onclick=()=>saveStartSaldo(uid);$('backSettingsBtn').onclick=settingsModal}
 async function saveStartSaldo(uid){try{let val=Number($('startSaldoMin').value||0);let existing=userRecs(uid).filter(r=>Number(r.pauze_minuten)===9999);for(let r of existing){await sb('/urenregistratie?id=eq.'+r.id,{method:'DELETE'})}if(val!==0){await sb('/urenregistratie',{method:'POST',headers:{Prefer:'return=representation'},body:JSON.stringify({medewerker_id:uid,datum:'2026-01-01',pauze_minuten:9999,totaal_minuten:val,uitkloktijd:iso()})})}msg('Beginsaldo opgeslagen.');await load();settingsModal()}catch(e){msg('Opslagfout: '+err(e))}}
 function workersModal(){let rows=users.map(u=>`<tr><td>${u.naam}</td><td>${u.pincode||''}</td><td>${u.rol||''}</td><td>${u.actief?'Actief':'Inactief'}</td><td><button class="btn light" onclick="editWorker(${u.id})">Wijzig</button></td></tr>`).join('');openModal('Werknemers beheren',`<div class="two"><div><h3>Bestaande werknemers</h3><table class="table"><tr><th>Naam</th><th>Pincode</th><th>Rol</th><th>Status</th><th></th></tr>${rows}</table></div><div><h3>Nieuwe werknemer</h3><div class="form"><input id="newName" placeholder="Naam"><input id="newPin" placeholder="Pincode, bv. 1234" maxlength="4"><select id="newRole"><option value="chauffeur">chauffeur</option><option value="magazijnier">magazijnier</option><option value="admin">admin</option><option value="meekijk">meekijk</option></select><button class="btn green" id="addWorkerBtn">Toevoegen</button></div><p class="warn">Pincode moet uniek zijn. Zet werknemers liever op inactief dan te verwijderen. Inactieve werknemers kunnen niet meer inloggen.</p></div></div>`);$('addWorkerBtn').onclick=addWorker}
@@ -591,7 +653,7 @@ async function deleteRegistration(id){
 }
 
 function datesBetween(start,end,skipWeekend){let out=[],a=new Date(start+'T12:00:00'),b=new Date(end+'T12:00:00');if(isNaN(a)||isNaN(b)||a>b)return out;for(let d=new Date(a);d<=b;d.setDate(d.getDate()+1)){let day=d.getDay();if(skipWeekend&&(day===0||day===6))continue;out.push(d.toISOString().slice(0,10))}return out}
-async function saveSpecial(type){try{let uid=Number($('mUser').value);let rows=[];if(type==='recup'){let date=$('mDate').value,val=Number($('mAmount').value);rows=[{medewerker_id:uid,datum:date,pauze_minuten:0,totaal_minuten:val,uitkloktijd:iso()}]}else{let ds=datesBetween($('mStart').value,$('mEnd').value,$('mSkipWeekend').checked);if(!ds.length)return msg('Geen geldige dagen gekozen.');let val=type==='verlof'?480:0;rows=ds.map(date=>({medewerker_id:uid,datum:date,pauze_minuten:0,totaal_minuten:val,uitkloktijd:iso()}))}await sb('/urenregistratie',{method:'POST',headers:{Prefer:'return=representation'},body:JSON.stringify(rows)});actionBanner('✅ OPGESLAGEN',(type==='recup'?'Recup':type)+' '+rows.length+' dag(en)','ok','Charlie heeft dit verwerkt.');msg((type==='recup'?'Recup':type)+' opgeslagen: '+rows.length+' dag(en).');await safeAudit((type==='recup'?'Recup':type)+' geregistreerd door '+(current?.naam||'onbekend')+': '+rows.length+' dag(en)',{actie:'speciale_dag',type,uid});$('adminModal').classList.remove('show');await load()}catch(e){msg('Opslagfout: '+err(e))}}
+async function saveSpecial(type){try{let uid=Number($('mUser').value);let rows=[];if(type==='recup'){let date=$('mDate').value,val=Number($('mAmount').value);rows=[{medewerker_id:uid,datum:date,pauze_minuten:0,totaal_minuten:val,uitkloktijd:iso()}]}else{let ds=datesBetween($('mStart').value,$('mEnd').value,$('mSkipWeekend').checked);if(!ds.length)return msg('Geen geldige dagen gekozen.');let val=type==='verlof'?480:0;rows=ds.map(date=>({medewerker_id:uid,datum:date,pauze_minuten:0,totaal_minuten:val,uitkloktijd:iso()}))}await sb('/urenregistratie',{method:'POST',headers:{Prefer:'return=representation'},body:JSON.stringify(rows)});actionBanner('✅ OPGESLAGEN',(type==='recup'?'Recup':type)+' '+rows.length+' dag(en)','ok','Charlie heeft dit verwerkt.');msg((type==='recup'?'Recup':type)+' opgeslagen: '+rows.length+' dag(en).');await safeAudit((type==='recup'?'Recup':type)+' geregistreerd door '+(current?.naam||'onbekend')+': '+rows.length+' dag(en)',{actie:'speciale_dag',type,uid});closeModal();await load()}catch(e){msg('Opslagfout: '+err(e))}}
 
 
 function hubTime(x){return x?new Date(x).toLocaleString('nl-BE',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}):''}
@@ -675,22 +737,23 @@ if($('lockBtn'))$('lockBtn').onclick=()=>lockApp('App handmatig vergrendeld.');i
 load().then(()=>setCharlieQuote('open')).catch(e=>msg('Supabase fout: '+err(e)));
 </script></body></html>
 function liveStartModal(){
- const sql=`-- Tuinafsluiter Hub live start reset
--- LET OP: eerst backup nemen van urenregistratie en hub_items.
--- Dit wist testberichten, mededelingen en activiteitenlog.
-delete from hub_items;
-
--- Optioneel: wis ALLE testregistraties.
--- Gebruik dit alleen als je zeker bent dat alle uren testdata zijn.
--- delete from urenregistratie;
-
--- Veiliger alternatief:
--- wis alleen registraties vanaf een bepaalde testperiode.
--- Pas de datum aan indien nodig.
--- delete from urenregistratie where datum < '2026-06-24';
-
--- Werknemers, pincodes en beginsaldo's blijven behouden tenzij je urenregistratie volledig wist.
-`;
+ const sql=[
+'-- Tuinafsluiter Hub live start reset',
+'-- LET OP: eerst backup nemen van urenregistratie en hub_items.',
+'-- Dit wist testberichten, mededelingen en activiteitenlog.',
+'delete from hub_items;',
+'',
+'-- Optioneel: wis ALLE testregistraties.',
+'-- Gebruik dit alleen als je zeker bent dat alle uren testdata zijn.',
+'-- delete from urenregistratie;',
+'',
+'-- Veiliger alternatief:',
+'-- wis alleen registraties vanaf een bepaalde testperiode.',
+'-- Pas de datum aan indien nodig.',
+"-- delete from urenregistratie where datum < '2026-06-24';",
+'',
+"-- Werknemers, pincodes en beginsaldo's blijven behouden tenzij je urenregistratie volledig wist."
+ ].join('\\n');
  openModal('Live start voorbereiden',`
  <div class="two">
   <div>
@@ -712,11 +775,12 @@ delete from hub_items;
   </div>
   <div>
    <h3>Supabase reset SQL</h3>
-   <textarea id="liveSql" rows="14" style="width:100%;font-family:monospace">${sql}</textarea>
+   <textarea id="liveSql" rows="14"></textarea>
    <button class="btn green" id="copyLiveSql">Kopieer SQL</button>
    <p class="warn">Deze knop voert niets uit. Je kopieert de SQL en voert die bewust uit in Supabase. Zo vermijden we per ongeluk gegevensverlies.</p>
   </div>
  </div>`);
+ $('liveSql').value=sql;
  $('copyLiveSql').onclick=()=>{navigator.clipboard?.writeText($('liveSql').value);msg('SQL gekopieerd. Plak dit in Supabase SQL Editor wanneer je echt wil resetten.')}
 }
 
