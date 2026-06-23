@@ -1,15 +1,21 @@
-# Tuinafsluiter Hub v1.5 Toetsenbord PIN
+# Tuinafsluiter Hub v1.6 Live Reset Fix
 
-Laatste comfort-update voor live gebruik.
+Laatste fix voor live start.
 
-Nieuw:
-- Op pc kan Jos de pincode intypen met het toetsenbord.
-- Cijfers 0-9 werken.
-- Backspace wist een cijfer.
-- Enter bevestigt de login.
-- Gsm-toetsenbord blijft gewoon werken zoals voordien.
-- Geen Supabase-wijziging nodig.
+Opgelost:
+- Live Start reset wist nu hub_items via de app:
+  - teamchat
+  - mededelingen
+  - activiteitenlog
+- Live Start kan ook alle urenregistraties wissen.
+- De app controleert na reset of de tabel echt leeg is.
+- SQL fallback staat duidelijk in Live Start.
+- Werknemers en pincodes blijven behouden.
+- Geen nieuwe Supabase SQL nodig.
 
 Upload/overschrijf alles naar GitHub.
-
-Daarna niets meer wijzigen en de app gewoon in gebruik nemen.
+Daarna testen:
+1. Zet een testbericht in Teamchat.
+2. Ga naar Live Start.
+3. Klik Wis chat/mededelingen/activiteitenlog.
+4. Controleer Supabase hub_items = 0 records.
