@@ -1,16 +1,15 @@
-# Tuinafsluiter Hub v2.5 Open Registratie Fix
-
-Probleem opgelost:
-- Jordy/Lars konden niet opnieuw inchecken omdat er nog een open registratie van gisteren stond.
+# Tuinafsluiter Hub v2.6 Verlofmelding
 
 Nieuw:
-- Als iemand wil inchecken terwijl er nog een open registratie van een vorige dag bestaat, vraagt Charlie bevestiging.
-- Na bevestiging sluit Charlie die oude registratie automatisch af op 23:59 van die dag.
-- Daarna wordt vandaag meteen opnieuw ingecheckt.
-- Uitchecken kan nog steeds open registraties afsluiten.
-- Geen Supabase-wijziging nodig.
-- Bestaande uren blijven behouden.
+- Bij verlofaanvraag voor 1 dag moet werknemer enkel 'Van' invullen.
+- 'Tot en met' is optioneel.
+- Als 'Tot en met' leeg blijft, gebruikt Charlie automatisch dezelfde datum als 'Van'.
+- Jos krijgt een duidelijker meldingsbadge op 'Meldingen / aanvragen'.
+- Dashboard toont een Charlie-banner bij openstaande verlofaanvragen.
 
 Upload/overschrijf:
 - index.html
 - README.md
+
+Geen Supabase-wijziging nodig.
+Bestaande uren blijven behouden.
