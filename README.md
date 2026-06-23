@@ -1,15 +1,14 @@
-# Tuinafsluiter Hub v1.8 Core Fix
+# Tuinafsluiter Hub v1.9 Security
 
-Veilige kernfix op de stabiele versie.
+Veilige beveiligingsstap op de stabiele basis.
 
-Aangepast:
-- Uitchecken werkt nu ook als iemand gisteren is ingecheckt en vandaag pas wil uitchecken.
-- Actieve registratie wordt gezocht over alle open registraties, niet alleen vandaag.
-- Dashboardtellers tellen nu unieke werknemers in plaats van aantal registraties.
-- Teamoverzicht toont "Open sinds datum" als iemand nog open staat van een vorige dag.
+Nieuw:
+- Als een werknemer inactief wordt gezet, kan hij/zij niet meer inloggen.
+- Als iemand al open staat in de app en daarna inactief wordt gezet, wordt hij/zij bij de volgende refresh/load automatisch uitgelogd.
+- Extra bevestiging wanneer je iemand op inactief zet.
+- Geen databasewijziging nodig.
+- Bestaande uren blijven behouden.
 
 Upload/overschrijf:
 - index.html
 - README.md
-
-Geen databasewijziging nodig. Bestaande uren blijven behouden.
