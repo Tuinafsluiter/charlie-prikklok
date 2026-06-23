@@ -1,16 +1,15 @@
-# Tuinafsluiter Hub v2.4 Vergrendeling
+# Tuinafsluiter Hub v2.5 Open Registratie Fix
+
+Probleem opgelost:
+- Jordy/Lars konden niet opnieuw inchecken omdat er nog een open registratie van gisteren stond.
 
 Nieuw:
-- Knop **Vergrendel** bovenaan naast Uitloggen
-- Automatische vergrendeling na 5 minuten inactiviteit
-- Als de app langer dan 2 minuten op de achtergrond staat, moet opnieuw pincode ingegeven worden
-- Dit beschermt de app als een gsm/tablet blijft openstaan of kwijt raakt
-
-Belangrijk:
-- Dit gebruikt de bestaande pincode-login.
-- Echte Face ID/Touch ID via web/PWA is complexer en bouwen we later apart als dat nodig is.
+- Als iemand wil inchecken terwijl er nog een open registratie van een vorige dag bestaat, vraagt Charlie bevestiging.
+- Na bevestiging sluit Charlie die oude registratie automatisch af op 23:59 van die dag.
+- Daarna wordt vandaag meteen opnieuw ingecheckt.
+- Uitchecken kan nog steeds open registraties afsluiten.
 - Geen Supabase-wijziging nodig.
-- Geen extra kosten.
+- Bestaande uren blijven behouden.
 
 Upload/overschrijf:
 - index.html
