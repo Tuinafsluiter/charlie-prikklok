@@ -434,6 +434,10 @@ html,body{
 .saldoCards .mini b{font-size:24px}
 @media(max-width:780px){.saldoCards{grid-template-columns:1fr}}
 
+
+/* v1.8 Verlof/ADV */
+.table td .smallTag,.smallTag{display:inline-block;border-radius:999px;background:#e5f2ec;color:#003b2e;font-weight:900;padding:3px 8px}
+
 </style>
 
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png?v=final">
@@ -631,7 +635,8 @@ async function login(){try{let r=await sb('/werknemers?select=*&pincode=eq.'+enc
 function isOwner(){let r=String(current?.rol||'').toLowerCase();return r.includes('admin')||r.includes('beheerder')||current?.naam?.toLowerCase()==='jos'}
 function isViewer(){let r=String(current?.rol||'').toLowerCase();return r.includes('meekijk')||r.includes('kijk')||r.includes('viewer')||current?.naam?.toLowerCase()==='rhani'}
 function isAdmin(){return isOwner()||isViewer()}
-function calc(r){let w=Number(r.totaal_minuten||0),pm=Number(r.pauze_minuten||0);if(pm===9999)return{worked:0,pause:0,balance:w,type:'Beginsaldo'};if(pm===PENDING_LEAVE)return{worked:0,pause:0,balance:0,type:'Verlofaanvraag'};if(pm===DENIED_LEAVE)return{worked:0,pause:0,balance:0,type:'Afgekeurde aanvraag'};if(!w&&r.inkloktijd&&r.uitkloktijd)w=Math.max(0,mins(r.inkloktijd,r.uitkloktijd)-pm);let type='Werkdag';if(!r.inkloktijd&&w<0)type=w<=-480?'Recupdag':'Halve recup';if(!r.inkloktijd&&w===480)type='Verlof';if(!r.inkloktijd&&w===0&&r.uitkloktijd)type='Ziekte';return{worked:w,pause:pm,balance:w? w-NORM:0,type}}
+function leaveKindFromRecord(r){return Number(r.totaal_minuten||0)===481?'ADV':'Verlof'}
+function calc(r){let w=Number(r.totaal_minuten||0),pm=Number(r.pauze_minuten||0);if(pm===9999)return{worked:0,pause:0,balance:w,type:'Beginsaldo'};if(pm===PENDING_LEAVE)return{worked:0,pause:0,balance:0,type:leaveKindFromRecord(r)+'aanvraag'};if(pm===DENIED_LEAVE)return{worked:0,pause:0,balance:0,type:'Afgekeurde aanvraag'};if(!r.inkloktijd&&w===481)return{worked:0,pause:0,balance:0,type:'ADV'};if(!w&&r.inkloktijd&&r.uitkloktijd)w=Math.max(0,mins(r.inkloktijd,r.uitkloktijd)-pm);let type='Werkdag';if(!r.inkloktijd&&w<0)type=w<=-480?'Recupdag':'Halve recup';if(!r.inkloktijd&&w===480)type='Verlof';if(!r.inkloktijd&&w===0&&r.uitkloktijd)type='Ziekte';return{worked:w,pause:pm,balance:w? w-NORM:0,type}}
 function userRecs(uid){return records.filter(r=>Number(r.medewerker_id)===Number(uid))}function monthSaldo(uid){return userRecs(uid).filter(r=>String(r.datum||'').startsWith(today().slice(0,7))&&(r.uitkloktijd||r.totaal_minuten!==null)).reduce((s,r)=>s+calc(r).balance,0)}function totalSaldo(uid){return userRecs(uid).filter(r=>r.uitkloktijd||r.totaal_minuten!==null).reduce((s,r)=>s+calc(r).balance,0)}function weekStart(){let d=new Date();let day=(d.getDay()+6)%7;d.setDate(d.getDate()-day);return d.toISOString().slice(0,10)}function weekSaldo(uid){let ws=weekStart();return userRecs(uid).filter(r=>String(r.datum||'')>=ws&&(r.uitkloktijd||r.totaal_minuten!==null)).reduce((s,r)=>s+calc(r).balance,0)}function dayWork(uid){let rs=userRecs(uid).filter(r=>r.datum===today());return rs.reduce((s,r)=>s+calc(r).worked,0)}function recupDays(m){let pos=Math.max(0,Number(m)||0);let whole=Math.floor(pos/480),half=Math.floor((pos-whole*480)/240);return whole+(half?0.5:0)}
 function render(){if(!current)return;if(isAdmin())renderAdminHome();else{renderEmployee();renderEmployeeDashboard();}}
 function renderEmployee(){let r=activeEntry||userRecs(current.id).find(x=>x.datum===today()&&Number(x.pauze_minuten)!==PENDING_LEAVE&&Number(x.pauze_minuten)!==DENIED_LEAVE);let ps=r?localStorage.getItem('pause_'+r.id):null;let c=r?calc(r):null;let openReq=userRecs(current.id).filter(x=>Number(x.pauze_minuten)===PENDING_LEAVE).length;let base=r?`<div class="mini"><span>Ingecheckt</span><b>${hm(r.inkloktijd)}</b></div><div class="mini"><span>Schoft</span><b>${dur(c.pause)}${ps?' loopt':''}</b></div><div class="mini"><span>Uitchecken</span><b>${hm(r.uitkloktijd)}</b></div><div class="mini"><span>Vandaag</span><b>${dur(c.worked)}</b></div>`:`<div class="mini"><span>Status</span><b>Nog niet gestart</b></div><div class="mini"><span>Vandaag</span><b>0u00</b></div>`;$('statusGrid').innerHTML=base+`<div class="mini"><span>Verlofaanvragen</span><b>${openReq}</b></div>`}
@@ -675,7 +680,7 @@ function renderEmployeeDashboard(){
     <div class="mini"><span>Vandaag gewerkt</span><b>${dur(todayWorked)}</b></div>
     <div class="mini"><span>Deze week saldo</span><b>${sal(week)}</b></div>
     <div class="mini"><span>Totaal plus/min</span><b>${sal(total)}</b></div>
-    <div class="mini"><span>Verlof over</span><b>${s.remaining} dagen</b></div>
+    <div class="mini"><span>Verlof / ADV over</span><b>${s.remaining} / ${s.advRemaining}</b></div>
     <div class="mini"><span>Open aanvragen</span><b>${req}</b></div>
     <div class="mini"><span>Nieuwe berichten</span><b>${chatCount}</b></div>
   </div>`;
@@ -740,48 +745,204 @@ document.addEventListener('click',function(e){
 });
 $('plusBtn').onclick=()=>{let rows=users.filter(u=>!isAdminUser(u)).map(u=>{let m=monthSaldo(u.id),w=weekSaldo(u.id),t=totalSaldo(u.id);return `<tr><td>${u.naam}</td><td>${dur(dayWork(u.id))}</td><td class="${w>=0?'plus':'minus'}">${sal(w)}</td><td class="${m>=0?'plus':'minus'}">${sal(m)}</td><td class="${t>=0?'plus':'minus'}">${sal(t)}</td><td>${recupDays(t)} dag(en)</td></tr>`}).join('');openModal('Plusuren',`<table class="table"><tr><th>Werknemer</th><th>Vandaag</th><th>Deze week</th><th>Deze maand</th><th>Totaal saldo</th><th>Recup mogelijk</th></tr>${rows}</table><p class="warn">Regel: 8u00 per werkdag is nul. Meer is plus, minder is min. Recup mogelijk wordt berekend op het totale positieve saldo.</p>`)};
 
+
 const DEFAULT_VAKANTIEDAGEN=20;
+const DEFAULT_ADVDAGEN=12;
+const BUILDING_CALENDAR_2026={
+ feestdagen:['2026-01-01','2026-04-06','2026-05-01','2026-05-14','2026-05-25','2026-07-21','2026-08-15','2026-11-01','2026-11-11','2026-12-25'],
+ advRustdagen:['2026-01-02','2026-04-07','2026-04-08','2026-05-15','2026-12-21','2026-12-22','2026-12-23','2026-12-24','2026-12-28','2026-12-29','2026-12-30','2026-12-31'],
+ bouwverlof:['2026-07-20','2026-07-21','2026-07-22','2026-07-23','2026-07-24','2026-07-27','2026-07-28','2026-07-29','2026-07-30','2026-07-31','2026-08-03','2026-08-04','2026-08-05','2026-08-06','2026-08-07'],
+ verplaatsteFeestdagen:['2026-11-02','2026-11-03']
+};
+function employeeUsers(){return users.filter(u=>!isAdminUser(u))}
+function emptyHolidayConfig(){return{year:2026,entitlements:{},calendar:BUILDING_CALENDAR_2026}}
+function getHolidayConfig(){
+ let item=hubItems.find(i=>i.type==='config'&&i.message==='holiday_config');
+ let meta=item?.meta||{};
+ if(typeof meta==='string'){try{meta=JSON.parse(meta)}catch(e){meta={}}}
+ let cfg={...emptyHolidayConfig(),...meta};
+ cfg.entitlements=cfg.entitlements||{};
+ cfg.calendar=cfg.calendar||BUILDING_CALENDAR_2026;
+ return cfg;
+}
+function holidayEntitlement(uid){
+ let cfg=getHolidayConfig(), e=cfg.entitlements[String(uid)]||{};
+ return{verlof:Number(e.verlof ?? DEFAULT_VAKANTIEDAGEN), adv:Number(e.adv ?? DEFAULT_ADVDAGEN)}
+}
+async function saveHolidayConfig(cfg){
+ let old=hubItems.filter(i=>i.type==='config'&&i.message==='holiday_config');
+ for(let i of old){await hub('/hub_items?id=eq.'+i.id,{method:'DELETE'})}
+ await hub('/hub_items',{method:'POST',headers:{Prefer:'return=representation'},body:JSON.stringify({type:'config',author_id:current?.id||null,author_name:current?.naam||'Jos',message:'holiday_config',target:'system',meta:cfg})});
+ await loadHubItems();
+}
+function fmtDates(list){return (list||[]).map(d=>d.slice(8,10)+'/'+d.slice(5,7)).join(', ')}
+function calendarHtml(){
+ let c=getHolidayConfig().calendar||BUILDING_CALENDAR_2026;
+ return `<h3>Bouwkalender 2026</h3>
+ <div class="warn">
+  <b>Feestdagen:</b> ${fmtDates(c.feestdagen)}<br>
+  <b>ADV/rustdagen:</b> ${fmtDates(c.advRustdagen)}<br>
+  <b>Bouwverlof Tuinafsluiter:</b> ${fmtDates(c.bouwverlof)}<br>
+  <b>Verplaatste feestdagen:</b> ${fmtDates(c.verplaatsteFeestdagen)}<br><br>
+  Schoolvakanties worden niet gevolgd. Grote vakantie is verschoven naar 20/07 t.e.m. 07/08.
+ </div>`;
+}
 function vacationStats(uid,year=new Date().getFullYear()){
   let rows=userRecs(uid).filter(r=>String(r.datum||'').startsWith(String(year)));
-  let approved=rows.filter(r=>calc(r).type==='Verlof').length;
-  let pending=rows.filter(r=>Number(r.pauze_minuten)===PENDING_LEAVE).length;
+  let ent=holidayEntitlement(uid);
+  let approvedV=rows.filter(r=>calc(r).type==='Verlof').length;
+  let approvedA=rows.filter(r=>calc(r).type==='ADV').length;
+  let pendingV=rows.filter(r=>Number(r.pauze_minuten)===PENDING_LEAVE&&leaveKindFromRecord(r)==='Verlof').length;
+  let pendingA=rows.filter(r=>Number(r.pauze_minuten)===PENDING_LEAVE&&leaveKindFromRecord(r)==='ADV').length;
   let denied=rows.filter(r=>Number(r.pauze_minuten)===DENIED_LEAVE).length;
-  let remaining=Math.max(0,DEFAULT_VAKANTIEDAGEN-approved-pending);
-  return{year,approved,pending,denied,remaining,total:DEFAULT_VAKANTIEDAGEN};
+  return{
+    year,
+    total:ent.verlof,approved:approvedV,pending:pendingV,denied,remaining:Math.max(0,ent.verlof-approvedV-pendingV),
+    advTotal:ent.adv,advApproved:approvedA,advPending:pendingA,advRemaining:Math.max(0,ent.adv-approvedA-pendingA)
+  };
 }
 function holidayBalanceModal(uid=null){
   let year=new Date().getFullYear();
   if(uid){
     let u=users.find(x=>Number(x.id)===Number(uid))||current;
     let s=vacationStats(u.id,year);
-    openModal('Mijn verlofsaldo',`<div class="warn"><b>${u.naam}</b><br>Jaar: ${year}</div><table class="table"><tr><th>Jaarrecht</th><th>Goedgekeurd</th><th>In aanvraag</th><th>Resterend</th></tr><tr><td>${s.total} dagen</td><td>${s.approved} dagen</td><td>${s.pending} dagen</td><td><b>${s.remaining} dagen</b></td></tr></table><p class="warn">Dit is een eenvoudig saldo op basis van ${DEFAULT_VAKANTIEDAGEN} dagen per jaar. Later kunnen we dit per werknemer apart instelbaar maken.</p>`);
+    openModal('Mijn verlof / ADV saldo',`<div class="warn"><b>${u.naam}</b><br>Jaar: ${year}</div>
+    <table class="table"><tr><th>Type</th><th>Jaarrecht</th><th>Goedgekeurd</th><th>In aanvraag</th><th>Resterend</th></tr>
+    <tr><td>Verlof</td><td>${s.total}</td><td>${s.approved}</td><td>${s.pending}</td><td><b>${s.remaining}</b></td></tr>
+    <tr><td>ADV</td><td>${s.advTotal}</td><td>${s.advApproved}</td><td>${s.advPending}</td><td><b>${s.advRemaining}</b></td></tr></table>
+    ${calendarHtml()}`);
     return;
   }
-  let rows=users.filter(u=>!isAdminUser(u)).map(u=>{
+  let rows=employeeUsers().map(u=>{
     let s=vacationStats(u.id,year);
-    return `<tr><td>${u.naam}</td><td>${s.total}</td><td>${s.approved}</td><td>${s.pending}</td><td>${s.denied}</td><td><b>${s.remaining}</b></td></tr>`
+    return `<tr><td>${u.naam}</td><td>${s.total}</td><td>${s.approved}</td><td>${s.pending}</td><td><b>${s.remaining}</b></td><td>${s.advTotal}</td><td>${s.advApproved}</td><td>${s.advPending}</td><td><b>${s.advRemaining}</b></td><td><button class="btn light" onclick="editHolidayRights(${u.id})">Wijzig</button></td></tr>`
   }).join('');
-  openModal('Vakantiesaldo',`<table class="table"><tr><th>Werknemer</th><th>Jaarrecht</th><th>Goedgekeurd</th><th>In aanvraag</th><th>Afgekeurd</th><th>Resterend</th></tr>${rows}</table><p class="warn">Standaard: ${DEFAULT_VAKANTIEDAGEN} vakantiedagen per werknemer per jaar. Goedgekeurde verlofdagen en openstaande aanvragen worden automatisch meegeteld.</p>`);
+  openModal('Vakantie / ADV saldo',`<table class="table"><tr><th>Werknemer</th><th>Verlof recht</th><th>Verlof genomen</th><th>Verlof aanvraag</th><th>Verlof over</th><th>ADV recht</th><th>ADV genomen</th><th>ADV aanvraag</th><th>ADV over</th><th></th></tr>${rows}</table>${calendarHtml()}<p class="warn">Rhani staat hier niet tussen. Alleen werknemers worden getoond.</p>`);
+}
+function editHolidayRights(uid){
+ let u=users.find(x=>Number(x.id)===Number(uid));let e=holidayEntitlement(uid);
+ openModal('Vakantie / ADV instellen '+(u?.naam||''),`<div class="form">
+  <label>Verlofdagen</label><input id="holVerlof" type="number" min="0" step="0.5" value="${e.verlof}">
+  <label>ADV dagen</label><input id="holAdv" type="number" min="0" step="0.5" value="${e.adv}">
+  <button class="btn green" id="saveHolidayRightsBtn">Opslaan</button>
+  <button class="btn light" id="backHolidayBtn">Terug</button>
+  <p class="warn">Voorbeeld: Lars 20 verlofdagen en 12 ADV-dagen. Charlie trekt goedgekeurde dagen automatisch af.</p>
+ </div>`);
+ $('saveHolidayRightsBtn').onclick=()=>saveHolidayRights(uid);
+ $('backHolidayBtn').onclick=()=>holidayBalanceModal();
+}
+async function saveHolidayRights(uid){
+ try{
+  let cfg=getHolidayConfig();
+  cfg.entitlements=cfg.entitlements||{};
+  cfg.entitlements[String(uid)]={verlof:Number($('holVerlof').value||0),adv:Number($('holAdv').value||0)};
+  await saveHolidayConfig(cfg);
+  msg('Vakantie/ADV saldo opgeslagen.');
+  await safeAudit('Vakantie/ADV recht aangepast',{actie:'vakantie_adv_recht',uid});
+  await load();
+  holidayBalanceModal();
+ }catch(e){msg('Opslagfout vakantie/ADV: '+err(e))}
 }
 
-function specialForm(type){let options=users.filter(u=>!isAdminUser(u)).map(u=>`<option value="${u.id}">${u.naam}</option>`).join('');let map={recup:'Recupdag',verlof:'Verlof',ziekte:'Ziekte'};let rangeFields=type==='recup'?`<input id="mDate" type="date" value="${today()}"><select id="mAmount"><option value="-480">Volledige recupdag (-8u)</option><option value="-240">Halve recup (-4u)</option></select>`:`<label>Van</label><input id="mStart" type="date" value="${today()}"><label>Tot en met</label><input id="mEnd" type="date" value="${today()}"><label class="check"><input id="mSkipWeekend" type="checkbox" checked> Weekends overslaan</label>`;openModal(map[type],`<div class="two"><div><div class="form"><select id="mUser">${options}</select>${rangeFields}<textarea id="mNote" rows="2" placeholder="Opmerking (optioneel)"></textarea><button class="btn green" id="mSave">Opslaan</button></div><p class="warn">${type==='recup'?'Recup wordt van de plusuren afgetrokken.':'Meerdere dagen worden automatisch als aparte dagregels opgeslagen.'}</p></div><div><h3>Charlie zegt</h3><div class="warn">🐕 ${type==='verlof'?'Verlof ingepland. Charlie neemt even over.':type==='ziekte'?'Rust goed uit. Charlie bewaakt de uren.':'Recupdag toegevoegd. Geniet ervan.'}</div></div></div>`);$('mSave').onclick=()=>saveSpecial(type)}
+function specialForm(type){
+ let options=employeeUsers().map(u=>`<option value="${u.id}">${u.naam}</option>`).join('');
+ let map={recup:'Recupdag',verlof:'Verlof / ADV',ziekte:'Ziekte'};
+ let kindField=type==='verlof'?`<label>Type</label><select id="mKind"><option value="verlof">Verlofdag</option><option value="adv">ADV-dag</option></select>`:'';
+ let rangeFields=type==='recup'?`<input id="mDate" type="date" value="${today()}"><select id="mAmount"><option value="-480">Volledige recupdag (-8u)</option><option value="-240">Halve recup (-4u)</option></select>`:`${kindField}<label>Van</label><input id="mStart" type="date" value="${today()}"><label>Tot en met</label><input id="mEnd" type="date" value="${today()}"><label class="check"><input id="mSkipWeekend" type="checkbox" checked> Weekends overslaan</label>`;
+ openModal(map[type],`<div class="two"><div><div class="form"><select id="mUser">${options}</select>${rangeFields}<textarea id="mNote" rows="2" placeholder="Opmerking (optioneel)"></textarea><button class="btn green" id="mSave">Opslaan</button></div><p class="warn">${type==='recup'?'Recup wordt van de plusuren afgetrokken.':'Meerdere dagen worden automatisch als aparte dagregels opgeslagen.'}</p></div><div><h3>Charlie zegt</h3><div class="warn">🐕 ${type==='verlof'?'Kies Verlof of ADV. Charlie telt apart af.':type==='ziekte'?'Rust goed uit. Charlie bewaakt de uren.':'Recupdag toegevoegd. Geniet ervan.'}</div></div></div>`);
+ $('mSave').onclick=()=>saveSpecial(type)
+}
 function isAdminUser(u){let r=String(u.rol||'').toLowerCase();return r.includes('admin')||r.includes('beheer')||r.includes('meekijk')||r.includes('kijk')||r.includes('viewer')||u.naam.toLowerCase()==='jos'||u.naam.toLowerCase()==='rhani'}
 $('recupBtn').onclick=()=>specialForm('recup');$('verlofBtn').onclick=()=>specialForm('verlof');$('ziekteBtn').onclick=()=>specialForm('ziekte');
 if($('requestLeaveBtn'))$('requestLeaveBtn').onclick=()=>employeeLeaveRequestModal();
 if($('notificationsBtn'))$('notificationsBtn').onclick=()=>notificationsModal();
-function employeeLeaveRequestModal(){openModal('Verlof aanvragen',`<div class="two"><div><div class="form"><label>Van</label><input id="reqStart" type="date" value="${today()}"><label>Tot en met <small style="font-weight:700;color:#557067">(optioneel bij 1 dag)</small></label><input id="reqEnd" type="date" placeholder="Leeg laten voor 1 dag"><label class="check"><input id="reqSkipWeekend" type="checkbox" checked> Weekends overslaan</label><textarea id="reqNote" rows="2" placeholder="Opmerking voor Jos (optioneel)"></textarea><button class="btn green" id="reqSave">Aanvraag verzenden</button></div><p class="warn">Voor 1 verlofdag vul je alleen <b>Van</b> in. Voor meerdere dagen vul je ook <b>Tot en met</b> in.</p></div><div><h3>Uw aanvragen</h3><div id="myReqs"></div></div></div>`);$('reqStart').onchange=()=>{if(!$('reqEnd').value)$('reqEnd').value=''};$('reqSave').onclick=saveLeaveRequest;renderMyRequests()}
-function renderMyRequests(){let mine=userRecs(current.id).filter(r=>Number(r.pauze_minuten)===PENDING_LEAVE||Number(r.pauze_minuten)===DENIED_LEAVE).sort((a,b)=>String(b.datum||'').localeCompare(String(a.datum||'')));$('myReqs').innerHTML=mine.length?`<table class="table"><tr><th>Datum</th><th>Status</th></tr>${mine.map(r=>`<tr><td>${r.datum}</td><td>${Number(r.pauze_minuten)===PENDING_LEAVE?'⏳ In behandeling':'❌ Afgekeurd'}</td></tr>`).join('')}</table>`:'<div class="warn">Geen openstaande aanvragen.</div>'}
-async function saveLeaveRequest(){try{let start=$('reqStart').value,end=$('reqEnd').value||start;let ds=datesBetween(start,end,$('reqSkipWeekend').checked);if(!ds.length)return msg('Geen geldige dagen gekozen.');let rows=ds.map(date=>({medewerker_id:current.id,datum:date,pauze_minuten:PENDING_LEAVE,totaal_minuten:0,uitkloktijd:iso()}));await sb('/urenregistratie',{method:'POST',headers:{Prefer:'return=representation'},body:JSON.stringify(rows)});setCharlieQuote('request');actionBanner('📨 VERLOFAANVRAAG VERZONDEN', ds.length+' dag(en) aangevraagd','info',pick(CHARLIE_QUOTES.request));msg('Verlofaanvraag verzonden.'); await audit(current.naam+' diende een verlofaanvraag in ('+ds.length+' dag(en))',{actie:'verlofaanvraag',dagen:ds.length});closeModal();await load()}catch(e){msg('Aanvraagfout: '+err(e))}}
-function pendingGroups(){let userById=Object.fromEntries(users.map(u=>[Number(u.id),u.naam]));let rows=records.filter(r=>Number(r.pauze_minuten)===PENDING_LEAVE).sort((a,b)=>String(a.datum||'').localeCompare(String(b.datum||'')));let groups={};rows.forEach(r=>{let key=String(r.medewerker_id)+'_'+String(r.created_at||'').slice(0,19);if(!groups[key])groups[key]={ids:[],uid:Number(r.medewerker_id),naam:userById[Number(r.medewerker_id)]||('ID '+r.medewerker_id),dates:[],created:r.created_at};groups[key].ids.push(r.id);groups[key].dates.push(r.datum)});return Object.values(groups)}
-function notificationsModal(){let groups=pendingGroups();let userById=Object.fromEntries(users.map(u=>[Number(u.id),u.naam]));let recent=records.slice().sort((a,b)=>String(b.created_at||b.inkloktijd||'').localeCompare(String(a.created_at||a.inkloktijd||''))).slice(0,30);let requests=groups.length?groups.map((g,i)=>`<div class="warn"><b>🌴 Verlofaanvraag van ${g.naam}</b><br>${g.dates[0]}${g.dates.length>1?' t.e.m. '+g.dates[g.dates.length-1]:''} (${g.dates.length} dag(en))<br><br><button class="btn green" onclick="approveLeaveRequest(${i})">Goedkeuren</button> <button class="btn light" onclick="denyLeaveRequest(${i})">Afkeuren</button></div>`).join(''):'<div class="warn">Geen openstaande verlofaanvragen.</div>';window._pendingGroups=groups;let events=recent.map(r=>{let c=calc(r),naam=userById[Number(r.medewerker_id)]||('ID '+r.medewerker_id);if(c.type==='Verlofaanvraag')return `🌴 ${naam} vroeg verlof aan voor ${r.datum}`;if(c.type==='Verlof')return `✅ ${naam} heeft verlof op ${r.datum}`;if(c.type==='Ziekte')return `♡ ${naam} staat ziek op ${r.datum}`;if(r.inkloktijd&&r.uitkloktijd)return `🏠 ${naam} checkte uit op ${r.datum} om ${hm(r.uitkloktijd)} (${dur(c.worked)})`;if(r.inkloktijd&&!r.uitkloktijd)return `↪ ${naam} is ingecheckt sinds ${hm(r.inkloktijd)}`;if(c.type==='Recupdag'||c.type==='Halve recup')return `📅 ${naam} heeft ${c.type.toLowerCase()} op ${r.datum}`;return `• ${naam}: ${c.type} op ${r.datum}`}).join('<br>');openModal('Meldingen en aanvragen',`<div class="two"><div><h3>Openstaande aanvragen</h3>${requests}</div><div><h3>Recente meldingen</h3><div class="warn">${events||'Nog geen meldingen.'}</div><p class="warn">Deze meldingen zijn alleen zichtbaar voor Jos/beheerder.</p></div></div>`)}
-async function approveLeaveRequest(i){try{let g=window._pendingGroups?.[i];if(!g)return;await sb('/urenregistratie?id=in.('+g.ids.join(',')+')',{method:'PATCH',headers:{Prefer:'return=representation'},body:JSON.stringify({pauze_minuten:0,totaal_minuten:480,uitkloktijd:iso()})});actionBanner('✅ VERLOF GOEDGEKEURD',g.naam,'ok','Charlie heeft het verlof verwerkt.');msg('Verlofaanvraag goedgekeurd.');await audit('Verlofaanvraag goedgekeurd voor '+g.naam,{actie:'verlof_goedgekeurd'});await load();notificationsModal()}catch(e){msg('Goedkeurfout: '+err(e))}}
-async function denyLeaveRequest(i){try{let g=window._pendingGroups?.[i];if(!g)return;await sb('/urenregistratie?id=in.('+g.ids.join(',')+')',{method:'PATCH',headers:{Prefer:'return=representation'},body:JSON.stringify({pauze_minuten:DENIED_LEAVE,totaal_minuten:0,uitkloktijd:iso()})});actionBanner('❌ VERLOF AFGEKEURD',g.naam,'stop','Charlie heeft de aanvraag bijgewerkt.');msg('Verlofaanvraag afgekeurd.');await audit('Verlofaanvraag afgekeurd voor '+g.naam,{actie:'verlof_afgekeurd'});await load();notificationsModal()}catch(e){msg('Afkeurfout: '+err(e))}}
+function employeeLeaveRequestModal(){
+ openModal('Verlof / ADV aanvragen',`<div class="two"><div><div class="form">
+ <label>Type</label><select id="reqKind"><option value="verlof">Verlofdag</option><option value="adv">ADV-dag</option></select>
+ <label>Van</label><input id="reqStart" type="date" value="${today()}">
+ <label>Tot en met <small style="font-weight:700;color:#557067">(optioneel bij 1 dag)</small></label><input id="reqEnd" type="date" placeholder="Leeg laten voor 1 dag">
+ <label class="check"><input id="reqSkipWeekend" type="checkbox" checked> Weekends overslaan</label>
+ <textarea id="reqNote" rows="2" placeholder="Opmerking voor Jos (optioneel)"></textarea><button class="btn green" id="reqSave">Aanvraag verzenden</button></div>
+ <p class="warn">Voor 1 dag vul je alleen <b>Van</b> in. Kies bovenaan of het Verlof of ADV is.</p></div><div><h3>Uw aanvragen</h3><div id="myReqs"></div></div></div>`);
+ $('reqStart').onchange=()=>{if(!$('reqEnd').value)$('reqEnd').value=''};
+ $('reqSave').onclick=saveLeaveRequest;
+ renderMyRequests()
+}
+function renderMyRequests(){
+ let mine=userRecs(current.id).filter(r=>Number(r.pauze_minuten)===PENDING_LEAVE||Number(r.pauze_minuten)===DENIED_LEAVE).sort((a,b)=>String(b.datum||'').localeCompare(String(a.datum||'')));
+ $('myReqs').innerHTML=mine.length?`<table class="table"><tr><th>Datum</th><th>Type</th><th>Status</th></tr>${mine.map(r=>`<tr><td>${r.datum}</td><td>${leaveKindFromRecord(r)}</td><td>${Number(r.pauze_minuten)===PENDING_LEAVE?'⏳ In behandeling':'❌ Afgekeurd'}</td></tr>`).join('')}</table>`:'<div class="warn">Geen openstaande aanvragen.</div>'
+}
+async function saveLeaveRequest(){
+ try{
+  let start=$('reqStart').value,end=$('reqEnd').value||start;let ds=datesBetween(start,end,$('reqSkipWeekend').checked);
+  if(!ds.length)return msg('Geen geldige dagen gekozen.');
+  let kind=$('reqKind')?.value||'verlof';
+  let pendingMarker=kind==='adv'?1:0;
+  let rows=ds.map(date=>({medewerker_id:current.id,datum:date,pauze_minuten:PENDING_LEAVE,totaal_minuten:pendingMarker,uitkloktijd:iso()}));
+  await sb('/urenregistratie',{method:'POST',headers:{Prefer:'return=representation'},body:JSON.stringify(rows)});
+  setCharlieQuote('request');
+  actionBanner('📨 AANVRAAG VERZONDEN', (kind==='adv'?'ADV':'Verlof')+' '+ds.length+' dag(en)','info',pick(CHARLIE_QUOTES.request));
+  msg((kind==='adv'?'ADV':'Verlof')+'aanvraag verzonden.');
+  await audit(current.naam+' diende een '+(kind==='adv'?'ADV':'verlof')+'aanvraag in ('+ds.length+' dag(en))',{actie:'verlofaanvraag',type:kind,dagen:ds.length});
+  closeModal();await load()
+ }catch(e){msg('Aanvraagfout: '+err(e))}
+}
+function pendingGroups(){
+ let userById=Object.fromEntries(users.map(u=>[Number(u.id),u.naam]));
+ let rows=records.filter(r=>Number(r.pauze_minuten)===PENDING_LEAVE).sort((a,b)=>String(a.datum||'').localeCompare(String(b.datum||'')));
+ let groups={};
+ rows.forEach(r=>{
+  let kind=leaveKindFromRecord(r);
+  let key=String(r.medewerker_id)+'_'+kind+'_'+String(r.created_at||'').slice(0,19);
+  if(!groups[key])groups[key]={ids:[],uid:Number(r.medewerker_id),naam:userById[Number(r.medewerker_id)]||('ID '+r.medewerker_id),dates:[],created:r.created_at,kind};
+  groups[key].ids.push(r.id);groups[key].dates.push(r.datum)
+ });
+ return Object.values(groups)
+}
+function notificationsModal(){
+ let groups=pendingGroups();let userById=Object.fromEntries(users.map(u=>[Number(u.id),u.naam]));
+ let recent=records.slice().sort((a,b)=>String(b.created_at||b.inkloktijd||'').localeCompare(String(a.created_at||a.inkloktijd||''))).slice(0,30);
+ let requests=groups.length?groups.map((g,i)=>`<div class="warn"><b>🌴 ${g.kind}aanvraag van ${g.naam}</b><br>${g.dates[0]}${g.dates.length>1?' t.e.m. '+g.dates[g.dates.length-1]:''} (${g.dates.length} dag(en))<br><br><button class="btn green" onclick="approveLeaveRequest(${i})">Goedkeuren</button> <button class="btn light" onclick="denyLeaveRequest(${i})">Afkeuren</button></div>`).join(''):'<div class="warn">Geen openstaande verlof/ADV-aanvragen.</div>';
+ window._pendingGroups=groups;
+ let events=recent.map(r=>{
+  let c=calc(r),naam=userById[Number(r.medewerker_id)]||('ID '+r.medewerker_id);
+  if(c.type==='Verlofaanvraag'||c.type==='ADVaanvraag')return `🌴 ${naam} vroeg ${leaveKindFromRecord(r)} aan voor ${r.datum}`;
+  if(c.type==='Verlof'||c.type==='ADV')return `✅ ${naam} heeft ${c.type} op ${r.datum}`;
+  if(c.type==='Ziekte')return `♡ ${naam} staat ziek op ${r.datum}`;
+  if(r.inkloktijd&&r.uitkloktijd)return `🏠 ${naam} checkte uit op ${r.datum} om ${hm(r.uitkloktijd)} (${dur(c.worked)})`;
+  if(r.inkloktijd&&!r.uitkloktijd)return `↪ ${naam} is ingecheckt sinds ${hm(r.inkloktijd)}`;
+  if(c.type==='Recupdag'||c.type==='Halve recup')return `📅 ${naam} heeft ${c.type.toLowerCase()} op ${r.datum}`;
+  return `• ${naam}: ${c.type} op ${r.datum}`
+ }).join('<br>');
+ openModal('Meldingen en aanvragen',`<div class="two"><div><h3>Openstaande aanvragen</h3>${requests}</div><div><h3>Recente meldingen</h3><div class="warn">${events||'Nog geen meldingen.'}</div><p class="warn">Deze meldingen zijn alleen zichtbaar voor Jos/beheerder.</p></div></div>`)
+}
+async function approveLeaveRequest(i){
+ try{
+  let g=window._pendingGroups?.[i];if(!g)return;
+  let val=g.kind==='ADV'?481:480;
+  await sb('/urenregistratie?id=in.('+g.ids.join(',')+')',{method:'PATCH',headers:{Prefer:'return=representation'},body:JSON.stringify({pauze_minuten:0,totaal_minuten:val,uitkloktijd:iso()})});
+  actionBanner('✅ '+g.kind.toUpperCase()+' GOEDGEKEURD',g.naam,'ok','Charlie heeft dit verwerkt.');
+  msg(g.kind+'aanvraag goedgekeurd.');
+  await audit(g.kind+'aanvraag goedgekeurd voor '+g.naam,{actie:'verlof_goedgekeurd',type:g.kind});
+  await load();notificationsModal()
+ }catch(e){msg('Goedkeurfout: '+err(e))}
+}
+async function denyLeaveRequest(i){
+ try{
+  let g=window._pendingGroups?.[i];if(!g)return;
+  await sb('/urenregistratie?id=in.('+g.ids.join(',')+')',{method:'PATCH',headers:{Prefer:'return=representation'},body:JSON.stringify({pauze_minuten:DENIED_LEAVE,totaal_minuten:0,uitkloktijd:iso()})});
+  actionBanner('❌ AANVRAAG AFGEKEURD',g.naam,'stop','Charlie heeft de aanvraag bijgewerkt.');
+  msg((g.kind||'Verlof')+'aanvraag afgekeurd.');
+  await audit((g.kind||'Verlof')+'aanvraag afgekeurd voor '+g.naam,{actie:'verlof_afgekeurd',type:g.kind});
+  await load();notificationsModal()
+ }catch(e){msg('Afkeurfout: '+err(e))}
+}
 
 $('workersBtn').onclick=()=>workersModal();
 if($('registrationsBtn'))$('registrationsBtn').onclick=()=>registrationsModal();
 
 if($('settingsBtn'))$('settingsBtn').onclick=()=>settingsModal();
-function settingsModal(){let rows=users.filter(u=>!isAdminUser(u)).map(u=>{let start=userRecs(u.id).filter(r=>Number(r.pauze_minuten)===9999).reduce((s,r)=>s+Number(r.totaal_minuten||0),0);return `<tr><td>${u.naam}</td><td>${sal(start)}</td><td><button class="btn light" onclick="editStartSaldo(${u.id})">Wijzig</button></td></tr>`}).join('');openModal('Instellingen',`<div class="two"><div><h3>Basisinstellingen</h3><table class="table"><tr><th>Instelling</th><th>Waarde</th></tr><tr><td>Standaard werkdag</td><td>8u00</td></tr><tr><td>Volledige recupdag</td><td>-8u00</td></tr><tr><td>Halve recupdag</td><td>-4u00</td></tr><tr><td>Quotes</td><td>Charlie quotes actief</td></tr><tr><td>Versie</td><td>Tuinafsluiter Hub v1.7 Beginsaldo Uren</td></tr></table><h3>Beginsaldo plus/minuren</h3><table class="table"><tr><th>Werknemer</th><th>Beginsaldo</th><th></th></tr>${rows}</table><p class="warn">Vul hier de bestaande plus- of minuren in. Charlie rekent daarna verder vanaf dit saldo.</p></div><div><h3>App status</h3><button class="btn green" onclick="enableLocalNotifications()">🔔 Meldingen op dit toestel aanzetten</button><p class="warn">Let op: dit zijn lokale browsermeldingen. Echte iPhone-pushmeldingen naar Jos zonder de app te openen maken we als aparte koppeling.</p><div class="warn">✅ Prikklok actief<br>✅ Supabase gekoppeld<br>✅ Plusuren actief<br>✅ Excel-export actief<br>✅ Registraties beheren actief<br>✅ Mobiele weergave verbeterd<br>✅ Rhani meekijkrol voorbereid<br>✅ Ongelezen tellers actief<br>✅ Automatische app-vergrendeling actief<br>✅ Open registraties van vorige dag worden correct afgehandeld<br>✅ Verlofaanvraag meldingbadge actief<br>✅ Live start checklist toegevoegd<br>✅ Vakantiesaldo toegevoegd<br>✅ Duidelijke actiebanners toegevoegd<br>✅ Pincode sneller en gevoeliger op gsm<br>✅ Werknemer-dashboard toegevoegd<br>✅ Scrollen op gsm versoepeld<br>✅ Live Start popup hersteld<br>✅ Ruwe tekst buiten app verwijderd<br>✅ Sluiten-knop definitief hersteld<br>✅ Scrollen op gsm extra soepel gemaakt<br>✅ Officieel app-icoon toegevoegd<br>✅ Klaar voor domeinnaam<br>✅ PDF/Excel export verbeterd<br>✅ Excel/CSV download gefixt<br>✅ Live reset-knoppen toegevoegd<br>✅ Startklaar voor morgen<br>✅ Maand- en totaalsaldo toegevoegd<br>✅ Pincode via toetsenbord op pc<br>✅ Live Start reset gefixt<br>✅ Beginsaldo invoeren in uren/minuten<br>✅ Activiteitenlog uitgebreid<br>✅ Verlofaanvragen actief<br>✅ Meldingen voor Jos actief</div></div></div>`)}
+function settingsModal(){let rows=users.filter(u=>!isAdminUser(u)).map(u=>{let start=userRecs(u.id).filter(r=>Number(r.pauze_minuten)===9999).reduce((s,r)=>s+Number(r.totaal_minuten||0),0);return `<tr><td>${u.naam}</td><td>${sal(start)}</td><td><button class="btn light" onclick="editStartSaldo(${u.id})">Wijzig</button></td></tr>`}).join('');openModal('Instellingen',`<div class="two"><div><h3>Basisinstellingen</h3><table class="table"><tr><th>Instelling</th><th>Waarde</th></tr><tr><td>Standaard werkdag</td><td>8u00</td></tr><tr><td>Volledige recupdag</td><td>-8u00</td></tr><tr><td>Halve recupdag</td><td>-4u00</td></tr><tr><td>Quotes</td><td>Charlie quotes actief</td></tr><tr><td>Versie</td><td>Tuinafsluiter Hub v1.8 Verlof ADV</td></tr></table><h3>Beginsaldo plus/minuren</h3><table class="table"><tr><th>Werknemer</th><th>Beginsaldo</th><th></th></tr>${rows}</table><p class="warn">Vul hier de bestaande plus- of minuren in. Charlie rekent daarna verder vanaf dit saldo.</p></div><div><h3>App status</h3><button class="btn green" onclick="enableLocalNotifications()">🔔 Meldingen op dit toestel aanzetten</button><p class="warn">Let op: dit zijn lokale browsermeldingen. Echte iPhone-pushmeldingen naar Jos zonder de app te openen maken we als aparte koppeling.</p><div class="warn">✅ Prikklok actief<br>✅ Supabase gekoppeld<br>✅ Plusuren actief<br>✅ Excel-export actief<br>✅ Registraties beheren actief<br>✅ Mobiele weergave verbeterd<br>✅ Rhani meekijkrol voorbereid<br>✅ Ongelezen tellers actief<br>✅ Automatische app-vergrendeling actief<br>✅ Open registraties van vorige dag worden correct afgehandeld<br>✅ Verlofaanvraag meldingbadge actief<br>✅ Live start checklist toegevoegd<br>✅ Vakantiesaldo toegevoegd<br>✅ Duidelijke actiebanners toegevoegd<br>✅ Pincode sneller en gevoeliger op gsm<br>✅ Werknemer-dashboard toegevoegd<br>✅ Scrollen op gsm versoepeld<br>✅ Live Start popup hersteld<br>✅ Ruwe tekst buiten app verwijderd<br>✅ Sluiten-knop definitief hersteld<br>✅ Scrollen op gsm extra soepel gemaakt<br>✅ Officieel app-icoon toegevoegd<br>✅ Klaar voor domeinnaam<br>✅ PDF/Excel export verbeterd<br>✅ Excel/CSV download gefixt<br>✅ Live reset-knoppen toegevoegd<br>✅ Startklaar voor morgen<br>✅ Maand- en totaalsaldo toegevoegd<br>✅ Pincode via toetsenbord op pc<br>✅ Live Start reset gefixt<br>✅ Beginsaldo invoeren in uren/minuten<br>✅ Verlof en ADV dagen apart instelbaar<br>✅ Activiteitenlog uitgebreid<br>✅ Verlofaanvragen actief<br>✅ Meldingen voor Jos actief</div></div></div>`)}
 function editStartSaldo(uid){
  let u=users.find(x=>Number(x.id)===Number(uid));
  let start=userRecs(uid).filter(r=>Number(r.pauze_minuten)===9999).reduce((s,r)=>s+Number(r.totaal_minuten||0),0);
@@ -856,7 +1017,27 @@ async function deleteRegistration(id){
 }
 
 function datesBetween(start,end,skipWeekend){let out=[],a=new Date(start+'T12:00:00'),b=new Date(end+'T12:00:00');if(isNaN(a)||isNaN(b)||a>b)return out;for(let d=new Date(a);d<=b;d.setDate(d.getDate()+1)){let day=d.getDay();if(skipWeekend&&(day===0||day===6))continue;out.push(d.toISOString().slice(0,10))}return out}
-async function saveSpecial(type){try{let uid=Number($('mUser').value);let rows=[];if(type==='recup'){let date=$('mDate').value,val=Number($('mAmount').value);rows=[{medewerker_id:uid,datum:date,pauze_minuten:0,totaal_minuten:val,uitkloktijd:iso()}]}else{let ds=datesBetween($('mStart').value,$('mEnd').value,$('mSkipWeekend').checked);if(!ds.length)return msg('Geen geldige dagen gekozen.');let val=type==='verlof'?480:0;rows=ds.map(date=>({medewerker_id:uid,datum:date,pauze_minuten:0,totaal_minuten:val,uitkloktijd:iso()}))}await sb('/urenregistratie',{method:'POST',headers:{Prefer:'return=representation'},body:JSON.stringify(rows)});actionBanner('✅ OPGESLAGEN',(type==='recup'?'Recup':type)+' '+rows.length+' dag(en)','ok','Charlie heeft dit verwerkt.');msg((type==='recup'?'Recup':type)+' opgeslagen: '+rows.length+' dag(en).');await safeAudit((type==='recup'?'Recup':type)+' geregistreerd door '+(current?.naam||'onbekend')+': '+rows.length+' dag(en)',{actie:'speciale_dag',type,uid});closeModal();await load()}catch(e){msg('Opslagfout: '+err(e))}}
+async function saveSpecial(type){
+ try{
+  let uid=Number($('mUser').value);let rows=[];
+  if(type==='recup'){
+   let date=$('mDate').value,val=Number($('mAmount').value);
+   rows=[{medewerker_id:uid,datum:date,pauze_minuten:0,totaal_minuten:val,uitkloktijd:iso()}]
+  }else{
+   let ds=datesBetween($('mStart').value,$('mEnd').value,$('mSkipWeekend').checked);
+   if(!ds.length)return msg('Geen geldige dagen gekozen.');
+   let kind=type==='verlof'?($('mKind')?.value||'verlof'):type;
+   let val=kind==='adv'?481:(type==='verlof'?480:0);
+   rows=ds.map(date=>({medewerker_id:uid,datum:date,pauze_minuten:0,totaal_minuten:val,uitkloktijd:iso()}))
+  }
+  await sb('/urenregistratie',{method:'POST',headers:{Prefer:'return=representation'},body:JSON.stringify(rows)});
+  let label=type==='verlof'&&$('mKind')?.value==='adv'?'ADV':(type==='recup'?'Recup':type);
+  actionBanner('✅ OPGESLAGEN',label+' '+rows.length+' dag(en)','ok','Charlie heeft dit verwerkt.');
+  msg(label+' opgeslagen: '+rows.length+' dag(en).');
+  await safeAudit(label+' geregistreerd door '+(current?.naam||'onbekend')+': '+rows.length+' dag(en)',{actie:'speciale_dag',type:label,uid});
+  closeModal();await load()
+ }catch(e){msg('Opslagfout: '+err(e))}
+}
 
 
 function hubTime(x){return x?new Date(x).toLocaleString('nl-BE',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}):''}
@@ -1039,6 +1220,10 @@ function reportDocumentHtml(rows,s){
 .saldoCards .mini b{font-size:24px}
 @media(max-width:780px){.saldoCards{grid-template-columns:1fr}}
 
+
+/* v1.8 Verlof/ADV */
+.table td .smallTag,.smallTag{display:inline-block;border-radius:999px;background:#e5f2ec;color:#003b2e;font-weight:900;padding:3px 8px}
+
 </style></head><body>
  <div class="reportHeader"><div><h1>Tuinafsluiter Hub</h1><div class="small">Urenrapport</div></div><div class="small">Aangemaakt: ${new Date().toLocaleString('nl-BE')}<br>Periode: ${s.from} t.e.m. ${s.to}</div></div>
  <div class="summary"><div class="box">Regels<b>${rows.length}</b></div><div class="box">Gewerkt<b>${dur(worked)}</b></div><div class="box">Saldo<b>${sal(balance)}</b></div><div class="box">Rapport<b>${s.type==='summary'?'Samenvatting':'Details'}</b></div></div>
@@ -1162,7 +1347,7 @@ function liveStartModal(){
 async function resetHubItems(){
  if(!confirm('Zeker? Dit wist teamchat, mededelingen en activiteitenlog.'))return;
  try{
-   await sb('/hub_items?id=gte.0',{method:'DELETE',headers:{Prefer:'return=representation'}});
+   await sb('/hub_items?type=in.(chat,announcement,audit)',{method:'DELETE',headers:{Prefer:'return=representation'}});
    hubItems=[];
    await load();
    let check=await sb('/hub_items?select=id&limit=1');
