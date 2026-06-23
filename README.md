@@ -1,15 +1,12 @@
-# Tuinafsluiter Hub v1.8 Verlof ADV
+# Tuinafsluiter Hub v1.9 Vrij Verlof Vaste ADV
 
-Toegevoegd:
-- Verlofdagen en ADV-dagen apart zichtbaar.
-- Vakantie/ADV recht per werknemer instelbaar.
-- Rhani wordt niet getoond in vakantiesaldo; alleen werknemers.
-- Werknemers kunnen kiezen: Verlofdag of ADV-dag aanvragen.
-- Jos kan Verlof of ADV goedkeuren.
-- Bouwkalender 2026 zichtbaar in Vakantiesaldo.
-- Schoolvakanties worden niet gevolgd.
-- Grote vakantie Tuinafsluiter is verschoven naar 20/07 t.e.m. 07/08.
-- Live Start wist chat/mededelingen/activiteitenlog, maar bewaart configuratie zoals vakantie/ADV-rechten.
+Correctie:
+- Werknemers kunnen geen ADV aanvragen.
+- Werknemers kunnen alleen vrije verlofdagen aanvragen.
+- Vrije verlofdagen zijn per werknemer instelbaar, standaard 6 dagen.
+- Vaste ADV/rustdagen blijven zichtbaar en kunnen door Jos/Admin vastgelegd worden.
+- Bouwkalender blijft zichtbaar.
+- Rhani staat niet in vakantiesaldo.
 
 Geen nieuwe Supabase SQL nodig.
 Upload/overschrijf alles naar GitHub.
