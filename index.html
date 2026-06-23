@@ -137,6 +137,46 @@ body {
   .keypad button{min-height:74px!important;font-size:30px!important}
 }
 
+
+/* v3.1 werknemer dashboard */
+.employeeSummary{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:12px;
+  margin:0 0 18px;
+}
+.employeeSummary .mini{
+  background:rgba(255,255,255,.085);
+  border:1px solid rgba(255,255,255,.16);
+  border-radius:18px;
+  padding:14px;
+}
+.employeeSummary .mini span{
+  display:block;
+  color:#cfe7dc;
+  font-size:13px;
+  font-weight:800;
+}
+.employeeSummary .mini b{
+  display:block;
+  margin-top:5px;
+  font-size:22px;
+  color:#fff;
+}
+.employeeStatusCard{
+  margin:0 0 16px;
+  padding:15px 16px;
+  border-radius:20px;
+  background:rgba(45,181,107,.18);
+  border:1px solid rgba(45,181,107,.34);
+  color:#eafff4;
+  font-weight:900;
+}
+@media(max-width:780px){
+  .employeeSummary{grid-template-columns:1fr 1fr}
+  .employeeSummary .mini b{font-size:19px}
+}
+
 </style>
 </head>
 <body><div class="app"><div class="shell">
@@ -144,7 +184,7 @@ body {
 <main><section class="hero"><div class="heroMark"></div><img src="assets/charlie.png" alt="Charlie"><div class="dogline"><span class="dogIcon"></span><span id="charlieQuote">Charlie waakt over uw uren</span></div></section>
 <section class="panel">
  <div id="loginView"><div class="loginLogo"><img src="assets/logo.png" alt="Tuinafsluiter"><div class="slogan">Tuinafsluiter Hub<br><span style="font-size:18px;color:#d8eee4">Urenregistratie • Verlof • Teamcommunicatie</span></div></div><div class="glass"><div class="pinText">Voer uw pincode in</div><div class="dots" id="dots"><span>–</span><span>–</span><span>–</span><span>–</span></div><div class="keypad" id="keypad"></div><button class="bigbtn" id="loginBtn">Aanmelden</button></div></div>
- <div id="workView" class="hidden"><div class="workHead"><div><p class="subtitle">Welkom</p><h1 class="title" id="hello">Jos</h1><span class="role hidden" id="roleBadge">Beheerder</span></div><div style="display:flex;gap:10px;align-items:center"><button class="logout" id="lockBtn">🔒 Vergrendel</button><button class="logout" id="logoutBtn">↪ Uitloggen</button></div></div><div id="employeePanel"><div class="actions"><button class="action" data-action="in"><span class="ico">↪</span><span><h3>Inchecken</h3><p>Start uw werkdag</p></span></button><button class="action" data-action="breakStart"><span class="ico">☕</span><span><h3>Schoft starten</h3><p>Begin uw pauze</p></span></button><button class="action" data-action="breakStop"><span class="ico">▶</span><span><h3>Schoft stoppen</h3><p>Einde van uw pauze</p></span></button><button class="action red" data-action="out"><span class="ico">↩</span><span><h3>Uitchecken</h3><p>Einde werkdag</p></span></button><button class="action" id="requestLeaveBtn"><span class="ico">🌴</span><span><h3>Verlof aanvragen</h3><p>Vraag een dag of periode aan</p></span></button><button class="action" id="myHolidayBalanceBtn"><span class="ico">🏖️</span><span><h3>Mijn verlofsaldo</h3><p>Bekijk opgenomen en resterend verlof</p></span></button><button class="action" id="teamchatEmployeeBtn"><span class="ico">💬</span><span><h3>Teamchat</h3><p>Berichten voor het team</p></span></button><button class="action" id="announcementsEmployeeBtn"><span class="ico">📢</span><span><h3>Mededelingen</h3><p>Belangrijke info van Tuinafsluiter</p></span></button></div><div class="statusGrid" id="statusGrid"></div></div><div id="adminPanel" class="adminCards hidden"><div class="adminStats" id="adminStats"></div><div class="overview"><h3>Teamoverzicht Vandaag</h3><div id="adminToday"></div></div><div class="adminBtns"><button class="tile" id="notificationsBtn">🔔 Meldingen / aanvragen</button><button class="tile" id="plusBtn">📊 Plusuren</button><button class="tile" id="recupBtn">📅 Recupdagen</button><button class="tile" id="verlofBtn">🌴 Verlof</button><button class="tile" id="holidayBalanceBtn">🏖️ Vakantiesaldo</button><button class="tile" id="ziekteBtn">♡ Ziekte</button><button class="tile" id="workersBtn">👥 Werknemers</button><button class="tile" id="registrationsBtn">👷 Registraties</button><button class="tile" id="teamchatBtn">💬 Teamchat</button><button class="tile" id="announcementsBtn">📢 Mededelingen</button><button class="tile" id="activityBtn">📋 Activiteiten</button><button class="tile" id="settingsBtn">⚙️ Instellingen</button><button class="tile" id="liveStartBtn">🚀 Live start</button><button class="tile" id="exportBtn">📄 Excel export</button></div></div></div>
+ <div id="workView" class="hidden"><div class="workHead"><div><p class="subtitle">Welkom</p><h1 class="title" id="hello">Jos</h1><span class="role hidden" id="roleBadge">Beheerder</span></div><div style="display:flex;gap:10px;align-items:center"><button class="logout" id="lockBtn">🔒 Vergrendel</button><button class="logout" id="logoutBtn">↪ Uitloggen</button></div></div><div id="employeePanel"><div id="employeeDashboard"></div><div class="actions"><button class="action" data-action="in"><span class="ico">↪</span><span><h3>Inchecken</h3><p>Start uw werkdag</p></span></button><button class="action" data-action="breakStart"><span class="ico">☕</span><span><h3>Schoft starten</h3><p>Begin uw pauze</p></span></button><button class="action" data-action="breakStop"><span class="ico">▶</span><span><h3>Schoft stoppen</h3><p>Einde van uw pauze</p></span></button><button class="action red" data-action="out"><span class="ico">↩</span><span><h3>Uitchecken</h3><p>Einde werkdag</p></span></button><button class="action" id="requestLeaveBtn"><span class="ico">🌴</span><span><h3>Verlof aanvragen</h3><p>Vraag een dag of periode aan</p></span></button><button class="action" id="myHolidayBalanceBtn"><span class="ico">🏖️</span><span><h3>Mijn verlofsaldo</h3><p>Bekijk opgenomen en resterend verlof</p></span></button><button class="action" id="teamchatEmployeeBtn"><span class="ico">💬</span><span><h3>Teamchat</h3><p>Berichten voor het team</p></span></button><button class="action" id="announcementsEmployeeBtn"><span class="ico">📢</span><span><h3>Mededelingen</h3><p>Belangrijke info van Tuinafsluiter</p></span></button></div><div class="statusGrid" id="statusGrid"></div></div><div id="adminPanel" class="adminCards hidden"><div class="adminStats" id="adminStats"></div><div class="overview"><h3>Teamoverzicht Vandaag</h3><div id="adminToday"></div></div><div class="adminBtns"><button class="tile" id="notificationsBtn">🔔 Meldingen / aanvragen</button><button class="tile" id="plusBtn">📊 Plusuren</button><button class="tile" id="recupBtn">📅 Recupdagen</button><button class="tile" id="verlofBtn">🌴 Verlof</button><button class="tile" id="holidayBalanceBtn">🏖️ Vakantiesaldo</button><button class="tile" id="ziekteBtn">♡ Ziekte</button><button class="tile" id="workersBtn">👥 Werknemers</button><button class="tile" id="registrationsBtn">👷 Registraties</button><button class="tile" id="teamchatBtn">💬 Teamchat</button><button class="tile" id="announcementsBtn">📢 Mededelingen</button><button class="tile" id="activityBtn">📋 Activiteiten</button><button class="tile" id="settingsBtn">⚙️ Instellingen</button><button class="tile" id="liveStartBtn">🚀 Live start</button><button class="tile" id="exportBtn">📄 Excel export</button></div></div></div>
  <div id="message" class="msg hidden"></div>
 </section></main><footer></footer></div></div>
 <div class="modal" id="adminModal"><div class="modalBox"><div class="modalHead"><h2 id="modalTitle">Beheer</h2><button class="btn light" id="closeModal">Sluiten</button></div><div id="modalContent"></div></div></div>
@@ -291,7 +331,7 @@ async function load(){
    return;
  }
  if(current)activeEntry=await getActive(current.id);
- render();applyRoleVisibility();if(typeof updateRequestBadge==='function')updateRequestBadge();if(typeof updateHubBadges==='function')updateHubBadges()
+ render();renderEmployeeDashboard();applyRoleVisibility();if(typeof updateRequestBadge==='function')updateRequestBadge();if(typeof updateHubBadges==='function')updateHubBadges()
 }
 async function getActive(uid){let r=await sb(`/urenregistratie?select=*&medewerker_id=eq.${uid}&uitkloktijd=is.null&inkloktijd=not.is.null&order=inkloktijd.desc&limit=1`);return r[0]||null}
 async function closeStaleOpenRegistration(r){
@@ -310,7 +350,7 @@ function isViewer(){let r=String(current?.rol||'').toLowerCase();return r.includ
 function isAdmin(){return isOwner()||isViewer()}
 function calc(r){let w=Number(r.totaal_minuten||0),pm=Number(r.pauze_minuten||0);if(pm===9999)return{worked:0,pause:0,balance:w,type:'Beginsaldo'};if(pm===PENDING_LEAVE)return{worked:0,pause:0,balance:0,type:'Verlofaanvraag'};if(pm===DENIED_LEAVE)return{worked:0,pause:0,balance:0,type:'Afgekeurde aanvraag'};if(!w&&r.inkloktijd&&r.uitkloktijd)w=Math.max(0,mins(r.inkloktijd,r.uitkloktijd)-pm);let type='Werkdag';if(!r.inkloktijd&&w<0)type=w<=-480?'Recupdag':'Halve recup';if(!r.inkloktijd&&w===480)type='Verlof';if(!r.inkloktijd&&w===0&&r.uitkloktijd)type='Ziekte';return{worked:w,pause:pm,balance:w? w-NORM:0,type}}
 function userRecs(uid){return records.filter(r=>Number(r.medewerker_id)===Number(uid))}function monthSaldo(uid){return userRecs(uid).filter(r=>String(r.datum||'').startsWith(today().slice(0,7))&&(r.uitkloktijd||r.totaal_minuten!==null)).reduce((s,r)=>s+calc(r).balance,0)}function totalSaldo(uid){return userRecs(uid).filter(r=>r.uitkloktijd||r.totaal_minuten!==null).reduce((s,r)=>s+calc(r).balance,0)}function weekStart(){let d=new Date();let day=(d.getDay()+6)%7;d.setDate(d.getDate()-day);return d.toISOString().slice(0,10)}function weekSaldo(uid){let ws=weekStart();return userRecs(uid).filter(r=>String(r.datum||'')>=ws&&(r.uitkloktijd||r.totaal_minuten!==null)).reduce((s,r)=>s+calc(r).balance,0)}function dayWork(uid){let rs=userRecs(uid).filter(r=>r.datum===today());return rs.reduce((s,r)=>s+calc(r).worked,0)}function recupDays(m){let pos=Math.max(0,Number(m)||0);let whole=Math.floor(pos/480),half=Math.floor((pos-whole*480)/240);return whole+(half?0.5:0)}
-function render(){if(!current)return;if(isAdmin())renderAdminHome();else renderEmployee()}
+function render(){if(!current)return;if(isAdmin())renderAdminHome();else{renderEmployee();renderEmployeeDashboard();}}
 function renderEmployee(){let r=activeEntry||userRecs(current.id).find(x=>x.datum===today()&&Number(x.pauze_minuten)!==PENDING_LEAVE&&Number(x.pauze_minuten)!==DENIED_LEAVE);let ps=r?localStorage.getItem('pause_'+r.id):null;let c=r?calc(r):null;let openReq=userRecs(current.id).filter(x=>Number(x.pauze_minuten)===PENDING_LEAVE).length;let base=r?`<div class="mini"><span>Ingecheckt</span><b>${hm(r.inkloktijd)}</b></div><div class="mini"><span>Schoft</span><b>${dur(c.pause)}${ps?' loopt':''}</b></div><div class="mini"><span>Uitchecken</span><b>${hm(r.uitkloktijd)}</b></div><div class="mini"><span>Vandaag</span><b>${dur(c.worked)}</b></div>`:`<div class="mini"><span>Status</span><b>Nog niet gestart</b></div><div class="mini"><span>Vandaag</span><b>0u00</b></div>`;$('statusGrid').innerHTML=base+`<div class="mini"><span>Verlofaanvragen</span><b>${openReq}</b></div>`}
 function uniqueEmployeeCount(rows){return new Set(rows.map(r=>Number(r.medewerker_id)).filter(Boolean)).size}
 
@@ -327,6 +367,37 @@ function updateRequestBadge(){
   let b=$('notificationsBtn');
   if(b)b.innerHTML='🔔 Meldingen / aanvragen '+badgeCountHtml(n);
 }
+
+function employeeStatusText(){
+  let open=userRecs(current.id).find(r=>!r.uitkloktijd&&r.inkloktijd);
+  if(open)return open.datum===today()?`🟢 Aan het werk sinds ${hm(open.inkloktijd)}`:`🟠 Open sinds ${open.datum} om ${hm(open.inkloktijd)}`;
+  let todayRows=userRecs(current.id).filter(r=>r.datum===today());
+  let last=todayRows.find(r=>r.uitkloktijd&&r.inkloktijd);
+  if(last)return `🏁 Vandaag uitgecheckt om ${hm(last.uitkloktijd)}`;
+  let special=todayRows.find(r=>!r.inkloktijd&&r.totaal_minuten!==null);
+  if(special)return `📌 Vandaag: ${calc(special).type}`;
+  return '⚪ Nog niet ingecheckt vandaag';
+}
+function renderEmployeeDashboard(){
+  if(!current||isAdmin())return;
+  let el=$('employeeDashboard'); if(!el)return;
+  let s=vacationStats? vacationStats(current.id,new Date().getFullYear()) : {remaining:'-',pending:'-'};
+  let todayWorked=dayWork(current.id);
+  let week=weekSaldo(current.id);
+  let total=totalSaldo(current.id);
+  let req=userRecs(current.id).filter(r=>Number(r.pauze_minuten)===PENDING_LEAVE).length;
+  let chatCount=(typeof unreadHubCounts==='function'?unreadHubCounts().chat:0);
+  el.innerHTML=`<div class="employeeStatusCard">${employeeStatusText()}</div>
+  <div class="employeeSummary">
+    <div class="mini"><span>Vandaag gewerkt</span><b>${dur(todayWorked)}</b></div>
+    <div class="mini"><span>Deze week saldo</span><b>${sal(week)}</b></div>
+    <div class="mini"><span>Totaal plus/min</span><b>${sal(total)}</b></div>
+    <div class="mini"><span>Verlof over</span><b>${s.remaining} dagen</b></div>
+    <div class="mini"><span>Open aanvragen</span><b>${req}</b></div>
+    <div class="mini"><span>Nieuwe berichten</span><b>${chatCount}</b></div>
+  </div>`;
+}
+
 function renderAdminHome(){
  let list=users.filter(u=>!isAdminUser(u));
  let todayRows=records.filter(r=>r.datum===today());
@@ -414,7 +485,7 @@ $('workersBtn').onclick=()=>workersModal();
 if($('registrationsBtn'))$('registrationsBtn').onclick=()=>registrationsModal();
 
 if($('settingsBtn'))$('settingsBtn').onclick=()=>settingsModal();
-function settingsModal(){let rows=users.filter(u=>!isAdminUser(u)).map(u=>{let start=userRecs(u.id).filter(r=>Number(r.pauze_minuten)===9999).reduce((s,r)=>s+Number(r.totaal_minuten||0),0);return `<tr><td>${u.naam}</td><td>${sal(start)}</td><td><button class="btn light" onclick="editStartSaldo(${u.id})">Wijzig</button></td></tr>`}).join('');openModal('Instellingen',`<div class="two"><div><h3>Basisinstellingen</h3><table class="table"><tr><th>Instelling</th><th>Waarde</th></tr><tr><td>Standaard werkdag</td><td>8u00</td></tr><tr><td>Volledige recupdag</td><td>-8u00</td></tr><tr><td>Halve recupdag</td><td>-4u00</td></tr><tr><td>Quotes</td><td>Charlie quotes actief</td></tr><tr><td>Versie</td><td>Tuinafsluiter Hub v3.0 Pincode Fix</td></tr></table><h3>Beginsaldo plus/minuren</h3><table class="table"><tr><th>Werknemer</th><th>Beginsaldo</th><th></th></tr>${rows}</table><p class="warn">Vul hier de bestaande plus- of minuren in. Charlie rekent daarna verder vanaf dit saldo.</p></div><div><h3>App status</h3><button class="btn green" onclick="enableLocalNotifications()">🔔 Meldingen op dit toestel aanzetten</button><p class="warn">Let op: dit zijn lokale browsermeldingen. Echte iPhone-pushmeldingen naar Jos zonder de app te openen maken we als aparte koppeling.</p><div class="warn">✅ Prikklok actief<br>✅ Supabase gekoppeld<br>✅ Plusuren actief<br>✅ Excel-export actief<br>✅ Registraties beheren actief<br>✅ Mobiele weergave verbeterd<br>✅ Rhani meekijkrol voorbereid<br>✅ Ongelezen tellers actief<br>✅ Automatische app-vergrendeling actief<br>✅ Open registraties van vorige dag worden correct afgehandeld<br>✅ Verlofaanvraag meldingbadge actief<br>✅ Live start checklist toegevoegd<br>✅ Vakantiesaldo toegevoegd<br>✅ Duidelijke actiebanners toegevoegd<br>✅ Pincode sneller en gevoeliger op gsm<br>✅ Activiteitenlog uitgebreid<br>✅ Verlofaanvragen actief<br>✅ Meldingen voor Jos actief</div></div></div>`)}
+function settingsModal(){let rows=users.filter(u=>!isAdminUser(u)).map(u=>{let start=userRecs(u.id).filter(r=>Number(r.pauze_minuten)===9999).reduce((s,r)=>s+Number(r.totaal_minuten||0),0);return `<tr><td>${u.naam}</td><td>${sal(start)}</td><td><button class="btn light" onclick="editStartSaldo(${u.id})">Wijzig</button></td></tr>`}).join('');openModal('Instellingen',`<div class="two"><div><h3>Basisinstellingen</h3><table class="table"><tr><th>Instelling</th><th>Waarde</th></tr><tr><td>Standaard werkdag</td><td>8u00</td></tr><tr><td>Volledige recupdag</td><td>-8u00</td></tr><tr><td>Halve recupdag</td><td>-4u00</td></tr><tr><td>Quotes</td><td>Charlie quotes actief</td></tr><tr><td>Versie</td><td>Tuinafsluiter Hub v3.1 Werknemer Dashboard</td></tr></table><h3>Beginsaldo plus/minuren</h3><table class="table"><tr><th>Werknemer</th><th>Beginsaldo</th><th></th></tr>${rows}</table><p class="warn">Vul hier de bestaande plus- of minuren in. Charlie rekent daarna verder vanaf dit saldo.</p></div><div><h3>App status</h3><button class="btn green" onclick="enableLocalNotifications()">🔔 Meldingen op dit toestel aanzetten</button><p class="warn">Let op: dit zijn lokale browsermeldingen. Echte iPhone-pushmeldingen naar Jos zonder de app te openen maken we als aparte koppeling.</p><div class="warn">✅ Prikklok actief<br>✅ Supabase gekoppeld<br>✅ Plusuren actief<br>✅ Excel-export actief<br>✅ Registraties beheren actief<br>✅ Mobiele weergave verbeterd<br>✅ Rhani meekijkrol voorbereid<br>✅ Ongelezen tellers actief<br>✅ Automatische app-vergrendeling actief<br>✅ Open registraties van vorige dag worden correct afgehandeld<br>✅ Verlofaanvraag meldingbadge actief<br>✅ Live start checklist toegevoegd<br>✅ Vakantiesaldo toegevoegd<br>✅ Duidelijke actiebanners toegevoegd<br>✅ Pincode sneller en gevoeliger op gsm<br>✅ Werknemer-dashboard toegevoegd<br>✅ Activiteitenlog uitgebreid<br>✅ Verlofaanvragen actief<br>✅ Meldingen voor Jos actief</div></div></div>`)}
 function editStartSaldo(uid){let u=users.find(x=>Number(x.id)===Number(uid));let start=userRecs(uid).filter(r=>Number(r.pauze_minuten)===9999).reduce((s,r)=>s+Number(r.totaal_minuten||0),0);openModal('Beginsaldo '+(u?.naam||''),`<div class="form"><label>Plus/minuren in minuten</label><input id="startSaldoMin" type="number" value="${start}"><p class="warn">Voorbeelden: +2u30 = 150, -3u15 = -195, +8u00 = 480.</p><button class="btn green" id="saveStartSaldoBtn">Opslaan</button><button class="btn light" id="backSettingsBtn">Terug</button></div>`);$('saveStartSaldoBtn').onclick=()=>saveStartSaldo(uid);$('backSettingsBtn').onclick=settingsModal}
 async function saveStartSaldo(uid){try{let val=Number($('startSaldoMin').value||0);let existing=userRecs(uid).filter(r=>Number(r.pauze_minuten)===9999);for(let r of existing){await sb('/urenregistratie?id=eq.'+r.id,{method:'DELETE'})}if(val!==0){await sb('/urenregistratie',{method:'POST',headers:{Prefer:'return=representation'},body:JSON.stringify({medewerker_id:uid,datum:'2026-01-01',pauze_minuten:9999,totaal_minuten:val,uitkloktijd:iso()})})}msg('Beginsaldo opgeslagen.');await load();settingsModal()}catch(e){msg('Opslagfout: '+err(e))}}
 function workersModal(){let rows=users.map(u=>`<tr><td>${u.naam}</td><td>${u.pincode||''}</td><td>${u.rol||''}</td><td>${u.actief?'Actief':'Inactief'}</td><td><button class="btn light" onclick="editWorker(${u.id})">Wijzig</button></td></tr>`).join('');openModal('Werknemers beheren',`<div class="two"><div><h3>Bestaande werknemers</h3><table class="table"><tr><th>Naam</th><th>Pincode</th><th>Rol</th><th>Status</th><th></th></tr>${rows}</table></div><div><h3>Nieuwe werknemer</h3><div class="form"><input id="newName" placeholder="Naam"><input id="newPin" placeholder="Pincode, bv. 1234" maxlength="4"><select id="newRole"><option value="chauffeur">chauffeur</option><option value="magazijnier">magazijnier</option><option value="admin">admin</option><option value="meekijk">meekijk</option></select><button class="btn green" id="addWorkerBtn">Toevoegen</button></div><p class="warn">Pincode moet uniek zijn. Zet werknemers liever op inactief dan te verwijderen. Inactieve werknemers kunnen niet meer inloggen.</p></div></div>`);$('addWorkerBtn').onclick=addWorker}

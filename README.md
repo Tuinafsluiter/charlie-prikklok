@@ -1,11 +1,17 @@
-# Tuinafsluiter Hub v3.0 Pincode Fix
+# Tuinafsluiter Hub v3.1 Werknemer Dashboard
 
 Nieuw:
-- Pincode toetsen reageren sneller op iPhone/gsm.
-- Grotere tikvlakken.
-- Minder kans dat een snelle tik niet wordt geregistreerd.
-- Touch/pointer events toegevoegd voor directe reactie.
+- Werknemers zien meteen bovenaan:
+  - huidige status
+  - vandaag gewerkt
+  - weeksaldo
+  - totaal plus/min
+  - resterend verlof
+  - open verlofaanvragen
+  - nieuwe berichten
+- Veel duidelijker voor Jordy/Lars.
 - Geen Supabase-wijziging nodig.
+- Bestaande uren blijven behouden.
 
 Upload/overschrijf:
 - index.html
