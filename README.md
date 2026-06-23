@@ -1,10 +1,11 @@
-# Tuinafsluiter Hub v3.3 Modal Fix
+# Tuinafsluiter Hub v3.5 Modal & Scroll Final
 
 Opgelost:
-- Live Start popup toont niet meer letterlijk `${sql}`.
-- SQL wordt correct in het vak geplaatst.
-- Achtergrond wordt geblokkeerd wanneer een popup open staat.
-- iPhone popup is beter leesbaar en scrollt vlotter.
+- Knop Sluiten werkt opnieuw in alle popups.
+- Klik buiten popup sluit ook de popup.
+- iPhone-scroll opnieuw soepeler gemaakt.
+- Geen agressieve body position fixed meer.
+- Live Start ruwe tekst blijft weg.
 - Geen Supabase-wijziging nodig.
 
 Upload/overschrijf:
