@@ -1,14 +1,16 @@
-# Tuinafsluiter Hub v2.3 Gerichte Chat
+# Tuinafsluiter Hub v2.4 Vergrendeling
 
 Nieuw:
-- Teamchat kan nu naar:
-  - Iedereen
-  - één specifieke persoon
-- Jos/eigenaar kan naar iedereen of naar één persoon sturen.
-- Werknemers kunnen naar iedereen of naar Jos sturen.
-- Privéberichten zijn zichtbaar voor verzender, ontvanger en Jos/eigenaar.
-- Ongelezen teller houdt rekening met persoonlijke berichten.
-- Geen nieuwe Supabase SQL nodig.
+- Knop **Vergrendel** bovenaan naast Uitloggen
+- Automatische vergrendeling na 5 minuten inactiviteit
+- Als de app langer dan 2 minuten op de achtergrond staat, moet opnieuw pincode ingegeven worden
+- Dit beschermt de app als een gsm/tablet blijft openstaan of kwijt raakt
+
+Belangrijk:
+- Dit gebruikt de bestaande pincode-login.
+- Echte Face ID/Touch ID via web/PWA is complexer en bouwen we later apart als dat nodig is.
+- Geen Supabase-wijziging nodig.
+- Geen extra kosten.
 
 Upload/overschrijf:
 - index.html
