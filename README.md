@@ -1,11 +1,11 @@
-# Tuinafsluiter Hub v2.1 Kalender Fix
+# Tuinafsluiter Hub v2.2 iPhone Kalender
 
 Opgelost:
-- Kalender kan correct naar vorige/volgende maand.
-- Maandwissel gebruikt geen UTC/tijdzone meer.
-- Bouwverlof/ADV labels vallen correct op werkdagen.
-- Weekenddagen krijgen geen bouwverlof/ADV label.
-- Kalender blijft Google Calendar-achtig.
+- Kalender past nu volledig binnen iPhone-scherm.
+- Kolommen en rijen lopen niet meer uit elkaar.
+- Op gsm worden kalenderitems als duidelijke gekleurde bolletjes getoond.
+- Op desktop blijven de tekstlabels zichtbaar.
+- Horizontale overflow in modal geblokkeerd.
 
 Geen Supabase-wijziging nodig.
 Upload/overschrijf alles naar GitHub.

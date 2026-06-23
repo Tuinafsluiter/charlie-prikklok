@@ -467,6 +467,52 @@ html,body{
  .holidayCards{grid-template-columns:1fr}.holidayNums{grid-template-columns:1fr 1fr}.calCell{min-height:70px;padding:5px}.calEvent{font-size:10px;padding:3px 4px}.calToolbar h3{font-size:18px}
 }
 
+
+/* v2.2 iPhone kalender fix */
+.modalBox{overflow-x:hidden!important;box-sizing:border-box!important}
+.holidayCalendar{width:100%!important;max-width:100%!important;overflow:hidden!important}
+.calGrid{width:100%!important;max-width:100%!important;min-width:0!important;box-sizing:border-box!important}
+.calHead b,.calCell{min-width:0!important;box-sizing:border-box!important;overflow:hidden!important}
+.calCell{word-break:normal!important}
+.calEvent{max-width:100%!important;box-sizing:border-box!important}
+
+@media(max-width:780px){
+ .modal{padding:10px!important;align-items:flex-start!important}
+ .modalBox{width:calc(100vw - 20px)!important;max-width:calc(100vw - 20px)!important;border-radius:22px!important;padding:14px!important}
+ .modalHead{gap:10px!important;align-items:flex-start!important}
+ .modalHead h2{font-size:26px!important;line-height:1.08!important;max-width:62%!important}
+ .modalHead .btn{padding:11px 14px!important;border-radius:16px!important}
+ .holidayTop{margin:4px 0 10px!important}
+ .holidayPerson{padding:10px 12px!important}
+ .holidayCards{grid-template-columns:1fr!important;gap:10px!important;margin:10px 0!important}
+ .holidayCard{padding:12px!important;border-radius:16px!important}
+ .holidayCard h3{font-size:18px!important}
+ .holidayNums{grid-template-columns:repeat(4,1fr)!important;gap:0!important}
+ .holidayNums span{padding:4px 6px!important;font-size:11px!important}
+ .holidayNums b{font-size:20px!important}
+ .infoLine{font-size:13px!important;padding:10px 12px!important;margin:8px 0 14px!important}
+ .calToolbar{gap:6px!important;margin:8px 0 10px!important;display:grid!important;grid-template-columns:auto auto auto 1fr!important;align-items:center!important}
+ .calToolbar h3{font-size:18px!important;text-align:right!important;margin:0!important}
+ .calToolbar .btn{padding:9px 10px!important;border-radius:12px!important;font-size:13px!important}
+ .calHead b{font-size:13px!important;padding:8px 0!important}
+ .calCell{min-height:62px!important;padding:5px 3px!important;border-color:#dce8e2!important}
+ .calDay{font-size:14px!important;margin-bottom:3px!important}
+ .calEvent{font-size:0!important;line-height:0!important;padding:0!important;width:10px!important;height:10px!important;border-radius:50%!important;margin:3px 2px 0 0!important;display:inline-block!important;vertical-align:top!important}
+ .calLegend{display:grid!important;grid-template-columns:1fr 1fr!important;gap:8px!important;padding:10px!important;font-size:13px!important;border-radius:14px!important}
+ .dot{width:12px!important;height:12px!important}
+}
+
+@media(max-width:420px){
+ .modalBox{padding:12px!important}
+ .modalHead h2{font-size:23px!important}
+ .holidayNums span{font-size:10px!important;padding:3px 4px!important}
+ .holidayNums b{font-size:18px!important}
+ .calCell{min-height:56px!important;padding:4px 2px!important}
+ .calDay{font-size:13px!important}
+ .calEvent{width:9px!important;height:9px!important}
+ .calLegend{font-size:12px!important}
+}
+
 </style>
 
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png?v=final">
@@ -1037,7 +1083,7 @@ $('workersBtn').onclick=()=>workersModal();
 if($('registrationsBtn'))$('registrationsBtn').onclick=()=>registrationsModal();
 
 if($('settingsBtn'))$('settingsBtn').onclick=()=>settingsModal();
-function settingsModal(){let rows=users.filter(u=>!isAdminUser(u)).map(u=>{let start=userRecs(u.id).filter(r=>Number(r.pauze_minuten)===9999).reduce((s,r)=>s+Number(r.totaal_minuten||0),0);return `<tr><td>${u.naam}</td><td>${sal(start)}</td><td><button class="btn light" onclick="editStartSaldo(${u.id})">Wijzig</button></td></tr>`}).join('');openModal('Instellingen',`<div class="two"><div><h3>Basisinstellingen</h3><table class="table"><tr><th>Instelling</th><th>Waarde</th></tr><tr><td>Standaard werkdag</td><td>8u00</td></tr><tr><td>Volledige recupdag</td><td>-8u00</td></tr><tr><td>Halve recupdag</td><td>-4u00</td></tr><tr><td>Quotes</td><td>Charlie quotes actief</td></tr><tr><td>Versie</td><td>Tuinafsluiter Hub v2.1 Kalender Fix</td></tr></table><h3>Beginsaldo plus/minuren</h3><table class="table"><tr><th>Werknemer</th><th>Beginsaldo</th><th></th></tr>${rows}</table><p class="warn">Vul hier de bestaande plus- of minuren in. Charlie rekent daarna verder vanaf dit saldo.</p></div><div><h3>App status</h3><button class="btn green" onclick="enableLocalNotifications()">🔔 Meldingen op dit toestel aanzetten</button><p class="warn">Let op: dit zijn lokale browsermeldingen. Echte iPhone-pushmeldingen naar Jos zonder de app te openen maken we als aparte koppeling.</p><div class="warn">✅ Prikklok actief<br>✅ Supabase gekoppeld<br>✅ Plusuren actief<br>✅ Excel-export actief<br>✅ Registraties beheren actief<br>✅ Mobiele weergave verbeterd<br>✅ Rhani meekijkrol voorbereid<br>✅ Ongelezen tellers actief<br>✅ Automatische app-vergrendeling actief<br>✅ Open registraties van vorige dag worden correct afgehandeld<br>✅ Verlofaanvraag meldingbadge actief<br>✅ Live start checklist toegevoegd<br>✅ Vakantiesaldo toegevoegd<br>✅ Duidelijke actiebanners toegevoegd<br>✅ Pincode sneller en gevoeliger op gsm<br>✅ Werknemer-dashboard toegevoegd<br>✅ Scrollen op gsm versoepeld<br>✅ Live Start popup hersteld<br>✅ Ruwe tekst buiten app verwijderd<br>✅ Sluiten-knop definitief hersteld<br>✅ Scrollen op gsm extra soepel gemaakt<br>✅ Officieel app-icoon toegevoegd<br>✅ Klaar voor domeinnaam<br>✅ PDF/Excel export verbeterd<br>✅ Excel/CSV download gefixt<br>✅ Live reset-knoppen toegevoegd<br>✅ Startklaar voor morgen<br>✅ Maand- en totaalsaldo toegevoegd<br>✅ Pincode via toetsenbord op pc<br>✅ Live Start reset gefixt<br>✅ Beginsaldo invoeren in uren/minuten<br>✅ Verlof en Vaste ADV/rustdagen apart instelbaar<br>✅ Activiteitenlog uitgebreid<br>✅ Verlofaanvragen actief<br>✅ Meldingen voor Jos actief</div></div></div>`)}
+function settingsModal(){let rows=users.filter(u=>!isAdminUser(u)).map(u=>{let start=userRecs(u.id).filter(r=>Number(r.pauze_minuten)===9999).reduce((s,r)=>s+Number(r.totaal_minuten||0),0);return `<tr><td>${u.naam}</td><td>${sal(start)}</td><td><button class="btn light" onclick="editStartSaldo(${u.id})">Wijzig</button></td></tr>`}).join('');openModal('Instellingen',`<div class="two"><div><h3>Basisinstellingen</h3><table class="table"><tr><th>Instelling</th><th>Waarde</th></tr><tr><td>Standaard werkdag</td><td>8u00</td></tr><tr><td>Volledige recupdag</td><td>-8u00</td></tr><tr><td>Halve recupdag</td><td>-4u00</td></tr><tr><td>Quotes</td><td>Charlie quotes actief</td></tr><tr><td>Versie</td><td>Tuinafsluiter Hub v2.2 iPhone Kalender</td></tr></table><h3>Beginsaldo plus/minuren</h3><table class="table"><tr><th>Werknemer</th><th>Beginsaldo</th><th></th></tr>${rows}</table><p class="warn">Vul hier de bestaande plus- of minuren in. Charlie rekent daarna verder vanaf dit saldo.</p></div><div><h3>App status</h3><button class="btn green" onclick="enableLocalNotifications()">🔔 Meldingen op dit toestel aanzetten</button><p class="warn">Let op: dit zijn lokale browsermeldingen. Echte iPhone-pushmeldingen naar Jos zonder de app te openen maken we als aparte koppeling.</p><div class="warn">✅ Prikklok actief<br>✅ Supabase gekoppeld<br>✅ Plusuren actief<br>✅ Excel-export actief<br>✅ Registraties beheren actief<br>✅ Mobiele weergave verbeterd<br>✅ Rhani meekijkrol voorbereid<br>✅ Ongelezen tellers actief<br>✅ Automatische app-vergrendeling actief<br>✅ Open registraties van vorige dag worden correct afgehandeld<br>✅ Verlofaanvraag meldingbadge actief<br>✅ Live start checklist toegevoegd<br>✅ Vakantiesaldo toegevoegd<br>✅ Duidelijke actiebanners toegevoegd<br>✅ Pincode sneller en gevoeliger op gsm<br>✅ Werknemer-dashboard toegevoegd<br>✅ Scrollen op gsm versoepeld<br>✅ Live Start popup hersteld<br>✅ Ruwe tekst buiten app verwijderd<br>✅ Sluiten-knop definitief hersteld<br>✅ Scrollen op gsm extra soepel gemaakt<br>✅ Officieel app-icoon toegevoegd<br>✅ Klaar voor domeinnaam<br>✅ PDF/Excel export verbeterd<br>✅ Excel/CSV download gefixt<br>✅ Live reset-knoppen toegevoegd<br>✅ Startklaar voor morgen<br>✅ Maand- en totaalsaldo toegevoegd<br>✅ Pincode via toetsenbord op pc<br>✅ Live Start reset gefixt<br>✅ Beginsaldo invoeren in uren/minuten<br>✅ Verlof en Vaste ADV/rustdagen apart instelbaar<br>✅ Activiteitenlog uitgebreid<br>✅ Verlofaanvragen actief<br>✅ Meldingen voor Jos actief</div></div></div>`)}
 function editStartSaldo(uid){
  let u=users.find(x=>Number(x.id)===Number(uid));
  let start=userRecs(uid).filter(r=>Number(r.pauze_minuten)===9999).reduce((s,r)=>s+Number(r.totaal_minuten||0),0);
@@ -1346,6 +1392,52 @@ function reportDocumentHtml(rows,s){
 .dot{display:inline-block;width:14px;height:14px;border-radius:50%;margin-right:7px;vertical-align:-2px}
 @media(max-width:780px){
  .holidayCards{grid-template-columns:1fr}.holidayNums{grid-template-columns:1fr 1fr}.calCell{min-height:70px;padding:5px}.calEvent{font-size:10px;padding:3px 4px}.calToolbar h3{font-size:18px}
+}
+
+
+/* v2.2 iPhone kalender fix */
+.modalBox{overflow-x:hidden!important;box-sizing:border-box!important}
+.holidayCalendar{width:100%!important;max-width:100%!important;overflow:hidden!important}
+.calGrid{width:100%!important;max-width:100%!important;min-width:0!important;box-sizing:border-box!important}
+.calHead b,.calCell{min-width:0!important;box-sizing:border-box!important;overflow:hidden!important}
+.calCell{word-break:normal!important}
+.calEvent{max-width:100%!important;box-sizing:border-box!important}
+
+@media(max-width:780px){
+ .modal{padding:10px!important;align-items:flex-start!important}
+ .modalBox{width:calc(100vw - 20px)!important;max-width:calc(100vw - 20px)!important;border-radius:22px!important;padding:14px!important}
+ .modalHead{gap:10px!important;align-items:flex-start!important}
+ .modalHead h2{font-size:26px!important;line-height:1.08!important;max-width:62%!important}
+ .modalHead .btn{padding:11px 14px!important;border-radius:16px!important}
+ .holidayTop{margin:4px 0 10px!important}
+ .holidayPerson{padding:10px 12px!important}
+ .holidayCards{grid-template-columns:1fr!important;gap:10px!important;margin:10px 0!important}
+ .holidayCard{padding:12px!important;border-radius:16px!important}
+ .holidayCard h3{font-size:18px!important}
+ .holidayNums{grid-template-columns:repeat(4,1fr)!important;gap:0!important}
+ .holidayNums span{padding:4px 6px!important;font-size:11px!important}
+ .holidayNums b{font-size:20px!important}
+ .infoLine{font-size:13px!important;padding:10px 12px!important;margin:8px 0 14px!important}
+ .calToolbar{gap:6px!important;margin:8px 0 10px!important;display:grid!important;grid-template-columns:auto auto auto 1fr!important;align-items:center!important}
+ .calToolbar h3{font-size:18px!important;text-align:right!important;margin:0!important}
+ .calToolbar .btn{padding:9px 10px!important;border-radius:12px!important;font-size:13px!important}
+ .calHead b{font-size:13px!important;padding:8px 0!important}
+ .calCell{min-height:62px!important;padding:5px 3px!important;border-color:#dce8e2!important}
+ .calDay{font-size:14px!important;margin-bottom:3px!important}
+ .calEvent{font-size:0!important;line-height:0!important;padding:0!important;width:10px!important;height:10px!important;border-radius:50%!important;margin:3px 2px 0 0!important;display:inline-block!important;vertical-align:top!important}
+ .calLegend{display:grid!important;grid-template-columns:1fr 1fr!important;gap:8px!important;padding:10px!important;font-size:13px!important;border-radius:14px!important}
+ .dot{width:12px!important;height:12px!important}
+}
+
+@media(max-width:420px){
+ .modalBox{padding:12px!important}
+ .modalHead h2{font-size:23px!important}
+ .holidayNums span{font-size:10px!important;padding:3px 4px!important}
+ .holidayNums b{font-size:18px!important}
+ .calCell{min-height:56px!important;padding:4px 2px!important}
+ .calDay{font-size:13px!important}
+ .calEvent{width:9px!important;height:9px!important}
+ .calLegend{font-size:12px!important}
 }
 
 </style></head><body>
