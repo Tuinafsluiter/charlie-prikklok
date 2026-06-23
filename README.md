@@ -1,15 +1,18 @@
-# Tuinafsluiter Hub v2.7 Live Start
+# Tuinafsluiter Hub v2.8 Vakantiesaldo
 
 Nieuw:
-- Nieuwe tegel: 🚀 Live start
-- Checklist voor officiële ingebruikname
-- Reset-SQL om testchat, mededelingen en activiteitenlog te wissen
-- Reset wordt NIET automatisch uitgevoerd in de app
-- Je kopieert bewust de SQL naar Supabase, zodat er geen gegevens per ongeluk verdwijnen
+- Nieuwe tegel voor Jos: 🏖️ Vakantiesaldo
+- Nieuwe knop voor werknemer: Mijn verlofsaldo
+- Toont per werknemer:
+  - jaarrecht
+  - goedgekeurde verlofdagen
+  - openstaande aanvragen
+  - afgekeurde aanvragen
+  - resterende dagen
+- Standaard jaarrecht staat voorlopig op 20 dagen per werknemer.
+- Geen nieuwe Supabase SQL nodig.
+- Bestaande uren blijven behouden.
 
 Upload/overschrijf:
 - index.html
 - README.md
-
-Geen nieuwe Supabase-tabel nodig.
-Bestaande uren blijven behouden zolang je geen delete uitvoert op urenregistratie.
