@@ -1,10 +1,11 @@
-# Tuinafsluiter Hub v3.6 Sluiten Fix
+# Tuinafsluiter Hub v3.7 Smooth Scroll
 
-Opgelost:
-- Knop Sluiten werkte niet door een foutieve lus in closeModal.
-- Sluiten werkt nu opnieuw in alle popups.
-- Sluiten-knop is groter en blijft bovenaan zichtbaar.
-- Klik buiten popup sluit ook de popup.
+Opgelost/verbeterd:
+- Scrollen op gsm soepeler gemaakt.
+- Zware achtergrond-effecten uitgeschakeld op mobiel.
+- Zware blur-effecten uitgeschakeld.
+- Minder schaduw en rendering-lag op mobiel.
+- Sluiten-knop blijft werken.
 - Geen Supabase-wijziging nodig.
 
 Upload/overschrijf:
