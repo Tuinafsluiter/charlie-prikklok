@@ -1,16 +1,10 @@
-# Tuinafsluiter Hub v2.9 Actiebanners
+# Tuinafsluiter Hub v3.0 Pincode Fix
 
 Nieuw:
-- Grote duidelijke statusbanner na acties:
-  - ✅ INGECHECKT
-  - ☕ PAUZE GESTART
-  - ▶️ PAUZE GESTOPT
-  - 🏁 UITGECHECKT
-  - 📨 VERLOFAANVRAAG VERZONDEN
-  - 💬 BERICHT VERSTUURD
-  - 📢 MEDEDELING GEPLAATST
-- Charlie quote blijft, maar onder de duidelijke actie.
-- Veel duidelijker voor Jordy/Lars op gsm.
+- Pincode toetsen reageren sneller op iPhone/gsm.
+- Grotere tikvlakken.
+- Minder kans dat een snelle tik niet wordt geregistreerd.
+- Touch/pointer events toegevoegd voor directe reactie.
 - Geen Supabase-wijziging nodig.
 
 Upload/overschrijf:

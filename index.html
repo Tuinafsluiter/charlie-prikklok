@@ -116,6 +116,27 @@ body {
 @keyframes bannerIn{from{opacity:0;transform:translate(-50%,-12px)}to{opacity:1;transform:translate(-50%,0)}}
 @media(max-width:780px){.actionBanner h2{font-size:24px}.actionBanner p{font-size:16px}}
 
+
+/* v3.0 pincode responsiever op gsm */
+.keypad button{
+  touch-action:manipulation!important;
+  -webkit-user-select:none!important;
+  user-select:none!important;
+  min-height:72px!important;
+  font-size:28px!important;
+}
+.dots span{
+  min-width:58px!important;
+  min-height:58px!important;
+}
+.bigbtn{
+  touch-action:manipulation!important;
+}
+@media(max-width:780px){
+  .keypad{gap:12px!important}
+  .keypad button{min-height:74px!important;font-size:30px!important}
+}
+
 </style>
 </head>
 <body><div class="app"><div class="shell">
@@ -230,7 +251,34 @@ function msg(t){$('message').textContent=t;$('message').classList.remove('hidden
  if(navigator.vibrate)try{navigator.vibrate(45)}catch(e){}
 }
 function err(e){return String(e.message||e).slice(0,220)}
-function drawDots(){[...$('dots').children].forEach((s,i)=>s.textContent=pin[i]?'•':'–')}function keypad(){['1','2','3','4','5','6','7','8','9','0','⌫'].forEach(n=>{let b=document.createElement('button');b.textContent=n;if(n==='0')b.className='wide';if(n==='⌫')b.className='del';b.onclick=()=>{if(n==='⌫')pin=pin.slice(0,-1);else if(pin.length<4)pin+=n;drawDots();if(pin.length===4)setTimeout(login,120)};$('keypad').appendChild(b)})}keypad();$('loginBtn').onclick=login;
+function drawDots(){[...$('dots').children].forEach((s,i)=>s.textContent=pin[i]?'•':'–')}
+function handlePinKey(n){
+ if(n==='⌫')pin=pin.slice(0,-1);
+ else if(pin.length<4)pin+=n;
+ drawDots();
+ if(pin.length===4)setTimeout(login,80);
+}
+function keypad(){
+ ['1','2','3','4','5','6','7','8','9','0','⌫'].forEach(n=>{
+  let b=document.createElement('button');
+  b.textContent=n;
+  if(n==='0')b.className='wide';
+  if(n==='⌫')b.className='del';
+  let last=0;
+  let press=(ev)=>{
+    ev.preventDefault();
+    let now=Date.now();
+    if(now-last<120)return;
+    last=now;
+    handlePinKey(n);
+  };
+  b.addEventListener('pointerdown',press,{passive:false});
+  b.addEventListener('touchstart',press,{passive:false});
+  b.addEventListener('click',(ev)=>ev.preventDefault());
+  $('keypad').appendChild(b);
+ })
+}
+keypad();$('loginBtn').onclick=login;
 async function load(){
  users=await sb('/werknemers?select=*&actief=eq.true&order=id.asc');
  records=await sb('/urenregistratie?select=*&order=datum.desc,inkloktijd.desc&limit=300');
@@ -366,7 +414,7 @@ $('workersBtn').onclick=()=>workersModal();
 if($('registrationsBtn'))$('registrationsBtn').onclick=()=>registrationsModal();
 
 if($('settingsBtn'))$('settingsBtn').onclick=()=>settingsModal();
-function settingsModal(){let rows=users.filter(u=>!isAdminUser(u)).map(u=>{let start=userRecs(u.id).filter(r=>Number(r.pauze_minuten)===9999).reduce((s,r)=>s+Number(r.totaal_minuten||0),0);return `<tr><td>${u.naam}</td><td>${sal(start)}</td><td><button class="btn light" onclick="editStartSaldo(${u.id})">Wijzig</button></td></tr>`}).join('');openModal('Instellingen',`<div class="two"><div><h3>Basisinstellingen</h3><table class="table"><tr><th>Instelling</th><th>Waarde</th></tr><tr><td>Standaard werkdag</td><td>8u00</td></tr><tr><td>Volledige recupdag</td><td>-8u00</td></tr><tr><td>Halve recupdag</td><td>-4u00</td></tr><tr><td>Quotes</td><td>Charlie quotes actief</td></tr><tr><td>Versie</td><td>Tuinafsluiter Hub v2.9 Actiebanners</td></tr></table><h3>Beginsaldo plus/minuren</h3><table class="table"><tr><th>Werknemer</th><th>Beginsaldo</th><th></th></tr>${rows}</table><p class="warn">Vul hier de bestaande plus- of minuren in. Charlie rekent daarna verder vanaf dit saldo.</p></div><div><h3>App status</h3><button class="btn green" onclick="enableLocalNotifications()">🔔 Meldingen op dit toestel aanzetten</button><p class="warn">Let op: dit zijn lokale browsermeldingen. Echte iPhone-pushmeldingen naar Jos zonder de app te openen maken we als aparte koppeling.</p><div class="warn">✅ Prikklok actief<br>✅ Supabase gekoppeld<br>✅ Plusuren actief<br>✅ Excel-export actief<br>✅ Registraties beheren actief<br>✅ Mobiele weergave verbeterd<br>✅ Rhani meekijkrol voorbereid<br>✅ Ongelezen tellers actief<br>✅ Automatische app-vergrendeling actief<br>✅ Open registraties van vorige dag worden correct afgehandeld<br>✅ Verlofaanvraag meldingbadge actief<br>✅ Live start checklist toegevoegd<br>✅ Vakantiesaldo toegevoegd<br>✅ Duidelijke actiebanners toegevoegd<br>✅ Activiteitenlog uitgebreid<br>✅ Verlofaanvragen actief<br>✅ Meldingen voor Jos actief</div></div></div>`)}
+function settingsModal(){let rows=users.filter(u=>!isAdminUser(u)).map(u=>{let start=userRecs(u.id).filter(r=>Number(r.pauze_minuten)===9999).reduce((s,r)=>s+Number(r.totaal_minuten||0),0);return `<tr><td>${u.naam}</td><td>${sal(start)}</td><td><button class="btn light" onclick="editStartSaldo(${u.id})">Wijzig</button></td></tr>`}).join('');openModal('Instellingen',`<div class="two"><div><h3>Basisinstellingen</h3><table class="table"><tr><th>Instelling</th><th>Waarde</th></tr><tr><td>Standaard werkdag</td><td>8u00</td></tr><tr><td>Volledige recupdag</td><td>-8u00</td></tr><tr><td>Halve recupdag</td><td>-4u00</td></tr><tr><td>Quotes</td><td>Charlie quotes actief</td></tr><tr><td>Versie</td><td>Tuinafsluiter Hub v3.0 Pincode Fix</td></tr></table><h3>Beginsaldo plus/minuren</h3><table class="table"><tr><th>Werknemer</th><th>Beginsaldo</th><th></th></tr>${rows}</table><p class="warn">Vul hier de bestaande plus- of minuren in. Charlie rekent daarna verder vanaf dit saldo.</p></div><div><h3>App status</h3><button class="btn green" onclick="enableLocalNotifications()">🔔 Meldingen op dit toestel aanzetten</button><p class="warn">Let op: dit zijn lokale browsermeldingen. Echte iPhone-pushmeldingen naar Jos zonder de app te openen maken we als aparte koppeling.</p><div class="warn">✅ Prikklok actief<br>✅ Supabase gekoppeld<br>✅ Plusuren actief<br>✅ Excel-export actief<br>✅ Registraties beheren actief<br>✅ Mobiele weergave verbeterd<br>✅ Rhani meekijkrol voorbereid<br>✅ Ongelezen tellers actief<br>✅ Automatische app-vergrendeling actief<br>✅ Open registraties van vorige dag worden correct afgehandeld<br>✅ Verlofaanvraag meldingbadge actief<br>✅ Live start checklist toegevoegd<br>✅ Vakantiesaldo toegevoegd<br>✅ Duidelijke actiebanners toegevoegd<br>✅ Pincode sneller en gevoeliger op gsm<br>✅ Activiteitenlog uitgebreid<br>✅ Verlofaanvragen actief<br>✅ Meldingen voor Jos actief</div></div></div>`)}
 function editStartSaldo(uid){let u=users.find(x=>Number(x.id)===Number(uid));let start=userRecs(uid).filter(r=>Number(r.pauze_minuten)===9999).reduce((s,r)=>s+Number(r.totaal_minuten||0),0);openModal('Beginsaldo '+(u?.naam||''),`<div class="form"><label>Plus/minuren in minuten</label><input id="startSaldoMin" type="number" value="${start}"><p class="warn">Voorbeelden: +2u30 = 150, -3u15 = -195, +8u00 = 480.</p><button class="btn green" id="saveStartSaldoBtn">Opslaan</button><button class="btn light" id="backSettingsBtn">Terug</button></div>`);$('saveStartSaldoBtn').onclick=()=>saveStartSaldo(uid);$('backSettingsBtn').onclick=settingsModal}
 async function saveStartSaldo(uid){try{let val=Number($('startSaldoMin').value||0);let existing=userRecs(uid).filter(r=>Number(r.pauze_minuten)===9999);for(let r of existing){await sb('/urenregistratie?id=eq.'+r.id,{method:'DELETE'})}if(val!==0){await sb('/urenregistratie',{method:'POST',headers:{Prefer:'return=representation'},body:JSON.stringify({medewerker_id:uid,datum:'2026-01-01',pauze_minuten:9999,totaal_minuten:val,uitkloktijd:iso()})})}msg('Beginsaldo opgeslagen.');await load();settingsModal()}catch(e){msg('Opslagfout: '+err(e))}}
 function workersModal(){let rows=users.map(u=>`<tr><td>${u.naam}</td><td>${u.pincode||''}</td><td>${u.rol||''}</td><td>${u.actief?'Actief':'Inactief'}</td><td><button class="btn light" onclick="editWorker(${u.id})">Wijzig</button></td></tr>`).join('');openModal('Werknemers beheren',`<div class="two"><div><h3>Bestaande werknemers</h3><table class="table"><tr><th>Naam</th><th>Pincode</th><th>Rol</th><th>Status</th><th></th></tr>${rows}</table></div><div><h3>Nieuwe werknemer</h3><div class="form"><input id="newName" placeholder="Naam"><input id="newPin" placeholder="Pincode, bv. 1234" maxlength="4"><select id="newRole"><option value="chauffeur">chauffeur</option><option value="magazijnier">magazijnier</option><option value="admin">admin</option><option value="meekijk">meekijk</option></select><button class="btn green" id="addWorkerBtn">Toevoegen</button></div><p class="warn">Pincode moet uniek zijn. Zet werknemers liever op inactief dan te verwijderen. Inactieve werknemers kunnen niet meer inloggen.</p></div></div>`);$('addWorkerBtn').onclick=addWorker}
