@@ -1,15 +1,15 @@
-# Tuinafsluiter Hub v1.4 Saldo Overzicht
+# Tuinafsluiter Hub v1.5 Toetsenbord PIN
 
-Toegevoegd:
-- Nieuwe tegel: Maand / totaal saldo
-- Per werknemer:
-  - gewerkt deze maand
-  - saldo deze maand
-  - totaal gewerkt
-  - totaal saldo
-- Export-samenvatting toont nu ook totaal saldo app.
-- CSV bevat onderaan totalen per werknemer.
+Laatste comfort-update voor live gebruik.
+
+Nieuw:
+- Op pc kan Jos de pincode intypen met het toetsenbord.
+- Cijfers 0-9 werken.
+- Backspace wist een cijfer.
+- Enter bevestigt de login.
+- Gsm-toetsenbord blijft gewoon werken zoals voordien.
 - Geen Supabase-wijziging nodig.
-- Bestaande uren blijven behouden.
 
 Upload/overschrijf alles naar GitHub.
+
+Daarna niets meer wijzigen en de app gewoon in gebruik nemen.
