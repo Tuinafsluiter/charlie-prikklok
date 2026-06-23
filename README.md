@@ -1,11 +1,10 @@
-# Tuinafsluiter Hub v3.5 Modal & Scroll Final
+# Tuinafsluiter Hub v3.6 Sluiten Fix
 
 Opgelost:
-- Knop Sluiten werkt opnieuw in alle popups.
+- Knop Sluiten werkte niet door een foutieve lus in closeModal.
+- Sluiten werkt nu opnieuw in alle popups.
+- Sluiten-knop is groter en blijft bovenaan zichtbaar.
 - Klik buiten popup sluit ook de popup.
-- iPhone-scroll opnieuw soepeler gemaakt.
-- Geen agressieve body position fixed meer.
-- Live Start ruwe tekst blijft weg.
 - Geen Supabase-wijziging nodig.
 
 Upload/overschrijf:

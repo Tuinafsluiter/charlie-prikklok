@@ -328,6 +328,24 @@ html,body,.app,main,#workView,#loginView{
   #liveSql{min-height:360px!important;font-size:13px!important}
 }
 
+
+/* v3.6 sluitknop definitief */
+#closeModal{
+  position:relative!important;
+  z-index:10001!important;
+  pointer-events:auto!important;
+  touch-action:manipulation!important;
+  min-height:46px!important;
+  padding:12px 18px!important;
+}
+.modalHead{
+  position:sticky!important;
+  top:0!important;
+  z-index:10000!important;
+  background:#f7fbf8!important;
+  padding-bottom:10px!important;
+}
+
 </style>
 </head>
 <body><div class="app"><div class="shell">
@@ -592,19 +610,19 @@ function noteActivity(){lastActivity=Date.now()}
 setInterval(()=>{if(current && Date.now()-lastActivity>AUTO_LOCK_MS)lockApp('Automatisch vergrendeld na 5 minuten inactiviteit.')},30000);
 document.addEventListener('visibilitychange',()=>{if(document.hidden && current){sessionStorage.setItem('hub_went_hidden_at',String(Date.now()))}else if(current){let t=Number(sessionStorage.getItem('hub_went_hidden_at')||0);if(t && Date.now()-t>2*60*1000)lockApp('Vergrendeld omdat de app even gesloten was.')}})
 
-function openModal(title,html){
+function openModal(title,contentHtml){
  $('modalTitle').textContent=title;
- $('modalContent').innerHTML=html;
+ $('modalContent').innerHTML=contentHtml;
  document.body.classList.add('modalOpen');
  $('adminModal').classList.add('show');
 }
 function closeModal(){
- closeModal();
+ $('adminModal').classList.remove('show');
  document.body.classList.remove('modalOpen');
 }
 document.addEventListener('click',function(e){
- if(e.target&&e.target.id==='closeModal')closeModal();
- if(e.target&&e.target.id==='adminModal')closeModal();
+ if(e.target&&e.target.closest&&e.target.closest('#closeModal')){e.preventDefault();closeModal();return;}
+ if(e.target&&e.target.id==='adminModal'){closeModal();return;}
 });
 $('plusBtn').onclick=()=>{let rows=users.filter(u=>!isAdminUser(u)).map(u=>{let m=monthSaldo(u.id),w=weekSaldo(u.id),t=totalSaldo(u.id);return `<tr><td>${u.naam}</td><td>${dur(dayWork(u.id))}</td><td class="${w>=0?'plus':'minus'}">${sal(w)}</td><td class="${m>=0?'plus':'minus'}">${sal(m)}</td><td class="${t>=0?'plus':'minus'}">${sal(t)}</td><td>${recupDays(t)} dag(en)</td></tr>`}).join('');openModal('Plusuren',`<table class="table"><tr><th>Werknemer</th><th>Vandaag</th><th>Deze week</th><th>Deze maand</th><th>Totaal saldo</th><th>Recup mogelijk</th></tr>${rows}</table><p class="warn">Regel: 8u00 per werkdag is nul. Meer is plus, minder is min. Recup mogelijk wordt berekend op het totale positieve saldo.</p>`)};
 
@@ -649,7 +667,7 @@ $('workersBtn').onclick=()=>workersModal();
 if($('registrationsBtn'))$('registrationsBtn').onclick=()=>registrationsModal();
 
 if($('settingsBtn'))$('settingsBtn').onclick=()=>settingsModal();
-function settingsModal(){let rows=users.filter(u=>!isAdminUser(u)).map(u=>{let start=userRecs(u.id).filter(r=>Number(r.pauze_minuten)===9999).reduce((s,r)=>s+Number(r.totaal_minuten||0),0);return `<tr><td>${u.naam}</td><td>${sal(start)}</td><td><button class="btn light" onclick="editStartSaldo(${u.id})">Wijzig</button></td></tr>`}).join('');openModal('Instellingen',`<div class="two"><div><h3>Basisinstellingen</h3><table class="table"><tr><th>Instelling</th><th>Waarde</th></tr><tr><td>Standaard werkdag</td><td>8u00</td></tr><tr><td>Volledige recupdag</td><td>-8u00</td></tr><tr><td>Halve recupdag</td><td>-4u00</td></tr><tr><td>Quotes</td><td>Charlie quotes actief</td></tr><tr><td>Versie</td><td>Tuinafsluiter Hub v3.5 Modal & Scroll Final</td></tr></table><h3>Beginsaldo plus/minuren</h3><table class="table"><tr><th>Werknemer</th><th>Beginsaldo</th><th></th></tr>${rows}</table><p class="warn">Vul hier de bestaande plus- of minuren in. Charlie rekent daarna verder vanaf dit saldo.</p></div><div><h3>App status</h3><button class="btn green" onclick="enableLocalNotifications()">🔔 Meldingen op dit toestel aanzetten</button><p class="warn">Let op: dit zijn lokale browsermeldingen. Echte iPhone-pushmeldingen naar Jos zonder de app te openen maken we als aparte koppeling.</p><div class="warn">✅ Prikklok actief<br>✅ Supabase gekoppeld<br>✅ Plusuren actief<br>✅ Excel-export actief<br>✅ Registraties beheren actief<br>✅ Mobiele weergave verbeterd<br>✅ Rhani meekijkrol voorbereid<br>✅ Ongelezen tellers actief<br>✅ Automatische app-vergrendeling actief<br>✅ Open registraties van vorige dag worden correct afgehandeld<br>✅ Verlofaanvraag meldingbadge actief<br>✅ Live start checklist toegevoegd<br>✅ Vakantiesaldo toegevoegd<br>✅ Duidelijke actiebanners toegevoegd<br>✅ Pincode sneller en gevoeliger op gsm<br>✅ Werknemer-dashboard toegevoegd<br>✅ Scrollen op gsm versoepeld<br>✅ Live Start popup hersteld<br>✅ Ruwe tekst buiten app verwijderd<br>✅ Sluiten-knop en iPhone scroll hersteld<br>✅ Activiteitenlog uitgebreid<br>✅ Verlofaanvragen actief<br>✅ Meldingen voor Jos actief</div></div></div>`)}
+function settingsModal(){let rows=users.filter(u=>!isAdminUser(u)).map(u=>{let start=userRecs(u.id).filter(r=>Number(r.pauze_minuten)===9999).reduce((s,r)=>s+Number(r.totaal_minuten||0),0);return `<tr><td>${u.naam}</td><td>${sal(start)}</td><td><button class="btn light" onclick="editStartSaldo(${u.id})">Wijzig</button></td></tr>`}).join('');openModal('Instellingen',`<div class="two"><div><h3>Basisinstellingen</h3><table class="table"><tr><th>Instelling</th><th>Waarde</th></tr><tr><td>Standaard werkdag</td><td>8u00</td></tr><tr><td>Volledige recupdag</td><td>-8u00</td></tr><tr><td>Halve recupdag</td><td>-4u00</td></tr><tr><td>Quotes</td><td>Charlie quotes actief</td></tr><tr><td>Versie</td><td>Tuinafsluiter Hub v3.6 Sluiten Fix</td></tr></table><h3>Beginsaldo plus/minuren</h3><table class="table"><tr><th>Werknemer</th><th>Beginsaldo</th><th></th></tr>${rows}</table><p class="warn">Vul hier de bestaande plus- of minuren in. Charlie rekent daarna verder vanaf dit saldo.</p></div><div><h3>App status</h3><button class="btn green" onclick="enableLocalNotifications()">🔔 Meldingen op dit toestel aanzetten</button><p class="warn">Let op: dit zijn lokale browsermeldingen. Echte iPhone-pushmeldingen naar Jos zonder de app te openen maken we als aparte koppeling.</p><div class="warn">✅ Prikklok actief<br>✅ Supabase gekoppeld<br>✅ Plusuren actief<br>✅ Excel-export actief<br>✅ Registraties beheren actief<br>✅ Mobiele weergave verbeterd<br>✅ Rhani meekijkrol voorbereid<br>✅ Ongelezen tellers actief<br>✅ Automatische app-vergrendeling actief<br>✅ Open registraties van vorige dag worden correct afgehandeld<br>✅ Verlofaanvraag meldingbadge actief<br>✅ Live start checklist toegevoegd<br>✅ Vakantiesaldo toegevoegd<br>✅ Duidelijke actiebanners toegevoegd<br>✅ Pincode sneller en gevoeliger op gsm<br>✅ Werknemer-dashboard toegevoegd<br>✅ Scrollen op gsm versoepeld<br>✅ Live Start popup hersteld<br>✅ Ruwe tekst buiten app verwijderd<br>✅ Sluiten-knop definitief hersteld<br>✅ iPhone scroll hersteld<br>✅ Activiteitenlog uitgebreid<br>✅ Verlofaanvragen actief<br>✅ Meldingen voor Jos actief</div></div></div>`)}
 function editStartSaldo(uid){let u=users.find(x=>Number(x.id)===Number(uid));let start=userRecs(uid).filter(r=>Number(r.pauze_minuten)===9999).reduce((s,r)=>s+Number(r.totaal_minuten||0),0);openModal('Beginsaldo '+(u?.naam||''),`<div class="form"><label>Plus/minuren in minuten</label><input id="startSaldoMin" type="number" value="${start}"><p class="warn">Voorbeelden: +2u30 = 150, -3u15 = -195, +8u00 = 480.</p><button class="btn green" id="saveStartSaldoBtn">Opslaan</button><button class="btn light" id="backSettingsBtn">Terug</button></div>`);$('saveStartSaldoBtn').onclick=()=>saveStartSaldo(uid);$('backSettingsBtn').onclick=settingsModal}
 async function saveStartSaldo(uid){try{let val=Number($('startSaldoMin').value||0);let existing=userRecs(uid).filter(r=>Number(r.pauze_minuten)===9999);for(let r of existing){await sb('/urenregistratie?id=eq.'+r.id,{method:'DELETE'})}if(val!==0){await sb('/urenregistratie',{method:'POST',headers:{Prefer:'return=representation'},body:JSON.stringify({medewerker_id:uid,datum:'2026-01-01',pauze_minuten:9999,totaal_minuten:val,uitkloktijd:iso()})})}msg('Beginsaldo opgeslagen.');await load();settingsModal()}catch(e){msg('Opslagfout: '+err(e))}}
 function workersModal(){let rows=users.map(u=>`<tr><td>${u.naam}</td><td>${u.pincode||''}</td><td>${u.rol||''}</td><td>${u.actief?'Actief':'Inactief'}</td><td><button class="btn light" onclick="editWorker(${u.id})">Wijzig</button></td></tr>`).join('');openModal('Werknemers beheren',`<div class="two"><div><h3>Bestaande werknemers</h3><table class="table"><tr><th>Naam</th><th>Pincode</th><th>Rol</th><th>Status</th><th></th></tr>${rows}</table></div><div><h3>Nieuwe werknemer</h3><div class="form"><input id="newName" placeholder="Naam"><input id="newPin" placeholder="Pincode, bv. 1234" maxlength="4"><select id="newRole"><option value="chauffeur">chauffeur</option><option value="magazijnier">magazijnier</option><option value="admin">admin</option><option value="meekijk">meekijk</option></select><button class="btn green" id="addWorkerBtn">Toevoegen</button></div><p class="warn">Pincode moet uniek zijn. Zet werknemers liever op inactief dan te verwijderen. Inactieve werknemers kunnen niet meer inloggen.</p></div></div>`);$('addWorkerBtn').onclick=addWorker}
