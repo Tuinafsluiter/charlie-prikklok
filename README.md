@@ -1,12 +1,14 @@
-# Tuinafsluiter Hub v1.9 Vrij Verlof Vaste ADV
+# Tuinafsluiter Hub v2.0 Vakantiekalender
 
-Correctie:
-- Werknemers kunnen geen ADV aanvragen.
-- Werknemers kunnen alleen vrije verlofdagen aanvragen.
-- Vrije verlofdagen zijn per werknemer instelbaar, standaard 6 dagen.
-- Vaste ADV/rustdagen blijven zichtbaar en kunnen door Jos/Admin vastgelegd worden.
-- Bouwkalender blijft zichtbaar.
-- Rhani staat niet in vakantiesaldo.
+Professionele verlofmodule:
+- Kaarten voor vrije verlofdagen en vaste ADV/rustdagen.
+- Google Calendar-achtige maandkalender.
+- Kleuren voor verlof, aanvraag, ADV/rustdag, feestdag, bouwverlof en verplaatste feestdag.
+- Lange uitlegtekst vervangen door korte professionele statusregel.
+- Vrije verlofdagen kunnen aangevraagd worden.
+- ADV/rustdagen en bouwverlof liggen vast volgens bedrijfsplanning.
+- Grote vakantie: 20/07 t.e.m. 07/08.
+- Schoolvakanties worden niet gevolgd.
 
 Geen nieuwe Supabase SQL nodig.
 Upload/overschrijf alles naar GitHub.
