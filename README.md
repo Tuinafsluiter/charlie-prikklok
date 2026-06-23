@@ -1,13 +1,26 @@
-# Tuinafsluiter Hub v1.9 Security
+# Tuinafsluiter Hub v2.0 Rhani Meekijkrol
 
-Veilige beveiligingsstap op de stabiele basis.
+Veilige volgende stap.
 
 Nieuw:
-- Als een werknemer inactief wordt gezet, kan hij/zij niet meer inloggen.
-- Als iemand al open staat in de app en daarna inactief wordt gezet, wordt hij/zij bij de volgende refresh/load automatisch uitgelogd.
-- Extra bevestiging wanneer je iemand op inactief zet.
-- Geen databasewijziging nodig.
+- Nieuwe rol: `meekijk`
+- Rhani kan als meekijker dashboard en overzichten bekijken.
+- Meekijkers zien geen gevoelige beheerknoppen:
+  - Werknemers
+  - Registraties
+  - Instellingen
+  - Verlof/Ziekte/Recup registreren
+  - Meldingen/aanvragen goedkeuren
+- Jos blijft eigenaar/beheerder met volledige rechten.
 - Bestaande uren blijven behouden.
+- Geen Supabase-wijziging nodig.
+
+Gebruik:
+1. Login als Jos.
+2. Ga naar Werknemers.
+3. Zet Rhani als werknemer met rol `meekijk`.
+4. Geef haar een pincode.
+5. Zij kan dan meekijken zonder per ongeluk iets aan te passen.
 
 Upload/overschrijf:
 - index.html
