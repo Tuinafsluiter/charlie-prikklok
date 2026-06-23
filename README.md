@@ -1,15 +1,15 @@
-# Tuinafsluiter Hub v2.6 Verlofmelding
+# Tuinafsluiter Hub v2.7 Live Start
 
 Nieuw:
-- Bij verlofaanvraag voor 1 dag moet werknemer enkel 'Van' invullen.
-- 'Tot en met' is optioneel.
-- Als 'Tot en met' leeg blijft, gebruikt Charlie automatisch dezelfde datum als 'Van'.
-- Jos krijgt een duidelijker meldingsbadge op 'Meldingen / aanvragen'.
-- Dashboard toont een Charlie-banner bij openstaande verlofaanvragen.
+- Nieuwe tegel: 🚀 Live start
+- Checklist voor officiële ingebruikname
+- Reset-SQL om testchat, mededelingen en activiteitenlog te wissen
+- Reset wordt NIET automatisch uitgevoerd in de app
+- Je kopieert bewust de SQL naar Supabase, zodat er geen gegevens per ongeluk verdwijnen
 
 Upload/overschrijf:
 - index.html
 - README.md
 
-Geen Supabase-wijziging nodig.
-Bestaande uren blijven behouden.
+Geen nieuwe Supabase-tabel nodig.
+Bestaande uren blijven behouden zolang je geen delete uitvoert op urenregistratie.
