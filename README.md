@@ -1,21 +1,10 @@
-# Tuinafsluiter Hub v1.6 Live Reset Fix
+# Tuinafsluiter Hub v1.7 Beginsaldo Uren
 
-Laatste fix voor live start.
-
-Opgelost:
-- Live Start reset wist nu hub_items via de app:
-  - teamchat
-  - mededelingen
-  - activiteitenlog
-- Live Start kan ook alle urenregistraties wissen.
-- De app controleert na reset of de tabel echt leeg is.
-- SQL fallback staat duidelijk in Live Start.
-- Werknemers en pincodes blijven behouden.
-- Geen nieuwe Supabase SQL nodig.
+Laatste praktische verbetering:
+- Beginsaldo kan nu ingegeven worden als uren + minuten.
+- Je kiest Plusuren (+) of Minuren (-).
+- Voorbeeld: Jordy +37u00 = Plusuren, uren 37, minuten 0.
+- Intern blijft alles correct in minuten opgeslagen.
+- Geen Supabase-wijziging nodig.
 
 Upload/overschrijf alles naar GitHub.
-Daarna testen:
-1. Zet een testbericht in Teamchat.
-2. Ga naar Live Start.
-3. Klik Wis chat/mededelingen/activiteitenlog.
-4. Controleer Supabase hub_items = 0 records.
