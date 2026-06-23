@@ -1,21 +1,15 @@
-# Tuinafsluiter Hub v2.2 Activiteitenlog
-
-Volgende veilige stap.
+# Tuinafsluiter Hub v2.3 Gerichte Chat
 
 Nieuw:
-- Activiteitenlog verder uitgebreid
-- Registratie-aanpassingen worden gelogd
-- Verlof/ziekte/recup-registraties worden gelogd
-- Teamchatberichten worden gelogd
-- Mededelingen worden gelogd
-- Handig voor Jos/Rhani-controle zonder extra kosten
+- Teamchat kan nu naar:
+  - Iedereen
+  - één specifieke persoon
+- Jos/eigenaar kan naar iedereen of naar één persoon sturen.
+- Werknemers kunnen naar iedereen of naar Jos sturen.
+- Privéberichten zijn zichtbaar voor verzender, ontvanger en Jos/eigenaar.
+- Ongelezen teller houdt rekening met persoonlijke berichten.
+- Geen nieuwe Supabase SQL nodig.
 
 Upload/overschrijf:
 - index.html
 - README.md
-
-Supabase:
-- gebruikt de bestaande hub_items tabel
-- geen nieuwe SQL nodig
-
-Bestaande uren blijven behouden.
