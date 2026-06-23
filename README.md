@@ -1,14 +1,11 @@
-# Tuinafsluiter Hub v2.0 Vakantiekalender
+# Tuinafsluiter Hub v2.1 Kalender Fix
 
-Professionele verlofmodule:
-- Kaarten voor vrije verlofdagen en vaste ADV/rustdagen.
-- Google Calendar-achtige maandkalender.
-- Kleuren voor verlof, aanvraag, ADV/rustdag, feestdag, bouwverlof en verplaatste feestdag.
-- Lange uitlegtekst vervangen door korte professionele statusregel.
-- Vrije verlofdagen kunnen aangevraagd worden.
-- ADV/rustdagen en bouwverlof liggen vast volgens bedrijfsplanning.
-- Grote vakantie: 20/07 t.e.m. 07/08.
-- Schoolvakanties worden niet gevolgd.
+Opgelost:
+- Kalender kan correct naar vorige/volgende maand.
+- Maandwissel gebruikt geen UTC/tijdzone meer.
+- Bouwverlof/ADV labels vallen correct op werkdagen.
+- Weekenddagen krijgen geen bouwverlof/ADV label.
+- Kalender blijft Google Calendar-achtig.
 
-Geen nieuwe Supabase SQL nodig.
+Geen Supabase-wijziging nodig.
 Upload/overschrijf alles naar GitHub.

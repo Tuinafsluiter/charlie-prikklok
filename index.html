@@ -810,14 +810,21 @@ let _holidayCalMonth='2026-07', _holidayCalUid=null;
 const MONTH_NAMES=['Januari','Februari','Maart','April','Mei','Juni','Juli','Augustus','September','Oktober','November','December'];
 function dateIso(y,m,d){return y+'-'+String(m).padStart(2,'0')+'-'+String(d).padStart(2,'0')}
 function monthLabel(ym){let [y,m]=ym.split('-').map(Number);return MONTH_NAMES[m-1]+' '+y}
-function shiftMonth(ym,delta){let [y,m]=ym.split('-').map(Number);let d=new Date(y,m-1+delta,1);return d.toISOString().slice(0,7)}
+function shiftMonth(ym,delta){
+ let [y,m]=ym.split('-').map(Number);
+ m += delta;
+ while(m<1){m+=12;y--}
+ while(m>12){m-=12;y++}
+ return y+'-'+String(m).padStart(2,'0');
+}
+function isWeekendIso(date){let [y,m,d]=date.split('-').map(Number);let day=new Date(y,m-1,d).getDay();return day===0||day===6}
 function holidayEventForDate(date,uid=null){
  let c=getHolidayConfig().calendar||BUILDING_CALENDAR_2026;
  let ev=[];
- if((c.bouwverlof||[]).includes(date))ev.push({label:'Bouwverlof',cls:'bouw'});
- if((c.advRustdagen||[]).includes(date))ev.push({label:'ADV / Rustdag',cls:'adv'});
+ if((c.bouwverlof||[]).includes(date)&&!isWeekendIso(date))ev.push({label:'Bouwverlof',cls:'bouw'});
+ if((c.advRustdagen||[]).includes(date)&&!isWeekendIso(date))ev.push({label:'ADV / Rustdag',cls:'adv'});
  if((c.feestdagen||[]).includes(date))ev.push({label:'Feestdag',cls:'feest'});
- if((c.verplaatsteFeestdagen||[]).includes(date))ev.push({label:'Verplaatst',cls:'verplaatst'});
+ if((c.verplaatsteFeestdagen||[]).includes(date)&&!isWeekendIso(date))ev.push({label:'Verplaatst',cls:'verplaatst'});
  let rs=records.filter(r=>String(r.datum||'')===date&&(uid==null||Number(r.medewerker_id)===Number(uid)));
  rs.forEach(r=>{
   let c=calc(r);
@@ -837,8 +844,8 @@ function calendarHtml(uid=null,ym=null){
  let startDate=new Date(y,m-1,1-mondayOffset);
  let cells=[];
  for(let i=0;i<42;i++){
-  let d=new Date(startDate);d.setDate(startDate.getDate()+i);
-  let iso=d.toISOString().slice(0,10), inMonth=d.getMonth()===(m-1);
+  let d=new Date(startDate.getFullYear(),startDate.getMonth(),startDate.getDate()+i);
+  let iso=dateIso(d.getFullYear(),d.getMonth()+1,d.getDate()), inMonth=d.getMonth()===(m-1);
   let ev=holidayEventForDate(iso,uid);
   cells.push(`<div class="calCell ${inMonth?'':'muted'}"><div class="calDay">${d.getDate()}</div>${ev.slice(0,3).map(e=>`<span class="calEvent ${e.cls}">${e.label}</span>`).join('')}</div>`);
  }
@@ -1030,7 +1037,7 @@ $('workersBtn').onclick=()=>workersModal();
 if($('registrationsBtn'))$('registrationsBtn').onclick=()=>registrationsModal();
 
 if($('settingsBtn'))$('settingsBtn').onclick=()=>settingsModal();
-function settingsModal(){let rows=users.filter(u=>!isAdminUser(u)).map(u=>{let start=userRecs(u.id).filter(r=>Number(r.pauze_minuten)===9999).reduce((s,r)=>s+Number(r.totaal_minuten||0),0);return `<tr><td>${u.naam}</td><td>${sal(start)}</td><td><button class="btn light" onclick="editStartSaldo(${u.id})">Wijzig</button></td></tr>`}).join('');openModal('Instellingen',`<div class="two"><div><h3>Basisinstellingen</h3><table class="table"><tr><th>Instelling</th><th>Waarde</th></tr><tr><td>Standaard werkdag</td><td>8u00</td></tr><tr><td>Volledige recupdag</td><td>-8u00</td></tr><tr><td>Halve recupdag</td><td>-4u00</td></tr><tr><td>Quotes</td><td>Charlie quotes actief</td></tr><tr><td>Versie</td><td>Tuinafsluiter Hub v2.0 Vakantiekalender</td></tr></table><h3>Beginsaldo plus/minuren</h3><table class="table"><tr><th>Werknemer</th><th>Beginsaldo</th><th></th></tr>${rows}</table><p class="warn">Vul hier de bestaande plus- of minuren in. Charlie rekent daarna verder vanaf dit saldo.</p></div><div><h3>App status</h3><button class="btn green" onclick="enableLocalNotifications()">🔔 Meldingen op dit toestel aanzetten</button><p class="warn">Let op: dit zijn lokale browsermeldingen. Echte iPhone-pushmeldingen naar Jos zonder de app te openen maken we als aparte koppeling.</p><div class="warn">✅ Prikklok actief<br>✅ Supabase gekoppeld<br>✅ Plusuren actief<br>✅ Excel-export actief<br>✅ Registraties beheren actief<br>✅ Mobiele weergave verbeterd<br>✅ Rhani meekijkrol voorbereid<br>✅ Ongelezen tellers actief<br>✅ Automatische app-vergrendeling actief<br>✅ Open registraties van vorige dag worden correct afgehandeld<br>✅ Verlofaanvraag meldingbadge actief<br>✅ Live start checklist toegevoegd<br>✅ Vakantiesaldo toegevoegd<br>✅ Duidelijke actiebanners toegevoegd<br>✅ Pincode sneller en gevoeliger op gsm<br>✅ Werknemer-dashboard toegevoegd<br>✅ Scrollen op gsm versoepeld<br>✅ Live Start popup hersteld<br>✅ Ruwe tekst buiten app verwijderd<br>✅ Sluiten-knop definitief hersteld<br>✅ Scrollen op gsm extra soepel gemaakt<br>✅ Officieel app-icoon toegevoegd<br>✅ Klaar voor domeinnaam<br>✅ PDF/Excel export verbeterd<br>✅ Excel/CSV download gefixt<br>✅ Live reset-knoppen toegevoegd<br>✅ Startklaar voor morgen<br>✅ Maand- en totaalsaldo toegevoegd<br>✅ Pincode via toetsenbord op pc<br>✅ Live Start reset gefixt<br>✅ Beginsaldo invoeren in uren/minuten<br>✅ Verlof en Vaste ADV/rustdagen apart instelbaar<br>✅ Activiteitenlog uitgebreid<br>✅ Verlofaanvragen actief<br>✅ Meldingen voor Jos actief</div></div></div>`)}
+function settingsModal(){let rows=users.filter(u=>!isAdminUser(u)).map(u=>{let start=userRecs(u.id).filter(r=>Number(r.pauze_minuten)===9999).reduce((s,r)=>s+Number(r.totaal_minuten||0),0);return `<tr><td>${u.naam}</td><td>${sal(start)}</td><td><button class="btn light" onclick="editStartSaldo(${u.id})">Wijzig</button></td></tr>`}).join('');openModal('Instellingen',`<div class="two"><div><h3>Basisinstellingen</h3><table class="table"><tr><th>Instelling</th><th>Waarde</th></tr><tr><td>Standaard werkdag</td><td>8u00</td></tr><tr><td>Volledige recupdag</td><td>-8u00</td></tr><tr><td>Halve recupdag</td><td>-4u00</td></tr><tr><td>Quotes</td><td>Charlie quotes actief</td></tr><tr><td>Versie</td><td>Tuinafsluiter Hub v2.1 Kalender Fix</td></tr></table><h3>Beginsaldo plus/minuren</h3><table class="table"><tr><th>Werknemer</th><th>Beginsaldo</th><th></th></tr>${rows}</table><p class="warn">Vul hier de bestaande plus- of minuren in. Charlie rekent daarna verder vanaf dit saldo.</p></div><div><h3>App status</h3><button class="btn green" onclick="enableLocalNotifications()">🔔 Meldingen op dit toestel aanzetten</button><p class="warn">Let op: dit zijn lokale browsermeldingen. Echte iPhone-pushmeldingen naar Jos zonder de app te openen maken we als aparte koppeling.</p><div class="warn">✅ Prikklok actief<br>✅ Supabase gekoppeld<br>✅ Plusuren actief<br>✅ Excel-export actief<br>✅ Registraties beheren actief<br>✅ Mobiele weergave verbeterd<br>✅ Rhani meekijkrol voorbereid<br>✅ Ongelezen tellers actief<br>✅ Automatische app-vergrendeling actief<br>✅ Open registraties van vorige dag worden correct afgehandeld<br>✅ Verlofaanvraag meldingbadge actief<br>✅ Live start checklist toegevoegd<br>✅ Vakantiesaldo toegevoegd<br>✅ Duidelijke actiebanners toegevoegd<br>✅ Pincode sneller en gevoeliger op gsm<br>✅ Werknemer-dashboard toegevoegd<br>✅ Scrollen op gsm versoepeld<br>✅ Live Start popup hersteld<br>✅ Ruwe tekst buiten app verwijderd<br>✅ Sluiten-knop definitief hersteld<br>✅ Scrollen op gsm extra soepel gemaakt<br>✅ Officieel app-icoon toegevoegd<br>✅ Klaar voor domeinnaam<br>✅ PDF/Excel export verbeterd<br>✅ Excel/CSV download gefixt<br>✅ Live reset-knoppen toegevoegd<br>✅ Startklaar voor morgen<br>✅ Maand- en totaalsaldo toegevoegd<br>✅ Pincode via toetsenbord op pc<br>✅ Live Start reset gefixt<br>✅ Beginsaldo invoeren in uren/minuten<br>✅ Verlof en Vaste ADV/rustdagen apart instelbaar<br>✅ Activiteitenlog uitgebreid<br>✅ Verlofaanvragen actief<br>✅ Meldingen voor Jos actief</div></div></div>`)}
 function editStartSaldo(uid){
  let u=users.find(x=>Number(x.id)===Number(uid));
  let start=userRecs(uid).filter(r=>Number(r.pauze_minuten)===9999).reduce((s,r)=>s+Number(r.totaal_minuten||0),0);
