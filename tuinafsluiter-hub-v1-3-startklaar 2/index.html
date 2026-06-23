@@ -1,0 +1,1092 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
+<title>Tuinafsluiter Hub</title>
+<meta name="theme-color" content="#003b2e"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Tuinafsluiter Hub"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="manifest" href="manifest.webmanifest"><style>
+:root{--g0:#002a22;--g1:#003b2e;--g2:#0e6b52;--g3:#29b56b;--lime:#7fb344;--white:#fff;--muted:#b9c9c3;--line:rgba(255,255,255,.16);--glass:rgba(255,255,255,.075);--shadow:0 28px 70px rgba(0,42,34,.30)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}body{-webkit-overflow-scrolling:touch;overscroll-behavior-y:auto}html,body{margin:0;min-height:100%;font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:#f4f7f5;color:white}button,input,select,textarea{font:inherit;font-size:16px}button{cursor:pointer;border:0}.hidden{display:none!important}
+.app{min-height:100dvh;background:radial-gradient(circle at 85% 0%,#095d49 0,#003b2e 35%,#001f1a 100%);position:relative;overflow-x:hidden;overflow-y:auto;-webkit-overflow-scrolling:touch}.app:before{content:"";position:absolute;inset:-20% auto auto -15%;width:56vw;height:56vw;opacity:.33;background:linear-gradient(135deg,transparent 0 35%,#26b96b 35% 48%,transparent 48% 100%);transform:rotate(-8deg);border-radius:60px}.app:after{content:"";position:absolute;right:-12%;bottom:-16%;width:48vw;height:48vw;opacity:.18;background:linear-gradient(135deg,transparent 0 38%,#2db56b 38% 55%,transparent 55%);transform:rotate(8deg);border-radius:70px}.shell{position:relative;z-index:1;min-height:100dvh;display:grid;grid-template-rows:auto 1fr auto}
+header{display:flex;justify-content:space-between;align-items:center;padding:30px 52px 12px}.brand{display:flex;align-items:center;gap:18px;min-width:560px}.brandLogo{height:118px;width:auto;max-width:680px;display:block;filter:drop-shadow(0 10px 22px rgba(0,0,0,.25))}.brandTextFallback{display:none;line-height:1}.brandName{font-size:42px;font-weight:950;letter-spacing:-1.6px;color:#fff;text-shadow:0 6px 18px rgba(0,0,0,.24)}.brandSub{margin-top:8px;color:#31d47b;font-size:19px;font-weight:850}.clock{text-align:right}.time{font-size:42px;font-weight:900;letter-spacing:-1.5px}.date{color:#d8eee4}.online{display:flex;justify-content:flex-end;gap:8px;color:#7ee0a5;font-weight:800;margin-top:4px}.dot{width:10px;height:10px;border-radius:50%;background:#28d17a;box-shadow:0 0 0 6px rgba(40,209,122,.12)}
+main{display:grid;grid-template-columns:34% 1fr;gap:42px;align-items:center;padding:0 48px 26px;min-height:0}.hero{position:relative;min-height:calc(100dvh - 260px);max-height:680px;border-radius:30px;overflow:hidden;background:#01281f;box-shadow:var(--shadow);border:1px solid var(--line)}.hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;filter:saturate(1.1) contrast(1.08) brightness(1.08)}.hero:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,42,34,.02),rgba(0,42,34,.32)),linear-gradient(180deg,transparent 58%,rgba(0,20,16,.62))}.heroMark{position:absolute;left:-50px;top:-35px;width:85%;height:85%;opacity:.10;background:linear-gradient(135deg,transparent 0 40%,#2db56b 40% 52%,transparent 52%);z-index:2}.dogline{position:absolute;left:26px;right:26px;bottom:24px;z-index:3;display:flex;align-items:center;gap:12px;font-weight:900;font-size:22px;text-shadow:0 3px 12px rgba(0,0,0,.45)}.dogIcon{width:38px;height:28px;border:2px solid #2dd873;border-top:0;border-radius:18px 18px 6px 6px;position:relative}.dogIcon:before{content:"";position:absolute;right:-8px;top:-14px;width:18px;height:18px;border:2px solid #2dd873;border-radius:50%}.dogIcon:after{content:"";position:absolute;left:8px;bottom:-8px;width:6px;height:12px;background:#2dd873;border-radius:4px;box-shadow:18px 0 0 #2dd873}
+.panel{max-width:680px;margin:auto;width:100%}.loginLogo{text-align:center;margin-bottom:30px}.loginLogo img{height:170px;max-width:680px;filter:drop-shadow(0 16px 30px rgba(0,0,0,.18))}.slogan{margin-top:-16px;color:#39d483;font-size:24px;font-weight:700}.title{font-size:42px;margin:0 0 8px;font-weight:900}.subtitle{color:#d5e8e0;margin:0 0 24px;font-size:18px}.glass{background:var(--glass);border:1px solid var(--line);box-shadow:var(--shadow);backdrop-filter:blur(18px);border-radius:28px;padding:28px}.pinText{text-align:center;font-size:20px;font-weight:800;margin-bottom:18px}.dots{display:flex;justify-content:center;gap:14px;margin-bottom:24px}.dots span{width:62px;height:62px;display:grid;place-items:center;border:2px solid #1eb96b;border-radius:14px;background:rgba(0,0,0,.12);font-size:30px;font-weight:900;color:#75eaa7}.keypad{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;max-width:430px;margin:0 auto}.keypad button,.bigbtn{height:64px;border-radius:16px;color:white;background:linear-gradient(145deg,#20bd6f,#0b6b53);font-weight:900;font-size:24px;box-shadow:0 15px 28px rgba(0,0,0,.18)}.keypad .wide{grid-column:span 2}.keypad .del{background:rgba(255,255,255,.12);border:1px solid var(--line)}.bigbtn{width:100%;margin-top:22px;font-size:22px;height:74px}.msg{margin-top:18px;background:rgba(255,255,255,.12);border-left:5px solid #2dd873;border-radius:18px;padding:14px 18px;font-weight:800;color:#fff}
+.workHead{display:flex;justify-content:space-between;gap:18px;align-items:flex-start;margin-bottom:24px}.role{display:inline-flex;margin-top:8px;background:#2db56b;color:white;border-radius:999px;padding:6px 13px;font-weight:900}.logout{background:transparent;color:white;border:1px solid var(--line);border-radius:999px;padding:10px 14px;font-weight:800}.actions{display:grid;gap:16px}.action{display:flex;gap:18px;align-items:center;text-align:left;background:rgba(255,255,255,.075);border:1px solid var(--line);border-radius:24px;padding:18px 20px;color:white;box-shadow:0 18px 45px rgba(0,0,0,.14)}.action .ico{width:66px;height:66px;display:grid;place-items:center;border-radius:50%;font-size:32px;background:linear-gradient(145deg,#2dd873,#0c765a);font-weight:900;flex:none}.action.red .ico{background:linear-gradient(145deg,#ff5252,#c81f1f)}.action h3{margin:0 0 4px;font-size:24px}.action p{margin:0;color:#c9ded6}.statusGrid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:18px}.mini{background:rgba(255,255,255,.075);border:1px solid var(--line);border-radius:20px;padding:16px}.mini span{color:#c9ded6;display:block;font-size:14px}.mini b{font-size:26px}.adminCards{display:grid;gap:18px}.overview{border:1px solid var(--line);border-radius:24px;overflow:hidden}.overview h3{margin:0;padding:16px 18px;border-bottom:1px solid var(--line)}.emp{display:grid;grid-template-columns:48px 1fr auto;align-items:center;gap:14px;padding:16px 18px;border-bottom:1px solid var(--line)}.emp:last-child{border-bottom:0}.avatar{width:44px;height:44px;border-radius:50%;background:#e8f3ed;color:#003b2e;display:grid;place-items:center;font-weight:900}.emp small{display:block;color:#c9ded6}.emp b{font-size:20px}.emp .plus{color:#48e88e}.emp .minus{color:#ff7777}.adminStats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.adminStats .mini b{font-size:22px}.adminBtns{display:grid;grid-template-columns:1fr 1fr;gap:14px}.tile{min-height:112px;background:rgba(255,255,255,.075);border:1px solid var(--line);border-radius:20px;color:#fff;font-weight:900;font-size:18px}.footer{display:none}
+.modal{position:fixed;inset:0;background:rgba(0,20,16,.82);z-index:99;display:none;align-items:center;justify-content:center;padding:24px}.modal.show{display:flex}.modalBox{width:min(1100px,100%);max-height:88dvh;overflow:auto;-webkit-overflow-scrolling:touch;background:#f6faf8;color:#092820;border-radius:28px;padding:24px;box-shadow:var(--shadow)}.modalHead{display:flex;justify-content:space-between;gap:20px;align-items:center}.btn{border-radius:14px;background:#003b2e;color:white;padding:12px 16px;font-weight:900}.btn.light{background:#e5f2ec;color:#003b2e}.btn.green{background:#2db56b}.form{display:grid;gap:12px}.form input,.form select,.form textarea{padding:12px;border:1px solid #d9e6df;border-radius:12px;background:white}.form label{font-weight:900}.form .check{display:flex;align-items:center;gap:10px;background:#e7f3ed;border-radius:12px;padding:10px 12px}.form .check input{width:20px;height:20px}.table{width:100%;border-collapse:collapse;margin-top:14px}.table th,.table td{padding:10px;border-bottom:1px solid #dce7e0;text-align:left}.table th{background:#003b2e;color:white}.two{display:grid;grid-template-columns:1.2fr .8fr;gap:22px}.warn{background:#fff8dd;border:1px solid #f1d275;color:#5a4100;border-radius:14px;padding:12px;margin:12px 0}
+@media(max-width:980px){header{padding:18px 18px}.brand{min-width:auto}.brandLogo{height:88px;max-width:520px}.brandName{font-size:32px}.brandSub{font-size:15px}.clock{display:none}main{grid-template-columns:1fr;padding:0 18px 18px}.hero{min-height:260px;max-height:none}.loginLogo img{height:100px}.slogan{font-size:19px}.title{font-size:34px}.two{grid-template-columns:1fr}.statusGrid{grid-template-columns:1fr 1fr}.adminBtns{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.hero{min-height:210px}.brandLogo{height:66px;max-width:340px}.brandName{font-size:25px}.brandSub{display:none}.loginLogo img{height:115px}.glass{padding:20px}.dots span{width:50px;height:50px}.keypad button{height:58px}.statusGrid,.adminBtns{grid-template-columns:1fr}.emp{grid-template-columns:42px 1fr}.emp>div:last-child{grid-column:2}.action .ico{width:56px;height:56px}.action h3{font-size:20px}}
+
+/* v1.1 mobile fix */
+@media(max-width:760px){
+  .app{overflow-y:auto;overflow-x:hidden}
+  .shell{min-height:100dvh;display:block}
+  header{padding:calc(14px + env(safe-area-inset-top)) 18px 8px;align-items:flex-start}
+  .brandLogo{height:38px!important;max-width:180px!important}
+  .clock{display:none!important}
+  main{display:flex!important;flex-direction:column!important;gap:16px!important;align-items:stretch!important;padding:8px 18px 24px!important}
+  .hero{width:100%;min-height:150px!important;height:150px!important;border-radius:22px!important;max-height:150px!important}
+  .hero img{object-position:center 38%}
+  .heroMark{opacity:.07}
+  .dogline{left:18px;right:18px;bottom:14px;font-size:17px;gap:9px;line-height:1.15}
+  .dogIcon{width:28px;height:21px}.dogIcon:before{right:-7px;top:-12px;width:15px;height:15px}.dogIcon:after{left:6px;bottom:-7px;width:5px;height:10px;box-shadow:14px 0 0 #2dd873}
+  .panel{max-width:100%;margin:0}
+  .loginLogo{margin:2px 0 14px;text-align:left}.loginLogo img{height:70px!important;max-width:280px!important}.slogan{font-size:15px!important;margin-top:-10px;padding-left:6px}
+  .glass{border-radius:22px!important;padding:18px!important}.pinText{font-size:17px;margin-bottom:12px}.dots{gap:9px;margin-bottom:16px}.dots span{width:46px!important;height:46px!important;border-radius:12px;font-size:24px}
+  .keypad{gap:9px;max-width:100%}.keypad button,.bigbtn{height:54px!important;border-radius:14px!important;font-size:22px!important}.bigbtn{height:58px!important;margin-top:14px!important;font-size:18px!important}
+  .workHead{margin-bottom:14px}.title{font-size:32px!important}.subtitle{font-size:15px!important;margin-bottom:6px}.logout{padding:9px 12px}
+  .action{padding:12px 14px;border-radius:18px;gap:12px}.action .ico{width:48px!important;height:48px!important;font-size:24px}.action h3{font-size:19px!important}.action p{font-size:13px}.actions{gap:10px}
+  .statusGrid{grid-template-columns:1fr 1fr!important;gap:10px}.mini{padding:12px;border-radius:16px}.mini b{font-size:21px}.adminStats{grid-template-columns:1fr 1fr!important;gap:10px}.adminBtns{grid-template-columns:1fr 1fr!important;gap:10px}.tile{min-height:76px;font-size:15px;border-radius:16px}
+  .overview h3{padding:12px 14px}.emp{grid-template-columns:38px 1fr auto!important;padding:12px 14px;gap:10px}.avatar{width:36px;height:36px}.emp b{font-size:16px}.emp small{font-size:11px}
+  .modal{padding:12px}.modalBox{border-radius:22px;padding:16px;max-height:92dvh}.table{font-size:13px}.table th,.table td{padding:7px}
+}
+@media(max-width:420px){
+  header{padding-left:14px;padding-right:14px}.brandLogo{height:34px!important;max-width:160px!important}
+  main{padding-left:14px!important;padding-right:14px!important}.hero{height:132px!important;min-height:132px!important}.dogline{font-size:15px}.loginLogo img{height:58px!important;max-width:240px!important}
+  .dots span{width:42px!important;height:42px!important}.keypad button{height:50px!important}.tile{min-height:70px}
+}
+
+
+.chatBox{display:grid;gap:12px;margin-top:16px}.chatMsg{background:#fff;border:1px solid #dce7e0;border-radius:16px;padding:12px 14px}.chatMsg b{color:#003b2e}.chatMsg small{display:block;color:#6b8178;margin-top:4px}.chatMsg.admin{border-left:5px solid #2db56b}.chatInput{display:grid;grid-template-columns:1fr auto;gap:10px;margin-top:14px}.badge{display:inline-flex;align-items:center;justify-content:center;min-width:26px;height:26px;border-radius:999px;background:#2dd873;color:#003b2e;font-weight:900;margin-left:6px;padding:0 8px}.readList{font-size:13px;color:#557067;margin-top:8px}.danger{background:#ffe7e7!important;color:#8a1111!important}.lockNote{font-size:13px;color:#d8eee4;margin-top:8px}
+
+
+/* v1.7 light iPhone scroll fix - behoudt logo/layout */
+html, body {
+  overflow-x: hidden;
+  -webkit-text-size-adjust: 100%;
+}
+body {
+  min-height: 100%;
+  -webkit-overflow-scrolling: touch;
+}
+.modalBox {
+  -webkit-overflow-scrolling: touch;
+}
+@media (max-width: 780px) {
+  .app {
+    min-height: 100dvh;
+    height: auto;
+    overflow-x: hidden;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: max(90px, env(safe-area-inset-bottom));
+  }
+  .modalBox {
+    max-height: 82dvh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+
+/* v2.1 badges voor ongelezen chat/mededelingen */
+.badgeCount{display:inline-flex;align-items:center;justify-content:center;min-width:24px;height:24px;padding:0 8px;margin-left:7px;border-radius:999px;background:#ff3b30;color:#fff;font-size:12px;font-weight:950;box-shadow:0 4px 12px rgba(0,0,0,.22)}
+.hubNotice{margin:0 0 16px;padding:13px 15px;border-radius:18px;background:rgba(45,181,107,.16);border:1px solid rgba(45,181,107,.36);font-weight:900;color:#eafff4}
+
+
+/* v2.3 gerichte chat */
+.targetLabel{display:inline-block;margin-left:8px;padding:3px 8px;border-radius:999px;background:#e9f6ef;color:#0a4a38;font-size:12px;font-weight:900}
+
+
+/* v2.4 beveiliging */
+.securityNote{margin-top:12px;color:#d8eee4;font-size:13px;font-weight:700}
+
+
+/* v2.6 melding badge verlofaanvragen */
+.badgeCount{display:inline-flex;align-items:center;justify-content:center;min-width:24px;height:24px;padding:0 8px;margin-left:7px;border-radius:999px;background:#ff3b30;color:#fff;font-size:12px;font-weight:950;box-shadow:0 4px 12px rgba(0,0,0,.22)}
+.requestNotice{margin:0 0 16px;padding:13px 15px;border-radius:18px;background:rgba(255,204,0,.16);border:1px solid rgba(255,204,0,.36);font-weight:900;color:#fff7d6}
+
+
+/* v2.9 duidelijke actiebanners */
+.actionBanner{
+  position:fixed;left:50%;top:max(18px,env(safe-area-inset-top));transform:translateX(-50%);
+  width:min(560px,calc(100vw - 28px));z-index:9999;
+  border-radius:22px;padding:18px 20px;
+  box-shadow:0 22px 60px rgba(0,0,0,.38);
+  border:1px solid rgba(255,255,255,.22);
+  color:#fff;animation:bannerIn .22s ease-out;
+}
+.actionBanner.ok{background:linear-gradient(135deg,#0d7b55,#22b66a)}
+.actionBanner.warn{background:linear-gradient(135deg,#9a6a00,#e7a900)}
+.actionBanner.stop{background:linear-gradient(135deg,#8e2020,#e84949)}
+.actionBanner.info{background:linear-gradient(135deg,#003b2e,#0e6b52)}
+.actionBanner h2{margin:0;font-size:28px;letter-spacing:.2px}
+.actionBanner p{margin:6px 0 0;font-size:17px;font-weight:800}
+.actionBanner small{display:block;margin-top:6px;color:rgba(255,255,255,.85);font-weight:750}
+@keyframes bannerIn{from{opacity:0;transform:translate(-50%,-12px)}to{opacity:1;transform:translate(-50%,0)}}
+@media(max-width:780px){.actionBanner h2{font-size:24px}.actionBanner p{font-size:16px}}
+
+
+/* v3.0 pincode responsiever op gsm */
+.keypad button{
+  touch-action:manipulation!important;
+  -webkit-user-select:none!important;
+  user-select:none!important;
+  min-height:72px!important;
+  font-size:28px!important;
+}
+.dots span{
+  min-width:58px!important;
+  min-height:58px!important;
+}
+.bigbtn{
+  touch-action:manipulation!important;
+}
+@media(max-width:780px){
+  .keypad{gap:12px!important}
+  .keypad button{min-height:74px!important;font-size:30px!important}
+}
+
+
+/* v3.1 werknemer dashboard */
+.employeeSummary{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:12px;
+  margin:0 0 18px;
+}
+.employeeSummary .mini{
+  background:rgba(255,255,255,.085);
+  border:1px solid rgba(255,255,255,.16);
+  border-radius:18px;
+  padding:14px;
+}
+.employeeSummary .mini span{
+  display:block;
+  color:#cfe7dc;
+  font-size:13px;
+  font-weight:800;
+}
+.employeeSummary .mini b{
+  display:block;
+  margin-top:5px;
+  font-size:22px;
+  color:#fff;
+}
+.employeeStatusCard{
+  margin:0 0 16px;
+  padding:15px 16px;
+  border-radius:20px;
+  background:rgba(45,181,107,.18);
+  border:1px solid rgba(45,181,107,.34);
+  color:#eafff4;
+  font-weight:900;
+}
+@media(max-width:780px){
+  .employeeSummary{grid-template-columns:1fr 1fr}
+  .employeeSummary .mini b{font-size:19px}
+}
+
+
+/* v3.2 mobiele scroll soepeler */
+html,body{
+  height:auto!important;
+  min-height:100%!important;
+  overflow-x:hidden!important;
+  overflow-y:auto!important;
+  -webkit-overflow-scrolling:touch!important;
+  overscroll-behavior-y:auto!important;
+  scroll-behavior:auto!important;
+}
+.app,.shell,main,#workView,#loginView{
+  height:auto!important;
+  overflow:visible!important;
+}
+.app:before,.app:after{
+  pointer-events:none!important;
+  will-change:auto!important;
+}
+.hero img,.loginLogo img,.brandLogo{
+  transform:translateZ(0);
+  backface-visibility:hidden;
+}
+@media(max-width:780px){
+  .shell{display:block!important;min-height:auto!important}
+  header{position:relative!important}
+  main{
+    display:block!important;
+    min-height:auto!important;
+    padding-bottom:120px!important;
+    overflow:visible!important;
+  }
+  .hero{
+    min-height:300px!important;
+    max-height:340px!important;
+    margin-bottom:18px!important;
+    transform:none!important;
+  }
+  .glass{
+    backdrop-filter:none!important;
+    -webkit-backdrop-filter:none!important;
+  }
+  .panel,.adminCards,#employeePanel{
+    overflow:visible!important;
+  }
+  .actions,.adminBtns,.employeeSummary{
+    transform:none!important;
+  }
+  .modal.show{
+    overflow-y:auto!important;
+    align-items:flex-start!important;
+    -webkit-overflow-scrolling:touch!important;
+  }
+  .modalBox{
+    max-height:86dvh!important;
+    overflow-y:auto!important;
+    -webkit-overflow-scrolling:touch!important;
+    margin:12px auto 28px!important;
+  }
+}
+
+
+/* v3.3 modal/live-start fix */
+body.modalOpen{
+  overflow:hidden!important;
+  position:fixed!important;
+  width:100%!important;
+}
+.modal{
+  background:rgba(0,20,16,.92)!important;
+  overflow-y:auto!important;
+  -webkit-overflow-scrolling:touch!important;
+  align-items:flex-start!important;
+}
+.modal.show{
+  display:flex!important;
+}
+.modalBox{
+  margin:max(18px,env(safe-area-inset-top)) auto max(28px,env(safe-area-inset-bottom))!important;
+  max-height:none!important;
+  overflow:visible!important;
+}
+#liveSql{
+  width:100%!important;
+  min-height:320px!important;
+  font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace!important;
+  font-size:14px!important;
+  line-height:1.35!important;
+  color:#092820!important;
+  background:#fff!important;
+}
+@media(max-width:780px){
+  .modal{padding:12px!important}
+  .modalBox{
+    width:100%!important;
+    border-radius:22px!important;
+    padding:18px!important;
+    max-height:none!important;
+  }
+  .modalBox .two{
+    display:block!important;
+  }
+  #liveSql{
+    min-height:360px!important;
+    font-size:13px!important;
+  }
+}
+
+
+/* v3.5 modal sluiten + scroll final */
+body.modalOpen{
+  overflow:hidden!important;
+}
+.modal{
+  background:rgba(0,20,16,.90)!important;
+  overflow-y:auto!important;
+  -webkit-overflow-scrolling:touch!important;
+  align-items:flex-start!important;
+}
+.modal.show{
+  display:flex!important;
+}
+.modalBox{
+  margin:max(16px,env(safe-area-inset-top)) auto max(26px,env(safe-area-inset-bottom))!important;
+  max-height:none!important;
+  overflow:visible!important;
+}
+html,body,.app,main,#workView,#loginView{
+  -webkit-overflow-scrolling:touch!important;
+}
+#liveSql{
+  width:100%!important;
+  min-height:320px!important;
+  font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace!important;
+  font-size:14px!important;
+  line-height:1.35!important;
+  color:#092820!important;
+  background:#fff!important;
+}
+@media(max-width:780px){
+  .modal{padding:12px!important}
+  .modalBox{
+    width:100%!important;
+    border-radius:22px!important;
+    padding:18px!important;
+    max-height:none!important;
+  }
+  .modalBox .two{display:block!important}
+  #liveSql{min-height:360px!important;font-size:13px!important}
+}
+
+
+/* v3.6 sluitknop definitief */
+#closeModal{
+  position:relative!important;
+  z-index:10001!important;
+  pointer-events:auto!important;
+  touch-action:manipulation!important;
+  min-height:46px!important;
+  padding:12px 18px!important;
+}
+.modalHead{
+  position:sticky!important;
+  top:0!important;
+  z-index:10000!important;
+  background:#f7fbf8!important;
+  padding-bottom:10px!important;
+}
+
+
+/* v3.7 smooth scroll final */
+html,body{
+  height:auto!important;
+  min-height:100%!important;
+  overflow-x:hidden!important;
+  overflow-y:auto!important;
+  -webkit-overflow-scrolling:touch!important;
+  scroll-behavior:auto!important;
+}
+.app{
+  height:auto!important;
+  min-height:100dvh!important;
+  overflow-x:hidden!important;
+  overflow-y:visible!important;
+  -webkit-overflow-scrolling:touch!important;
+}
+.shell,main,#workView,#loginView,#employeePanel,.adminCards,.panel{
+  height:auto!important;
+  min-height:auto!important;
+  overflow:visible!important;
+}
+.glass{
+  backdrop-filter:none!important;
+  -webkit-backdrop-filter:none!important;
+}
+.app:before,.app:after{
+  display:none!important;
+}
+.hero,.hero img,.loginLogo img,.brandLogo,.action,.tile,.mini{
+  will-change:auto!important;
+  transform:none!important;
+  backface-visibility:visible!important;
+}
+@media(max-width:780px){
+  body:not(.modalOpen){
+    position:static!important;
+  }
+  .shell{
+    display:block!important;
+  }
+  header{
+    position:relative!important;
+  }
+  main{
+    display:block!important;
+    padding-bottom:120px!important;
+    overflow:visible!important;
+  }
+  .hero{
+    min-height:280px!important;
+    max-height:320px!important;
+    margin-bottom:18px!important;
+    box-shadow:0 12px 28px rgba(0,42,34,.22)!important;
+  }
+  .actions,.adminBtns{
+    gap:10px!important;
+  }
+  .action,.tile,.mini{
+    box-shadow:none!important;
+  }
+}
+
+
+/* v1.1 export final */
+.exportSummary{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:12px 0}
+.exportSummary .mini{background:#e9f6ef;color:#092820;border:1px solid #cde4d8}
+.reportHeader{display:flex;justify-content:space-between;gap:20px;align-items:flex-start;margin-bottom:16px;border-bottom:2px solid #004132;padding-bottom:10px}
+.reportLogo{font-size:24px;font-weight:950;color:#004132}
+@media(max-width:780px){.exportSummary{grid-template-columns:1fr 1fr}}
+
+
+/* v1.3 startklaar fixes */
+#liveSql{
+  white-space:pre!important;
+  font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace!important;
+  font-size:13px!important;
+  line-height:1.35!important;
+}
+#exportDownloadLink{margin:12px 0}
+#exportDownloadLink a{display:inline-block;text-decoration:none}
+
+</style>
+
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png?v=final">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/icon-192.png?v=final">
+<link rel="icon" type="image/png" sizes="512x512" href="assets/icon-512.png?v=final">
+<link rel="shortcut icon" href="assets/favicon.png?v=final">
+
+</head>
+<body><div class="app"><div class="shell">
+<header><div class="brand"><img class="brandLogo" src="assets/tuinafsluiter-rebrand.svg?v=46" alt="Tuinafsluiter"><div class="brandTextFallback"><div class="brandName">Tuinafsluiter</div><div class="brandSub">Urenregistratie • Verlof • Teamcommunicatie</div></div></div><div class="clock"><div class="time" id="time">--:--</div><div class="date" id="date">--</div><div class="online"><span class="dot"></span><span id="mode">Online</span></div></div></header>
+<main><section class="hero"><div class="heroMark"></div><img src="assets/charlie.png" alt="Charlie"><div class="dogline"><span class="dogIcon"></span><span id="charlieQuote">Charlie waakt over uw uren</span></div></section>
+<section class="panel">
+ <div id="loginView"><div class="loginLogo"><img src="assets/logo.png" alt="Tuinafsluiter"><div class="slogan">Tuinafsluiter Hub<br><span style="font-size:18px;color:#d8eee4">Urenregistratie • Verlof • Teamcommunicatie</span></div></div><div class="glass"><div class="pinText">Voer uw pincode in</div><div class="dots" id="dots"><span>–</span><span>–</span><span>–</span><span>–</span></div><div class="keypad" id="keypad"></div><button class="bigbtn" id="loginBtn">Aanmelden</button></div></div>
+ <div id="workView" class="hidden"><div class="workHead"><div><p class="subtitle">Welkom</p><h1 class="title" id="hello">Jos</h1><span class="role hidden" id="roleBadge">Beheerder</span></div><div style="display:flex;gap:10px;align-items:center"><button class="logout" id="lockBtn">🔒 Vergrendel</button><button class="logout" id="logoutBtn">↪ Uitloggen</button></div></div><div id="employeePanel"><div id="employeeDashboard"></div><div class="actions"><button class="action" data-action="in"><span class="ico">↪</span><span><h3>Inchecken</h3><p>Start uw werkdag</p></span></button><button class="action" data-action="breakStart"><span class="ico">☕</span><span><h3>Schoft starten</h3><p>Begin uw pauze</p></span></button><button class="action" data-action="breakStop"><span class="ico">▶</span><span><h3>Schoft stoppen</h3><p>Einde van uw pauze</p></span></button><button class="action red" data-action="out"><span class="ico">↩</span><span><h3>Uitchecken</h3><p>Einde werkdag</p></span></button><button class="action" id="requestLeaveBtn"><span class="ico">🌴</span><span><h3>Verlof aanvragen</h3><p>Vraag een dag of periode aan</p></span></button><button class="action" id="myHolidayBalanceBtn"><span class="ico">🏖️</span><span><h3>Mijn verlofsaldo</h3><p>Bekijk opgenomen en resterend verlof</p></span></button><button class="action" id="teamchatEmployeeBtn"><span class="ico">💬</span><span><h3>Teamchat</h3><p>Berichten voor het team</p></span></button><button class="action" id="announcementsEmployeeBtn"><span class="ico">📢</span><span><h3>Mededelingen</h3><p>Belangrijke info van Tuinafsluiter</p></span></button></div><div class="statusGrid" id="statusGrid"></div></div><div id="adminPanel" class="adminCards hidden"><div class="adminStats" id="adminStats"></div><div class="overview"><h3>Teamoverzicht Vandaag</h3><div id="adminToday"></div></div><div class="adminBtns"><button class="tile" id="notificationsBtn">🔔 Meldingen / aanvragen</button><button class="tile" id="plusBtn">📊 Plusuren</button><button class="tile" id="recupBtn">📅 Recupdagen</button><button class="tile" id="verlofBtn">🌴 Verlof</button><button class="tile" id="holidayBalanceBtn">🏖️ Vakantiesaldo</button><button class="tile" id="ziekteBtn">♡ Ziekte</button><button class="tile" id="workersBtn">👥 Werknemers</button><button class="tile" id="registrationsBtn">👷 Registraties</button><button class="tile" id="teamchatBtn">💬 Teamchat</button><button class="tile" id="announcementsBtn">📢 Mededelingen</button><button class="tile" id="activityBtn">📋 Activiteiten</button><button class="tile" id="settingsBtn">⚙️ Instellingen</button><button class="tile" id="liveStartBtn">🚀 Live start</button><button class="tile" id="exportBtn">📄 Export PDF / Excel</button></div></div></div>
+ <div id="message" class="msg hidden"></div>
+</section></main><footer></footer></div></div>
+<div class="modal" id="adminModal"><div class="modalBox"><div class="modalHead"><h2 id="modalTitle">Beheer</h2><button type="button" class="btn light" id="closeModal">Sluiten</button></div><div id="modalContent"></div></div></div>
+<script>
+const SUPABASE_URL='https://uwtkopnjwewkodozvkxi.supabase.co';
+const SUPABASE_ANON_KEY='sb_publishable_-YUPSJu3IeIID2mS1rhgIA_nngfTjWA';
+const API=SUPABASE_URL+'/rest/v1';
+const HEADERS={apikey:SUPABASE_ANON_KEY,Authorization:'Bearer '+SUPABASE_ANON_KEY,'Content-Type':'application/json'};
+const NORM=480, PENDING_LEAVE=7777, DENIED_LEAVE=7779;let pin='',current=null,users=[],records=[],activeEntry=null,hubItems=[];
+const $=id=>document.getElementById(id);
+const CHARLIE_QUOTES={
+  open:[
+    'Charlie waakt over uw uren',
+    'Charlie staat paraat. Jij ook?',
+    'Nieuwe werkdag, nieuwe kansen.',
+    'Charlie bewaakt ondertussen het team.',
+    'Elke minuut telt. Charlie noteert mee.',
+    'Goed begonnen is half gewerkt.',
+    'Tuinafsluitingen zonder gedoe, uren zonder discussie.'
+  ],
+  monday:['Nieuwe week. Charlie is er klaar voor.','Maandagmodus aan. Charlie houdt toezicht.'],
+  friday:['Het weekend is dichterbij dan maandag.','Nog even doorbijten. De zetel roept al.','Vrijdaggevoel gespot. Charlie houdt de klok in het oog.'],
+  login:['Charlie heeft u herkend.','Welkom terug. Charlie is alert.','De werkdag kan beginnen.'],
+  in:['Ingecheckt. Charlie noteert het.','Werkdag gestart. Veel succes!','Charlie ziet dat ge eraan begint.'],
+  breakStart:['Schoft gestart. Even opladen.','Charlie bewaakt ondertussen de uren.','Pauze verdiend. Koffie mag.'],
+  breakStop:['Schoft voorbij. Terug in actie.','Charlie heeft de pauze genoteerd.','We zijn weer vertrokken.'],
+  out:['Goed gewerkt. Tijd voor de zetel.','Werkdag afgesloten. Charlie neemt de wacht over.','De uren zijn veilig opgeborgen.'],
+  longDay:['Sterke werkdag. Charlie geeft een pootje. 🐾','Meer dan 9 uur gewerkt. Charlie is onder de indruk.','Plusuren gespaard. Charlie noteert het.'],
+  request:['Verlofaanvraag verstuurd. Charlie legt ze bij Jos.','Aanvraag verzonden. Charlie bewaakt de agenda.','Verlof gevraagd. Jos krijgt een melding.']
+};
+function pick(arr){return arr[Math.floor(Math.random()*arr.length)]}
+function setCharlieQuote(type='open',extra=null){let d=new Date(),arr=[...(CHARLIE_QUOTES[type]||CHARLIE_QUOTES.open)];if(type==='open'&&users?.length){let count=users.filter(u=>!isAdminUser(u)).length;if(count)arr.unshift(`Charlie bewaakt ondertussen ${count} medewerker${count===1?'':'s'}.`)}if(type==='open'&&d.getDay()===5)arr=[...CHARLIE_QUOTES.friday,...arr];if(type==='open'&&d.getDay()===1)arr=[...CHARLIE_QUOTES.monday,...arr];if(extra)arr.unshift(extra);let el=$('charlieQuote');if(el)el.textContent=pick(arr)}
+
+function tick(){let d=new Date();$('time').textContent=d.toLocaleTimeString('nl-BE',{hour:'2-digit',minute:'2-digit'});$('date').textContent=d.toLocaleDateString('nl-BE',{weekday:'long',day:'numeric',month:'long',year:'numeric'})}setInterval(tick,1000);tick();
+function today(){return new Date().toISOString().slice(0,10)}function iso(){return new Date().toISOString()}function mins(a,b){return Math.round((new Date(b)-new Date(a))/60000)}
+function dur(m){m=Math.round(Number(m)||0);let neg=m<0;m=Math.abs(m);return (neg?'-':'')+Math.floor(m/60)+'u'+String(m%60).padStart(2,'0')}function sal(m){m=Math.round(Number(m)||0);return (m>=0?'+':'-')+dur(Math.abs(m))}function hm(x){return x?new Date(x).toLocaleTimeString('nl-BE',{hour:'2-digit',minute:'2-digit'}):'--:--'}
+async function sb(path,opts={}){let res=await fetch(API+path,{...opts,headers:{...HEADERS,...(opts.headers||{})}});if(!res.ok)throw new Error(await res.text());if(res.status===204)return null;return res.json()}
+async function hub(path,opts={}){
+  let res=await fetch(API+path,{...opts,headers:{...HEADERS,...(opts.headers||{})}});
+  if(!res.ok)throw new Error(await res.text());
+  if(res.status===204)return null;
+  return res.json();
+}
+function needsHubTable(e){return String(e&&e.message||e).includes('hub_items')||String(e&&e.message||e).includes('relation')||String(e&&e.message||e).includes('does not exist')}
+function hubSqlHelp(){return `<div class="warn"><b>Eenmalige database-stap nodig</b><br>Maak in Supabase via SQL Editor deze tabel aan:<br><pre style="white-space:pre-wrap;background:#092820;color:#fff;padding:12px;border-radius:12px;overflow:auto">create table if not exists hub_items (
+  id bigint generated by default as identity primary key,
+  created_at timestamptz default now(),
+  type text not null,
+  author_id bigint,
+  author_name text,
+  message text,
+  pinned boolean default false,
+  target text default 'all',
+  read_by jsonb default '[]'::jsonb,
+  meta jsonb default '{}'::jsonb
+);</pre></div>`}
+async function loadHubItems(){
+  try{hubItems=await hub('/hub_items?select=*&order=created_at.desc&limit=250')}
+  catch(e){hubItems=[]; console.warn('hub_items niet beschikbaar', e)}
+}
+async function postHubItem(type,message,extra={}){
+  let body={type,author_id:current?.id||null,author_name:current?.naam||'Systeem',message:String(message||''),...extra};
+  await hub('/hub_items',{method:'POST',headers:{Prefer:'return=representation'},body:JSON.stringify(body)});
+}
+async function audit(message,meta={}){
+  try{await postHubItem('audit',message,{target:'jos',meta})}catch(e){console.warn('audit mislukt',e)}
+}
+async function safeAudit(message,meta={}){try{await audit(message,meta)}catch(e){console.warn('safe audit mislukt',e)}}
+function readByArray(item){try{return Array.isArray(item.read_by)?item.read_by:JSON.parse(item.read_by||'[]')}catch(e){return []}}
+async function markHubRead(id){
+  let item=hubItems.find(x=>Number(x.id)===Number(id)); if(!item||!current)return;
+  let arr=readByArray(item); if(!arr.includes(current.naam))arr.push(current.naam);
+  await hub('/hub_items?id=eq.'+id,{method:'PATCH',headers:{Prefer:'return=representation'},body:JSON.stringify({read_by:arr})});
+  await loadHubItems();
+}
+
+function chatReadKey(){return 'hub_chat_read_'+(current?.id||'gast')}
+function lastChatRead(){return Number(localStorage.getItem(chatReadKey())||0)}
+function setChatReadNow(){localStorage.setItem(chatReadKey(), String(Date.now()))}
+function unreadHubCounts(){
+  if(!current)return{chat:0,ann:0,total:0};
+  let last=lastChatRead();
+  let chat=hubItems.filter(i=>i.type==='chat'&&Number(i.author_id)!==Number(current.id)&&Number(new Date(i.created_at).getTime())>last&&(String(i.target||'all')==='all'||String(i.target)===String(current.id)||isOwner())).length;
+  let ann=hubItems.filter(i=>i.type==='announcement'&&!readByArray(i).includes(current.naam)).length;
+  return{chat,ann,total:chat+ann};
+}
+function badgeCountHtml(n){return n>0?`<span class="badgeCount">${n}</span>`:''}
+function updateHubBadges(){
+  let c=unreadHubCounts();
+  let tb=$('teamchatBtn');if(tb)tb.innerHTML='💬 Teamchat '+badgeCountHtml(c.chat);
+  let eb=$('teamchatEmployeeBtn');if(eb){let h=eb.querySelector('h3');if(h)h.innerHTML='Teamchat '+badgeCountHtml(c.chat)}
+  let ab=$('announcementsBtn');if(ab)ab.innerHTML='📢 Mededelingen '+badgeCountHtml(c.ann);
+  let ae=$('announcementsEmployeeBtn');if(ae){let h=ae.querySelector('h3');if(h)h.innerHTML='Mededelingen '+badgeCountHtml(c.ann)}
+  if('setAppBadge' in navigator){try{c.total?navigator.setAppBadge(c.total):navigator.clearAppBadge()}catch(e){}}
+}
+
+
+function msg(t){$('message').textContent=t;$('message').classList.remove('hidden');setTimeout(()=>$('message').classList.add('hidden'),5200)}function actionBanner(title,detail='',type='ok',charlie=''){
+ let old=document.querySelector('.actionBanner');if(old)old.remove();
+ let div=document.createElement('div');div.className='actionBanner '+type;
+ div.innerHTML=`<h2>${title}</h2>${detail?`<p>${detail}</p>`:''}${charlie?`<small>🐕 ${charlie}</small>`:''}`;
+ document.body.appendChild(div);
+ setTimeout(()=>{div.style.opacity='0';div.style.transition='opacity .25s';setTimeout(()=>div.remove(),280)},5200);
+ if(navigator.vibrate)try{navigator.vibrate(45)}catch(e){}
+}
+function err(e){return String(e.message||e).slice(0,220)}
+function drawDots(){[...$('dots').children].forEach((s,i)=>s.textContent=pin[i]?'•':'–')}
+function handlePinKey(n){
+ if(n==='⌫')pin=pin.slice(0,-1);
+ else if(pin.length<4)pin+=n;
+ drawDots();
+ if(pin.length===4)setTimeout(login,80);
+}
+function keypad(){
+ ['1','2','3','4','5','6','7','8','9','0','⌫'].forEach(n=>{
+  let b=document.createElement('button');
+  b.textContent=n;
+  if(n==='0')b.className='wide';
+  if(n==='⌫')b.className='del';
+  let last=0;
+  let press=(ev)=>{
+    ev.preventDefault();
+    let now=Date.now();
+    if(now-last<120)return;
+    last=now;
+    handlePinKey(n);
+  };
+  b.addEventListener('pointerdown',press,{passive:false});
+  b.addEventListener('touchstart',press,{passive:false});
+  b.addEventListener('click',(ev)=>ev.preventDefault());
+  $('keypad').appendChild(b);
+ })
+}
+keypad();$('loginBtn').onclick=login;
+async function load(){
+ users=await sb('/werknemers?select=*&actief=eq.true&order=id.asc');
+ records=await sb('/urenregistratie?select=*&order=datum.desc,inkloktijd.desc&limit=300');
+ if(typeof loadHubItems==='function')await loadHubItems();
+ if(current && !users.find(u=>Number(u.id)===Number(current.id))){
+   current=null;activeEntry=null;
+   $('workView').classList.add('hidden');
+   $('loginView').classList.remove('hidden');
+   msg('Account gedeactiveerd. Neem contact op met de beheerder.');
+   return;
+ }
+ if(current)activeEntry=await getActive(current.id);
+ render();renderEmployeeDashboard();applyRoleVisibility();if(typeof updateRequestBadge==='function')updateRequestBadge();if(typeof updateHubBadges==='function')updateHubBadges()
+}
+async function getActive(uid){let r=await sb(`/urenregistratie?select=*&medewerker_id=eq.${uid}&uitkloktijd=is.null&inkloktijd=not.is.null&order=inkloktijd.desc&limit=1`);return r[0]||null}
+async function closeStaleOpenRegistration(r){
+  let out = new Date(r.datum+'T23:59:00').toISOString();
+  let pause = Number(r.pauze_minuten||0);
+  let ps = localStorage.getItem('pause_'+r.id);
+  if(ps){pause += Math.max(0, mins(ps, out)); localStorage.removeItem('pause_'+r.id)}
+  let worked = Math.max(0, mins(r.inkloktijd, out)-pause);
+  await sb('/urenregistratie?id=eq.'+r.id,{method:'PATCH',headers:{Prefer:'return=representation'},body:JSON.stringify({uitkloktijd:out,pauze_minuten:pause,totaal_minuten:worked})});
+  try{await safeAudit('Open registratie automatisch afgesloten op einde dag voor '+(current?.naam||'onbekend'),{actie:'open_registratie_afgesloten',id:r.id,datum:r.datum})}catch(e){}
+}
+
+async function login(){try{let r=await sb('/werknemers?select=*&pincode=eq.'+encodeURIComponent(pin)+'&actief=eq.true&limit=1');if(!r[0]){msg('🐕 Charlie kent deze pincode niet.');pin='';drawDots();return}current=r[0];pin='';drawDots();$('loginView').classList.add('hidden');$('workView').classList.remove('hidden');$('hello').textContent=current.naam;let admin=isAdmin();$('roleBadge').classList.toggle('hidden',!admin);$('roleBadge').textContent=isViewer()&&!isOwner()?'Meekijken':'Beheerder';$('employeePanel').classList.toggle('hidden',admin);$('adminPanel').classList.toggle('hidden',!admin);await load();setCharlieQuote('login');msg('🐕 '+pick(CHARLIE_QUOTES.login)+' Welkom '+current.naam+'.')}catch(e){msg('Loginfout: '+err(e))}}
+function isOwner(){let r=String(current?.rol||'').toLowerCase();return r.includes('admin')||r.includes('beheerder')||current?.naam?.toLowerCase()==='jos'}
+function isViewer(){let r=String(current?.rol||'').toLowerCase();return r.includes('meekijk')||r.includes('kijk')||r.includes('viewer')||current?.naam?.toLowerCase()==='rhani'}
+function isAdmin(){return isOwner()||isViewer()}
+function calc(r){let w=Number(r.totaal_minuten||0),pm=Number(r.pauze_minuten||0);if(pm===9999)return{worked:0,pause:0,balance:w,type:'Beginsaldo'};if(pm===PENDING_LEAVE)return{worked:0,pause:0,balance:0,type:'Verlofaanvraag'};if(pm===DENIED_LEAVE)return{worked:0,pause:0,balance:0,type:'Afgekeurde aanvraag'};if(!w&&r.inkloktijd&&r.uitkloktijd)w=Math.max(0,mins(r.inkloktijd,r.uitkloktijd)-pm);let type='Werkdag';if(!r.inkloktijd&&w<0)type=w<=-480?'Recupdag':'Halve recup';if(!r.inkloktijd&&w===480)type='Verlof';if(!r.inkloktijd&&w===0&&r.uitkloktijd)type='Ziekte';return{worked:w,pause:pm,balance:w? w-NORM:0,type}}
+function userRecs(uid){return records.filter(r=>Number(r.medewerker_id)===Number(uid))}function monthSaldo(uid){return userRecs(uid).filter(r=>String(r.datum||'').startsWith(today().slice(0,7))&&(r.uitkloktijd||r.totaal_minuten!==null)).reduce((s,r)=>s+calc(r).balance,0)}function totalSaldo(uid){return userRecs(uid).filter(r=>r.uitkloktijd||r.totaal_minuten!==null).reduce((s,r)=>s+calc(r).balance,0)}function weekStart(){let d=new Date();let day=(d.getDay()+6)%7;d.setDate(d.getDate()-day);return d.toISOString().slice(0,10)}function weekSaldo(uid){let ws=weekStart();return userRecs(uid).filter(r=>String(r.datum||'')>=ws&&(r.uitkloktijd||r.totaal_minuten!==null)).reduce((s,r)=>s+calc(r).balance,0)}function dayWork(uid){let rs=userRecs(uid).filter(r=>r.datum===today());return rs.reduce((s,r)=>s+calc(r).worked,0)}function recupDays(m){let pos=Math.max(0,Number(m)||0);let whole=Math.floor(pos/480),half=Math.floor((pos-whole*480)/240);return whole+(half?0.5:0)}
+function render(){if(!current)return;if(isAdmin())renderAdminHome();else{renderEmployee();renderEmployeeDashboard();}}
+function renderEmployee(){let r=activeEntry||userRecs(current.id).find(x=>x.datum===today()&&Number(x.pauze_minuten)!==PENDING_LEAVE&&Number(x.pauze_minuten)!==DENIED_LEAVE);let ps=r?localStorage.getItem('pause_'+r.id):null;let c=r?calc(r):null;let openReq=userRecs(current.id).filter(x=>Number(x.pauze_minuten)===PENDING_LEAVE).length;let base=r?`<div class="mini"><span>Ingecheckt</span><b>${hm(r.inkloktijd)}</b></div><div class="mini"><span>Schoft</span><b>${dur(c.pause)}${ps?' loopt':''}</b></div><div class="mini"><span>Uitchecken</span><b>${hm(r.uitkloktijd)}</b></div><div class="mini"><span>Vandaag</span><b>${dur(c.worked)}</b></div>`:`<div class="mini"><span>Status</span><b>Nog niet gestart</b></div><div class="mini"><span>Vandaag</span><b>0u00</b></div>`;$('statusGrid').innerHTML=base+`<div class="mini"><span>Verlofaanvragen</span><b>${openReq}</b></div>`}
+function uniqueEmployeeCount(rows){return new Set(rows.map(r=>Number(r.medewerker_id)).filter(Boolean)).size}
+
+function applyRoleVisibility(){
+  let viewer=typeof isViewer==='function'&&isViewer()&&!isOwner();
+  ['workersBtn','registrationsBtn','settingsBtn','notificationsBtn','recupBtn','verlofBtn','ziekteBtn'].forEach(id=>{let el=$(id);if(el)el.style.display=viewer?'none':''});
+  let rb=$('roleBadge'); if(rb&&viewer)rb.textContent='Meekijken';
+}
+
+function pendingRequestCount(){return records.filter(r=>Number(r.pauze_minuten)===PENDING_LEAVE).length}
+function badgeCountHtml(n){return n>0?`<span class="badgeCount">${n}</span>`:''}
+function updateRequestBadge(){
+  let n=pendingRequestCount();
+  let b=$('notificationsBtn');
+  if(b)b.innerHTML='🔔 Meldingen / aanvragen '+badgeCountHtml(n);
+}
+
+function employeeStatusText(){
+  let open=userRecs(current.id).find(r=>!r.uitkloktijd&&r.inkloktijd);
+  if(open)return open.datum===today()?`🟢 Aan het werk sinds ${hm(open.inkloktijd)}`:`🟠 Open sinds ${open.datum} om ${hm(open.inkloktijd)}`;
+  let todayRows=userRecs(current.id).filter(r=>r.datum===today());
+  let last=todayRows.find(r=>r.uitkloktijd&&r.inkloktijd);
+  if(last)return `🏁 Vandaag uitgecheckt om ${hm(last.uitkloktijd)}`;
+  let special=todayRows.find(r=>!r.inkloktijd&&r.totaal_minuten!==null);
+  if(special)return `📌 Vandaag: ${calc(special).type}`;
+  return '⚪ Nog niet ingecheckt vandaag';
+}
+function renderEmployeeDashboard(){
+  if(!current||isAdmin())return;
+  let el=$('employeeDashboard'); if(!el)return;
+  let s=vacationStats? vacationStats(current.id,new Date().getFullYear()) : {remaining:'-',pending:'-'};
+  let todayWorked=dayWork(current.id);
+  let week=weekSaldo(current.id);
+  let total=totalSaldo(current.id);
+  let req=userRecs(current.id).filter(r=>Number(r.pauze_minuten)===PENDING_LEAVE).length;
+  let chatCount=(typeof unreadHubCounts==='function'?unreadHubCounts().chat:0);
+  el.innerHTML=`<div class="employeeStatusCard">${employeeStatusText()}</div>
+  <div class="employeeSummary">
+    <div class="mini"><span>Vandaag gewerkt</span><b>${dur(todayWorked)}</b></div>
+    <div class="mini"><span>Deze week saldo</span><b>${sal(week)}</b></div>
+    <div class="mini"><span>Totaal plus/min</span><b>${sal(total)}</b></div>
+    <div class="mini"><span>Verlof over</span><b>${s.remaining} dagen</b></div>
+    <div class="mini"><span>Open aanvragen</span><b>${req}</b></div>
+    <div class="mini"><span>Nieuwe berichten</span><b>${chatCount}</b></div>
+  </div>`;
+}
+
+function renderAdminHome(){
+ let list=users.filter(u=>!isAdminUser(u));
+ let todayRows=records.filter(r=>r.datum===today());
+ let active=uniqueEmployeeCount(todayRows.filter(r=>r.inkloktijd&&!r.uitkloktijd));
+ let checked=uniqueEmployeeCount(todayRows.filter(r=>r.inkloktijd&&r.uitkloktijd));
+ let verlof=uniqueEmployeeCount(todayRows.filter(r=>calc(r).type==='Verlof'));
+ let ziek=uniqueEmployeeCount(todayRows.filter(r=>calc(r).type==='Ziekte'));
+ let worked=todayRows.reduce((s,r)=>s+calc(r).worked,0);
+ let pendingReq=records.filter(r=>Number(r.pauze_minuten)===PENDING_LEAVE).length;
+ if($('adminStats')){let uc=typeof unreadHubCounts==='function'?unreadHubCounts():{total:0};$('adminStats').innerHTML=`${uc.total?`<div class="hubNotice">🐕 Charlie heeft ${uc.total} nieuwe melding${uc.total===1?'':'en'} voor jou.</div>`:''}<div class="mini"><span>Actief</span><b>${active}</b></div><div class="mini"><span>Uitgecheckt</span><b>${checked}</b></div><div class="mini"><span>Verlof / ziek</span><b>${verlof}/${ziek}</b></div><div class="mini"><span>Aanvragen</span><b>${pendingReq}</b></div><div class="mini"><span>Vandaag gewerkt</span><b>${dur(worked)}</b></div>`;}
+ $('adminToday').innerHTML=list.map(u=>{let open=userRecs(u.id).find(r=>!r.uitkloktijd&&r.inkloktijd);let special=userRecs(u.id).find(r=>r.datum===today()&&!r.inkloktijd&&r.totaal_minuten!==null);let status=open?(open.datum===today()?'Aan het werk':'Open sinds '+open.datum):special?calc(special).type:'Vandaag';let w=dayWork(u.id);let s=monthSaldo(u.id);return `<div class="emp"><div class="avatar">${u.naam[0]}</div><div><b>${u.naam}</b><small>${status}</small><small>Saldo maand</small></div><div><b>${dur(w)}</b><small class="${s>=0?'plus':'minus'}">${sal(s)}</small></div></div>`}).join('')||'<div class="emp">Geen werknemers gevonden</div>'}
+async function action(a){try{let r=await getActive(current.id);if(a==='in'){
+ if(r){
+   if(r.datum!==today()){
+     if(!confirm('Er staat nog een open registratie van '+r.datum+'. Charlie kan die afsluiten op 23:59 en daarna vandaag opnieuw inchecken. Doorgaan?'))return msg('Sluit eerst de open registratie af.');
+     await closeStaleOpenRegistration(r);
+     r=null;
+   }else{
+     return msg('Je bent al ingecheckt.');
+   }
+ }
+ await sb('/urenregistratie',{method:'POST',headers:{Prefer:'return=representation'},body:JSON.stringify({medewerker_id:current.id,datum:today(),inkloktijd:iso(),pauze_minuten:0})});setCharlieQuote('in');actionBanner('✅ INGECHECKT', new Date().toLocaleTimeString('nl-BE',{hour:'2-digit',minute:'2-digit'})+' geregistreerd','ok',pick(CHARLIE_QUOTES.in));msg('Ingecheckt.')
+}
+if(a==='breakStart'){if(!r)return msg('Eerst inchecken.');localStorage.setItem('pause_'+r.id,iso());setCharlieQuote('breakStart');actionBanner('☕ PAUZE GESTART', new Date().toLocaleTimeString('nl-BE',{hour:'2-digit',minute:'2-digit'})+' geregistreerd','warn',pick(CHARLIE_QUOTES.breakStart));msg('Pauze gestart.')}
+if(a==='breakStop'){if(!r)return msg('Geen actieve werkdag.');let ps=localStorage.getItem('pause_'+r.id);if(!ps)return msg('Geen actieve schoft gevonden.');let add=Math.max(0,mins(ps,iso()));await sb('/urenregistratie?id=eq.'+r.id,{method:'PATCH',headers:{Prefer:'return=representation'},body:JSON.stringify({pauze_minuten:Number(r.pauze_minuten||0)+add})});localStorage.removeItem('pause_'+r.id);setCharlieQuote('breakStop');actionBanner('▶️ PAUZE GESTOPT','Pauze: '+dur(add),'ok',pick(CHARLIE_QUOTES.breakStop));msg('Pauze gestopt: '+dur(add))}
+if(a==='out'){if(!r)return msg('Je bent nog niet ingecheckt.');let ps=localStorage.getItem('pause_'+r.id),pause=Number(r.pauze_minuten||0);if(ps){pause+=Math.max(0,mins(ps,iso()));localStorage.removeItem('pause_'+r.id)}let out=iso(),worked=Math.max(0,mins(r.inkloktijd,out)-pause);await sb('/urenregistratie?id=eq.'+r.id,{method:'PATCH',headers:{Prefer:'return=representation'},body:JSON.stringify({uitkloktijd:out,pauze_minuten:pause,totaal_minuten:worked})});setCharlieQuote(worked>=540?'longDay':'out');actionBanner('🏁 UITGECHECKT','Netto gewerkt: '+dur(worked),'stop',pick(worked>=540?CHARLIE_QUOTES.longDay:CHARLIE_QUOTES.out));msg('Uitgecheckt. Netto: '+dur(worked)+(r.datum!==today()?' (open registratie van '+r.datum+' afgesloten)':''))}await load()}catch(e){msg('Databasefout: '+err(e))}}
+document.querySelectorAll('[data-action]').forEach(b=>b.onclick=()=>action(b.dataset.action));$('logoutBtn').onclick=()=>{current=null;activeEntry=null;$('workView').classList.add('hidden');$('loginView').classList.remove('hidden');msg('Uitgelogd.')};
+
+function lockApp(reason='Vergrendeld. Voer opnieuw uw pincode in.'){
+  if(!current)return;
+  current=null;activeEntry=null;pin='';
+  drawDots();
+  $('workView').classList.add('hidden');
+  $('loginView').classList.remove('hidden');
+  msg(reason);
+}
+let lastActivity=Date.now();
+const AUTO_LOCK_MS=5*60*1000;
+function noteActivity(){lastActivity=Date.now()}
+['click','touchstart','keydown'].forEach(ev=>document.addEventListener(ev,noteActivity,{passive:true}));
+setInterval(()=>{if(current && Date.now()-lastActivity>AUTO_LOCK_MS)lockApp('Automatisch vergrendeld na 5 minuten inactiviteit.')},30000);
+document.addEventListener('visibilitychange',()=>{if(document.hidden && current){sessionStorage.setItem('hub_went_hidden_at',String(Date.now()))}else if(current){let t=Number(sessionStorage.getItem('hub_went_hidden_at')||0);if(t && Date.now()-t>2*60*1000)lockApp('Vergrendeld omdat de app even gesloten was.')}})
+
+function openModal(title,contentHtml){
+ $('modalTitle').textContent=title;
+ $('modalContent').innerHTML=contentHtml;
+ document.body.classList.add('modalOpen');
+ $('adminModal').classList.add('show');
+}
+function closeModal(){
+ $('adminModal').classList.remove('show');
+ document.body.classList.remove('modalOpen');
+}
+document.addEventListener('click',function(e){
+ if(e.target&&e.target.closest&&e.target.closest('#closeModal')){e.preventDefault();closeModal();return;}
+ if(e.target&&e.target.id==='adminModal'){closeModal();return;}
+});
+$('plusBtn').onclick=()=>{let rows=users.filter(u=>!isAdminUser(u)).map(u=>{let m=monthSaldo(u.id),w=weekSaldo(u.id),t=totalSaldo(u.id);return `<tr><td>${u.naam}</td><td>${dur(dayWork(u.id))}</td><td class="${w>=0?'plus':'minus'}">${sal(w)}</td><td class="${m>=0?'plus':'minus'}">${sal(m)}</td><td class="${t>=0?'plus':'minus'}">${sal(t)}</td><td>${recupDays(t)} dag(en)</td></tr>`}).join('');openModal('Plusuren',`<table class="table"><tr><th>Werknemer</th><th>Vandaag</th><th>Deze week</th><th>Deze maand</th><th>Totaal saldo</th><th>Recup mogelijk</th></tr>${rows}</table><p class="warn">Regel: 8u00 per werkdag is nul. Meer is plus, minder is min. Recup mogelijk wordt berekend op het totale positieve saldo.</p>`)};
+
+const DEFAULT_VAKANTIEDAGEN=20;
+function vacationStats(uid,year=new Date().getFullYear()){
+  let rows=userRecs(uid).filter(r=>String(r.datum||'').startsWith(String(year)));
+  let approved=rows.filter(r=>calc(r).type==='Verlof').length;
+  let pending=rows.filter(r=>Number(r.pauze_minuten)===PENDING_LEAVE).length;
+  let denied=rows.filter(r=>Number(r.pauze_minuten)===DENIED_LEAVE).length;
+  let remaining=Math.max(0,DEFAULT_VAKANTIEDAGEN-approved-pending);
+  return{year,approved,pending,denied,remaining,total:DEFAULT_VAKANTIEDAGEN};
+}
+function holidayBalanceModal(uid=null){
+  let year=new Date().getFullYear();
+  if(uid){
+    let u=users.find(x=>Number(x.id)===Number(uid))||current;
+    let s=vacationStats(u.id,year);
+    openModal('Mijn verlofsaldo',`<div class="warn"><b>${u.naam}</b><br>Jaar: ${year}</div><table class="table"><tr><th>Jaarrecht</th><th>Goedgekeurd</th><th>In aanvraag</th><th>Resterend</th></tr><tr><td>${s.total} dagen</td><td>${s.approved} dagen</td><td>${s.pending} dagen</td><td><b>${s.remaining} dagen</b></td></tr></table><p class="warn">Dit is een eenvoudig saldo op basis van ${DEFAULT_VAKANTIEDAGEN} dagen per jaar. Later kunnen we dit per werknemer apart instelbaar maken.</p>`);
+    return;
+  }
+  let rows=users.filter(u=>!isAdminUser(u)).map(u=>{
+    let s=vacationStats(u.id,year);
+    return `<tr><td>${u.naam}</td><td>${s.total}</td><td>${s.approved}</td><td>${s.pending}</td><td>${s.denied}</td><td><b>${s.remaining}</b></td></tr>`
+  }).join('');
+  openModal('Vakantiesaldo',`<table class="table"><tr><th>Werknemer</th><th>Jaarrecht</th><th>Goedgekeurd</th><th>In aanvraag</th><th>Afgekeurd</th><th>Resterend</th></tr>${rows}</table><p class="warn">Standaard: ${DEFAULT_VAKANTIEDAGEN} vakantiedagen per werknemer per jaar. Goedgekeurde verlofdagen en openstaande aanvragen worden automatisch meegeteld.</p>`);
+}
+
+function specialForm(type){let options=users.filter(u=>!isAdminUser(u)).map(u=>`<option value="${u.id}">${u.naam}</option>`).join('');let map={recup:'Recupdag',verlof:'Verlof',ziekte:'Ziekte'};let rangeFields=type==='recup'?`<input id="mDate" type="date" value="${today()}"><select id="mAmount"><option value="-480">Volledige recupdag (-8u)</option><option value="-240">Halve recup (-4u)</option></select>`:`<label>Van</label><input id="mStart" type="date" value="${today()}"><label>Tot en met</label><input id="mEnd" type="date" value="${today()}"><label class="check"><input id="mSkipWeekend" type="checkbox" checked> Weekends overslaan</label>`;openModal(map[type],`<div class="two"><div><div class="form"><select id="mUser">${options}</select>${rangeFields}<textarea id="mNote" rows="2" placeholder="Opmerking (optioneel)"></textarea><button class="btn green" id="mSave">Opslaan</button></div><p class="warn">${type==='recup'?'Recup wordt van de plusuren afgetrokken.':'Meerdere dagen worden automatisch als aparte dagregels opgeslagen.'}</p></div><div><h3>Charlie zegt</h3><div class="warn">🐕 ${type==='verlof'?'Verlof ingepland. Charlie neemt even over.':type==='ziekte'?'Rust goed uit. Charlie bewaakt de uren.':'Recupdag toegevoegd. Geniet ervan.'}</div></div></div>`);$('mSave').onclick=()=>saveSpecial(type)}
+function isAdminUser(u){let r=String(u.rol||'').toLowerCase();return r.includes('admin')||r.includes('beheer')||r.includes('meekijk')||r.includes('kijk')||r.includes('viewer')||u.naam.toLowerCase()==='jos'||u.naam.toLowerCase()==='rhani'}
+$('recupBtn').onclick=()=>specialForm('recup');$('verlofBtn').onclick=()=>specialForm('verlof');$('ziekteBtn').onclick=()=>specialForm('ziekte');
+if($('requestLeaveBtn'))$('requestLeaveBtn').onclick=()=>employeeLeaveRequestModal();
+if($('notificationsBtn'))$('notificationsBtn').onclick=()=>notificationsModal();
+function employeeLeaveRequestModal(){openModal('Verlof aanvragen',`<div class="two"><div><div class="form"><label>Van</label><input id="reqStart" type="date" value="${today()}"><label>Tot en met <small style="font-weight:700;color:#557067">(optioneel bij 1 dag)</small></label><input id="reqEnd" type="date" placeholder="Leeg laten voor 1 dag"><label class="check"><input id="reqSkipWeekend" type="checkbox" checked> Weekends overslaan</label><textarea id="reqNote" rows="2" placeholder="Opmerking voor Jos (optioneel)"></textarea><button class="btn green" id="reqSave">Aanvraag verzenden</button></div><p class="warn">Voor 1 verlofdag vul je alleen <b>Van</b> in. Voor meerdere dagen vul je ook <b>Tot en met</b> in.</p></div><div><h3>Uw aanvragen</h3><div id="myReqs"></div></div></div>`);$('reqStart').onchange=()=>{if(!$('reqEnd').value)$('reqEnd').value=''};$('reqSave').onclick=saveLeaveRequest;renderMyRequests()}
+function renderMyRequests(){let mine=userRecs(current.id).filter(r=>Number(r.pauze_minuten)===PENDING_LEAVE||Number(r.pauze_minuten)===DENIED_LEAVE).sort((a,b)=>String(b.datum||'').localeCompare(String(a.datum||'')));$('myReqs').innerHTML=mine.length?`<table class="table"><tr><th>Datum</th><th>Status</th></tr>${mine.map(r=>`<tr><td>${r.datum}</td><td>${Number(r.pauze_minuten)===PENDING_LEAVE?'⏳ In behandeling':'❌ Afgekeurd'}</td></tr>`).join('')}</table>`:'<div class="warn">Geen openstaande aanvragen.</div>'}
+async function saveLeaveRequest(){try{let start=$('reqStart').value,end=$('reqEnd').value||start;let ds=datesBetween(start,end,$('reqSkipWeekend').checked);if(!ds.length)return msg('Geen geldige dagen gekozen.');let rows=ds.map(date=>({medewerker_id:current.id,datum:date,pauze_minuten:PENDING_LEAVE,totaal_minuten:0,uitkloktijd:iso()}));await sb('/urenregistratie',{method:'POST',headers:{Prefer:'return=representation'},body:JSON.stringify(rows)});setCharlieQuote('request');actionBanner('📨 VERLOFAANVRAAG VERZONDEN', ds.length+' dag(en) aangevraagd','info',pick(CHARLIE_QUOTES.request));msg('Verlofaanvraag verzonden.'); await audit(current.naam+' diende een verlofaanvraag in ('+ds.length+' dag(en))',{actie:'verlofaanvraag',dagen:ds.length});closeModal();await load()}catch(e){msg('Aanvraagfout: '+err(e))}}
+function pendingGroups(){let userById=Object.fromEntries(users.map(u=>[Number(u.id),u.naam]));let rows=records.filter(r=>Number(r.pauze_minuten)===PENDING_LEAVE).sort((a,b)=>String(a.datum||'').localeCompare(String(b.datum||'')));let groups={};rows.forEach(r=>{let key=String(r.medewerker_id)+'_'+String(r.created_at||'').slice(0,19);if(!groups[key])groups[key]={ids:[],uid:Number(r.medewerker_id),naam:userById[Number(r.medewerker_id)]||('ID '+r.medewerker_id),dates:[],created:r.created_at};groups[key].ids.push(r.id);groups[key].dates.push(r.datum)});return Object.values(groups)}
+function notificationsModal(){let groups=pendingGroups();let userById=Object.fromEntries(users.map(u=>[Number(u.id),u.naam]));let recent=records.slice().sort((a,b)=>String(b.created_at||b.inkloktijd||'').localeCompare(String(a.created_at||a.inkloktijd||''))).slice(0,30);let requests=groups.length?groups.map((g,i)=>`<div class="warn"><b>🌴 Verlofaanvraag van ${g.naam}</b><br>${g.dates[0]}${g.dates.length>1?' t.e.m. '+g.dates[g.dates.length-1]:''} (${g.dates.length} dag(en))<br><br><button class="btn green" onclick="approveLeaveRequest(${i})">Goedkeuren</button> <button class="btn light" onclick="denyLeaveRequest(${i})">Afkeuren</button></div>`).join(''):'<div class="warn">Geen openstaande verlofaanvragen.</div>';window._pendingGroups=groups;let events=recent.map(r=>{let c=calc(r),naam=userById[Number(r.medewerker_id)]||('ID '+r.medewerker_id);if(c.type==='Verlofaanvraag')return `🌴 ${naam} vroeg verlof aan voor ${r.datum}`;if(c.type==='Verlof')return `✅ ${naam} heeft verlof op ${r.datum}`;if(c.type==='Ziekte')return `♡ ${naam} staat ziek op ${r.datum}`;if(r.inkloktijd&&r.uitkloktijd)return `🏠 ${naam} checkte uit op ${r.datum} om ${hm(r.uitkloktijd)} (${dur(c.worked)})`;if(r.inkloktijd&&!r.uitkloktijd)return `↪ ${naam} is ingecheckt sinds ${hm(r.inkloktijd)}`;if(c.type==='Recupdag'||c.type==='Halve recup')return `📅 ${naam} heeft ${c.type.toLowerCase()} op ${r.datum}`;return `• ${naam}: ${c.type} op ${r.datum}`}).join('<br>');openModal('Meldingen en aanvragen',`<div class="two"><div><h3>Openstaande aanvragen</h3>${requests}</div><div><h3>Recente meldingen</h3><div class="warn">${events||'Nog geen meldingen.'}</div><p class="warn">Deze meldingen zijn alleen zichtbaar voor Jos/beheerder.</p></div></div>`)}
+async function approveLeaveRequest(i){try{let g=window._pendingGroups?.[i];if(!g)return;await sb('/urenregistratie?id=in.('+g.ids.join(',')+')',{method:'PATCH',headers:{Prefer:'return=representation'},body:JSON.stringify({pauze_minuten:0,totaal_minuten:480,uitkloktijd:iso()})});actionBanner('✅ VERLOF GOEDGEKEURD',g.naam,'ok','Charlie heeft het verlof verwerkt.');msg('Verlofaanvraag goedgekeurd.');await audit('Verlofaanvraag goedgekeurd voor '+g.naam,{actie:'verlof_goedgekeurd'});await load();notificationsModal()}catch(e){msg('Goedkeurfout: '+err(e))}}
+async function denyLeaveRequest(i){try{let g=window._pendingGroups?.[i];if(!g)return;await sb('/urenregistratie?id=in.('+g.ids.join(',')+')',{method:'PATCH',headers:{Prefer:'return=representation'},body:JSON.stringify({pauze_minuten:DENIED_LEAVE,totaal_minuten:0,uitkloktijd:iso()})});actionBanner('❌ VERLOF AFGEKEURD',g.naam,'stop','Charlie heeft de aanvraag bijgewerkt.');msg('Verlofaanvraag afgekeurd.');await audit('Verlofaanvraag afgekeurd voor '+g.naam,{actie:'verlof_afgekeurd'});await load();notificationsModal()}catch(e){msg('Afkeurfout: '+err(e))}}
+
+$('workersBtn').onclick=()=>workersModal();
+if($('registrationsBtn'))$('registrationsBtn').onclick=()=>registrationsModal();
+
+if($('settingsBtn'))$('settingsBtn').onclick=()=>settingsModal();
+function settingsModal(){let rows=users.filter(u=>!isAdminUser(u)).map(u=>{let start=userRecs(u.id).filter(r=>Number(r.pauze_minuten)===9999).reduce((s,r)=>s+Number(r.totaal_minuten||0),0);return `<tr><td>${u.naam}</td><td>${sal(start)}</td><td><button class="btn light" onclick="editStartSaldo(${u.id})">Wijzig</button></td></tr>`}).join('');openModal('Instellingen',`<div class="two"><div><h3>Basisinstellingen</h3><table class="table"><tr><th>Instelling</th><th>Waarde</th></tr><tr><td>Standaard werkdag</td><td>8u00</td></tr><tr><td>Volledige recupdag</td><td>-8u00</td></tr><tr><td>Halve recupdag</td><td>-4u00</td></tr><tr><td>Quotes</td><td>Charlie quotes actief</td></tr><tr><td>Versie</td><td>Tuinafsluiter Hub v1.3 Startklaar</td></tr></table><h3>Beginsaldo plus/minuren</h3><table class="table"><tr><th>Werknemer</th><th>Beginsaldo</th><th></th></tr>${rows}</table><p class="warn">Vul hier de bestaande plus- of minuren in. Charlie rekent daarna verder vanaf dit saldo.</p></div><div><h3>App status</h3><button class="btn green" onclick="enableLocalNotifications()">🔔 Meldingen op dit toestel aanzetten</button><p class="warn">Let op: dit zijn lokale browsermeldingen. Echte iPhone-pushmeldingen naar Jos zonder de app te openen maken we als aparte koppeling.</p><div class="warn">✅ Prikklok actief<br>✅ Supabase gekoppeld<br>✅ Plusuren actief<br>✅ Excel-export actief<br>✅ Registraties beheren actief<br>✅ Mobiele weergave verbeterd<br>✅ Rhani meekijkrol voorbereid<br>✅ Ongelezen tellers actief<br>✅ Automatische app-vergrendeling actief<br>✅ Open registraties van vorige dag worden correct afgehandeld<br>✅ Verlofaanvraag meldingbadge actief<br>✅ Live start checklist toegevoegd<br>✅ Vakantiesaldo toegevoegd<br>✅ Duidelijke actiebanners toegevoegd<br>✅ Pincode sneller en gevoeliger op gsm<br>✅ Werknemer-dashboard toegevoegd<br>✅ Scrollen op gsm versoepeld<br>✅ Live Start popup hersteld<br>✅ Ruwe tekst buiten app verwijderd<br>✅ Sluiten-knop definitief hersteld<br>✅ Scrollen op gsm extra soepel gemaakt<br>✅ Officieel app-icoon toegevoegd<br>✅ Klaar voor domeinnaam<br>✅ PDF/Excel export verbeterd<br>✅ Excel/CSV download gefixt<br>✅ Live reset-knoppen toegevoegd<br>✅ Startklaar voor morgen<br>✅ Activiteitenlog uitgebreid<br>✅ Verlofaanvragen actief<br>✅ Meldingen voor Jos actief</div></div></div>`)}
+function editStartSaldo(uid){let u=users.find(x=>Number(x.id)===Number(uid));let start=userRecs(uid).filter(r=>Number(r.pauze_minuten)===9999).reduce((s,r)=>s+Number(r.totaal_minuten||0),0);openModal('Beginsaldo '+(u?.naam||''),`<div class="form"><label>Plus/minuren in minuten</label><input id="startSaldoMin" type="number" value="${start}"><p class="warn">Voorbeelden: +2u30 = 150, -3u15 = -195, +8u00 = 480.</p><button class="btn green" id="saveStartSaldoBtn">Opslaan</button><button class="btn light" id="backSettingsBtn">Terug</button></div>`);$('saveStartSaldoBtn').onclick=()=>saveStartSaldo(uid);$('backSettingsBtn').onclick=settingsModal}
+async function saveStartSaldo(uid){try{let val=Number($('startSaldoMin').value||0);let existing=userRecs(uid).filter(r=>Number(r.pauze_minuten)===9999);for(let r of existing){await sb('/urenregistratie?id=eq.'+r.id,{method:'DELETE'})}if(val!==0){await sb('/urenregistratie',{method:'POST',headers:{Prefer:'return=representation'},body:JSON.stringify({medewerker_id:uid,datum:'2026-01-01',pauze_minuten:9999,totaal_minuten:val,uitkloktijd:iso()})})}msg('Beginsaldo opgeslagen.');await load();settingsModal()}catch(e){msg('Opslagfout: '+err(e))}}
+function workersModal(){let rows=users.map(u=>`<tr><td>${u.naam}</td><td>${u.pincode||''}</td><td>${u.rol||''}</td><td>${u.actief?'Actief':'Inactief'}</td><td><button class="btn light" onclick="editWorker(${u.id})">Wijzig</button></td></tr>`).join('');openModal('Werknemers beheren',`<div class="two"><div><h3>Bestaande werknemers</h3><table class="table"><tr><th>Naam</th><th>Pincode</th><th>Rol</th><th>Status</th><th></th></tr>${rows}</table></div><div><h3>Nieuwe werknemer</h3><div class="form"><input id="newName" placeholder="Naam"><input id="newPin" placeholder="Pincode, bv. 1234" maxlength="4"><select id="newRole"><option value="chauffeur">chauffeur</option><option value="magazijnier">magazijnier</option><option value="admin">admin</option><option value="meekijk">meekijk</option></select><button class="btn green" id="addWorkerBtn">Toevoegen</button></div><p class="warn">Pincode moet uniek zijn. Zet werknemers liever op inactief dan te verwijderen. Inactieve werknemers kunnen niet meer inloggen.</p></div></div>`);$('addWorkerBtn').onclick=addWorker}
+async function addWorker(){try{let naam=$('newName').value.trim(),pincode=$('newPin').value.trim(),rol=$('newRole').value;if(!naam||!pincode)return msg('Naam en pincode zijn verplicht.');await sb('/werknemers',{method:'POST',headers:{Prefer:'return=representation'},body:JSON.stringify({naam,pincode,rol,actief:true})});msg('Werknemer toegevoegd.');await audit('Werknemer toegevoegd: '+naam,{actie:'werknemer_toegevoegd'});await load();workersModal()}catch(e){msg('Opslagfout: '+err(e))}}
+function editWorker(id){let u=users.find(x=>Number(x.id)===Number(id));if(!u)return;openModal('Werknemer wijzigen',`<div class="form"><label>Naam</label><input id="editName" value="${u.naam||''}"><label>Pincode</label><input id="editPin" value="${u.pincode||''}" maxlength="4"><label>Rol</label><select id="editRole"><option ${u.rol==='chauffeur'?'selected':''} value="chauffeur">chauffeur</option><option ${u.rol==='magazijnier'?'selected':''} value="magazijnier">magazijnier</option><option ${u.rol==='admin'?'selected':''} value="admin">admin</option></select><label>Status</label><select id="editActive"><option value="true" ${u.actief?'selected':''}>Actief</option><option value="false" ${!u.actief?'selected':''}>Inactief</option></select><button class="btn green" id="saveWorkerBtn">Opslaan</button><button class="btn light" id="backWorkersBtn">Terug naar lijst</button></div>`);$('saveWorkerBtn').onclick=()=>saveWorker(id);$('backWorkersBtn').onclick=workersModal}
+async function saveWorker(id){try{let body={naam:$('editName').value.trim(),pincode:$('editPin').value.trim(),rol:$('editRole').value,actief:$('editActive').value==='true'};if(!body.naam||!body.pincode)return msg('Naam en pincode zijn verplicht.');await sb('/werknemers?id=eq.'+id,{method:'PATCH',headers:{Prefer:'return=representation'},body:JSON.stringify(body)});msg('Werknemer opgeslagen.');await audit('Werknemer aangepast: '+body.naam+(body.actief?'':' (inactief gezet)'),{actie:'werknemer_aangepast'});await load();workersModal()}catch(e){msg('Opslagfout: '+err(e))}}
+
+
+function registrationsModal(){
+ let options='<option value="all">Alle werknemers</option>'+users.filter(u=>!isAdminUser(u)).map(u=>`<option value="${u.id}">${u.naam}</option>`).join('');
+ openModal('Registraties beheren',`<div class="form"><div class="two"><div><label>Werknemer</label><select id="regUser">${options}</select></div><div><label>Vanaf datum</label><input id="regFrom" type="date" value="${today().slice(0,8)}01"></div></div><button class="btn green" id="regFilterBtn">Filter toepassen</button></div><div id="regList"></div><p class="warn">Gebruik dit voor vergeten uitklokken, verkeerde pauzes of testregistraties. Wijzigingen tellen meteen mee in plusuren en export.</p>`);
+ $('regFilterBtn').onclick=renderRegistrationsList; renderRegistrationsList();
+}
+function renderRegistrationsList(){
+ let uid=$('regUser')?.value||'all', from=$('regFrom')?.value||'1900-01-01';
+ let userById=Object.fromEntries(users.map(u=>[Number(u.id),u.naam]));
+ let list=records.filter(r=>(uid==='all'||Number(r.medewerker_id)===Number(uid))&&String(r.datum||'')>=from).sort((a,b)=>String(b.datum||'').localeCompare(String(a.datum||'')) || String(b.inkloktijd||'').localeCompare(String(a.inkloktijd||''))).slice(0,80);
+ $('regList').innerHTML=`<table class="table"><tr><th>Datum</th><th>Werknemer</th><th>Type</th><th>In</th><th>Uit</th><th>Schoft</th><th>Gewerkt</th><th>Saldo</th><th>Acties</th></tr>${list.map(r=>{let c=calc(r);return `<tr><td>${r.datum||''}</td><td>${userById[Number(r.medewerker_id)]||r.medewerker_id}</td><td>${c.type}</td><td>${hm(r.inkloktijd)}</td><td>${hm(r.uitkloktijd)}</td><td>${dur(c.pause)}</td><td>${dur(c.worked)}</td><td>${sal(c.balance)}</td><td><button class="btn light" onclick="editRegistration(${r.id})">✏️</button> <button class="btn light" onclick="deleteRegistration(${r.id})">🗑️</button></td></tr>`}).join('')}</table>`;
+}
+function timeVal(x){return x?new Date(x).toTimeString().slice(0,5):''}
+function localIso(date,time){if(!date||!time)return null;return new Date(date+'T'+time+':00').toISOString()}
+function editRegistration(id){
+ let r=records.find(x=>Number(x.id)===Number(id)); if(!r)return msg('Registratie niet gevonden.');
+ let opts=users.filter(u=>!isAdminUser(u)).map(u=>`<option value="${u.id}" ${Number(u.id)===Number(r.medewerker_id)?'selected':''}>${u.naam}</option>`).join('');
+ let c=calc(r);
+ openModal('Registratie aanpassen',`<div class="form"><label>Werknemer</label><select id="eUser">${opts}</select><label>Datum</label><input id="eDate" type="date" value="${r.datum||today()}"><div class="two"><div><label>Incheck</label><input id="eIn" type="time" value="${timeVal(r.inkloktijd)}"></div><div><label>Uitcheck</label><input id="eOut" type="time" value="${timeVal(r.uitkloktijd)}"></div></div><label>Schoft / pauze minuten</label><input id="ePause" type="number" min="0" value="${Number(r.pauze_minuten||0)}"><label>Manueel totaal minuten (voor verlof/ziekte/recup)</label><input id="eTotal" type="number" value="${r.inkloktijd?'':Number(r.totaal_minuten||0)}"><button class="btn green" id="saveRegBtn">Opslaan</button><button class="btn light" id="backRegBtn">Terug naar registraties</button></div><p class="warn">Voor gewone werkdagen vul je incheck, uitcheck en pauze in. Voor verlof/ziekte/recup kun je het manueel totaal gebruiken: verlof 480, ziekte 0, recup -480 of -240.</p>`);
+ $('saveRegBtn').onclick=()=>saveRegistration(id); $('backRegBtn').onclick=registrationsModal;
+}
+async function saveRegistration(id){
+ try{
+  let date=$('eDate').value, tin=$('eIn').value, tout=$('eOut').value, pause=Number($('ePause').value||0), manual=$('eTotal').value;
+  let inIso=localIso(date,tin), outIso=localIso(date,tout), total=null;
+  if(inIso&&outIso) total=Math.max(0,mins(inIso,outIso)-pause); else if(manual!=='') total=Number(manual);
+  let body={medewerker_id:Number($('eUser').value),datum:date,inkloktijd:inIso,uitkloktijd:outIso,pauze_minuten:pause,totaal_minuten:total};
+  await sb('/urenregistratie?id=eq.'+id,{method:'PATCH',headers:{Prefer:'return=representation'},body:JSON.stringify(body)});
+  actionBanner('💾 REGISTRATIE OPGESLAGEN','Uren zijn opnieuw berekend','ok','Charlie heeft opnieuw gerekend.');msg('Registratie opgeslagen. Charlie heeft opnieuw gerekend.'); await safeAudit('Registratie aangepast door '+(current?.naam||'onbekend'),{actie:'registratie_aangepast',id}); await load(); registrationsModal();
+ }catch(e){msg('Opslagfout: '+err(e))}
+}
+async function deleteRegistration(id){
+ if(!confirm('Deze registratie verwijderen?'))return;
+ try{await sb('/urenregistratie?id=eq.'+id,{method:'DELETE'}); actionBanner('🗑️ REGISTRATIE VERWIJDERD','Testregel of fout verwijderd','stop','Charlie heeft het overzicht opgekuist.');msg('Registratie verwijderd.'); await audit('Registratie verwijderd',{actie:'registratie_verwijderd',id}); await load(); registrationsModal()}catch(e){msg('Verwijderfout: '+err(e))}
+}
+
+function datesBetween(start,end,skipWeekend){let out=[],a=new Date(start+'T12:00:00'),b=new Date(end+'T12:00:00');if(isNaN(a)||isNaN(b)||a>b)return out;for(let d=new Date(a);d<=b;d.setDate(d.getDate()+1)){let day=d.getDay();if(skipWeekend&&(day===0||day===6))continue;out.push(d.toISOString().slice(0,10))}return out}
+async function saveSpecial(type){try{let uid=Number($('mUser').value);let rows=[];if(type==='recup'){let date=$('mDate').value,val=Number($('mAmount').value);rows=[{medewerker_id:uid,datum:date,pauze_minuten:0,totaal_minuten:val,uitkloktijd:iso()}]}else{let ds=datesBetween($('mStart').value,$('mEnd').value,$('mSkipWeekend').checked);if(!ds.length)return msg('Geen geldige dagen gekozen.');let val=type==='verlof'?480:0;rows=ds.map(date=>({medewerker_id:uid,datum:date,pauze_minuten:0,totaal_minuten:val,uitkloktijd:iso()}))}await sb('/urenregistratie',{method:'POST',headers:{Prefer:'return=representation'},body:JSON.stringify(rows)});actionBanner('✅ OPGESLAGEN',(type==='recup'?'Recup':type)+' '+rows.length+' dag(en)','ok','Charlie heeft dit verwerkt.');msg((type==='recup'?'Recup':type)+' opgeslagen: '+rows.length+' dag(en).');await safeAudit((type==='recup'?'Recup':type)+' geregistreerd door '+(current?.naam||'onbekend')+': '+rows.length+' dag(en)',{actie:'speciale_dag',type,uid});closeModal();await load()}catch(e){msg('Opslagfout: '+err(e))}}
+
+
+function hubTime(x){return x?new Date(x).toLocaleString('nl-BE',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}):''}
+function teamchatModal(){
+ try{
+  setChatReadNow();updateHubBadges();
+  let allowed=hubItems.filter(i=>{
+    if(i.type!=='chat')return false;
+    let target=String(i.target||'all');
+    if(target==='all')return true;
+    if(!current)return false;
+    return target===String(current.id)||Number(i.author_id)===Number(current.id);
+  }).sort((a,b)=>String(a.created_at||'').localeCompare(String(b.created_at||'')));
+  let userOptions='';
+  if(isOwner()){
+    userOptions='<option value="all">Iedereen</option>'+users.filter(u=>Number(u.id)!==Number(current.id)).map(u=>`<option value="${u.id}">${u.naam}</option>`).join('');
+  }else{
+    let jos=users.find(u=>u.naam?.toLowerCase()==='jos'||String(u.rol||'').toLowerCase().includes('admin'));
+    userOptions='<option value="all">Iedereen</option>'+(jos?`<option value="${jos.id}">Alleen Jos</option>`:'');
+  }
+  let list=allowed.length?allowed.map(i=>{
+    let target=String(i.target||'all');
+    let targetName=target==='all'?'Iedereen':(users.find(u=>String(u.id)===target)?.naam||'Privé');
+    return `<div class="chatMsg ${isAdminUser({naam:i.author_name,rol:''})?'admin':''}"><b>${i.author_name||'Onbekend'}</b><span class="targetLabel">${targetName}</span><div>${String(i.message||'').replace(/[<>&]/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;'}[c]))}</div><small>${hubTime(i.created_at)}</small></div>`
+  }).join(''):'<div class="warn">Nog geen berichten.</div>';
+  openModal('Teamchat',`<div class="chatBox" id="chatList">${list}</div><div class="form" style="margin-top:14px"><label>Naar</label><select id="chatTarget">${userOptions}</select><label>Bericht</label><textarea id="chatText" rows="3" placeholder="Typ een bericht..."></textarea><button class="btn green" id="sendChatBtn">Verstuur</button></div><p class="warn">Berichten naar iedereen zijn zichtbaar voor het team. Privéberichten zijn alleen zichtbaar voor de verzender, ontvanger en Jos/eigenaar.</p>`);
+  $('sendChatBtn').onclick=sendChat;
+ }catch(e){openModal('Teamchat',hubSqlHelp())}
+}
+async function sendChat(){
+ try{
+  let t=$('chatText').value.trim(); if(!t)return msg('Typ eerst een bericht.');
+  let target=$('chatTarget')?.value||'all';
+  await postHubItem('chat',t,{target});
+  actionBanner('💬 BERICHT VERSTUURD', target==='all'?'Naar iedereen':'Privébericht','info','Charlie heeft het bericht afgeleverd.');msg(target==='all'?'Bericht verstuurd naar iedereen.':'Privébericht verstuurd.');
+  await safeAudit('Teamchatbericht geplaatst door '+(current?.naam||'onbekend')+(target==='all'?' naar iedereen':' naar '+(users.find(u=>String(u.id)===String(target))?.naam||target)),{actie:'teamchat',target});
+  await load(); updateHubBadges(); teamchatModal();
+ }catch(e){openModal('Teamchat',hubSqlHelp())}
+}
+function announcementsModal(){
+ try{
+  let anns=hubItems.filter(i=>i.type==='announcement').sort((a,b)=>String(b.created_at||'').localeCompare(String(a.created_at||'')));
+  let canPost=isAdmin();
+  let list=anns.length?anns.map(i=>{
+    let reads=readByArray(i);
+    let readLine=isAdmin()?`<div class="readList">Gelezen door: ${reads.length?reads.join(', '):'nog niemand'}</div>`:'';
+    let btn=!reads.includes(current?.naam)?`<button class="btn light" onclick="markAnnouncementRead(${i.id})">✓ Gelezen</button>`:'<span class="readList">✓ Gelezen</span>';
+    return `<div class="chatMsg admin"><b>📢 ${i.author_name||'Jos'}</b><div>${String(i.message||'').replace(/[<>&]/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;'}[c]))}</div><small>${hubTime(i.created_at)}</small>${readLine}<div style="margin-top:8px">${btn}</div></div>`
+  }).join(''):'<div class="warn">Nog geen mededelingen.</div>';
+  openModal('Mededelingen',`${canPost?'<div class="chatInput"><input id="annText" placeholder="Nieuwe mededeling voor iedereen..."><button class="btn green" id="sendAnnBtn">Plaats</button></div>':''}<div class="chatBox">${list}</div><p class="warn">Mededelingen zijn belangrijk. Werknemers kunnen ze als gelezen aanduiden.</p>`);
+  if(canPost)$('sendAnnBtn').onclick=sendAnnouncement;
+ }catch(e){openModal('Mededelingen',hubSqlHelp())}
+}
+async function sendAnnouncement(){
+ try{
+  let t=$('annText').value.trim(); if(!t)return msg('Typ eerst een mededeling.');
+  await postHubItem('announcement',t,{target:'all',pinned:true,read_by:[]});
+  actionBanner('📢 MEDEDELING GEPLAATST','Iedereen kan dit lezen','info','Charlie zet het bovenaan.');msg('Mededeling geplaatst. Iedereen ziet deze in de Hub.');
+  await safeAudit('Mededeling geplaatst door '+current.naam,{actie:'mededeling',message:t});
+  await load(); updateHubBadges(); announcementsModal();
+ }catch(e){openModal('Mededelingen',hubSqlHelp())}
+}
+async function markAnnouncementRead(id){
+ try{await markHubRead(id); updateHubBadges(); msg('Gelezen bevestigd.'); announcementsModal()}catch(e){msg('Kon gelezen-status niet opslaan.')}
+}
+function activityModal(){
+ try{
+  let acts=hubItems.filter(i=>i.type==='audit').sort((a,b)=>String(b.created_at||'').localeCompare(String(a.created_at||''))).slice(0,120);
+  let list=acts.length?`<table class="table"><tr><th>Tijd</th><th>Door</th><th>Activiteit</th></tr>${acts.map(i=>`<tr><td>${hubTime(i.created_at)}</td><td>${i.author_name||'Systeem'}</td><td>${i.message||''}</td></tr>`).join('')}</table>`:'<div class="warn">Nog geen activiteitenlog.</div>';
+  openModal('Activiteitenlog',list+'<p class="warn">Hier zie je belangrijke wijzigingen: registraties, verlof, werknemers, mededelingen en berichten. Dit is vooral handig voor Jos wanneer iemand anders later meekijkt of iets wijzigt.</p>');
+ }catch(e){openModal('Activiteitenlog',hubSqlHelp())}
+}
+
+if($('teamchatBtn'))$('teamchatBtn').onclick=teamchatModal;
+if($('teamchatEmployeeBtn'))$('teamchatEmployeeBtn').onclick=teamchatModal;
+if($('announcementsBtn'))$('announcementsBtn').onclick=announcementsModal;
+if($('announcementsEmployeeBtn'))$('announcementsEmployeeBtn').onclick=announcementsModal;
+if($('activityBtn'))$('activityBtn').onclick=activityModal;
+if($('exportBtn'))$('exportBtn').onclick=exportModal;
+
+
+
+function exportRows(uid='all',from='1900-01-01',to='2999-12-31'){
+ let userById=Object.fromEntries(users.map(u=>[Number(u.id),u.naam]));
+ return records.filter(r=>(uid==='all'||Number(r.medewerker_id)===Number(uid))&&String(r.datum||'')>=from&&String(r.datum||'')<=to)
+  .sort((a,b)=>String(a.datum||'').localeCompare(String(b.datum||'')) || String(a.inkloktijd||'').localeCompare(String(b.inkloktijd||'')))
+  .map(r=>{let c=calc(r);return{
+    datum:r.datum||'',
+    werknemer:userById[Number(r.medewerker_id)]||r.medewerker_id,
+    type:c.type,
+    in:hm(r.inkloktijd),
+    uit:hm(r.uitkloktijd),
+    schoft:dur(c.pause),
+    gewerkt:dur(c.worked),
+    saldo:sal(c.balance),
+    worked:c.worked,
+    balance:c.balance
+  }});
+}
+function exportModal(){
+ let opts='<option value="all">Alle werknemers</option>'+users.filter(u=>!isAdminUser(u)).map(u=>`<option value="${u.id}">${u.naam}</option>`).join('');
+ let firstMonth=today().slice(0,8)+'01';
+ openModal('Export PDF / Excel',`<div class="form">
+  <div class="two">
+   <div><label>Werknemer</label><select id="exUser">${opts}</select></div>
+   <div><label>Vanaf</label><input id="exFrom" type="date" value="${firstMonth}"></div>
+  </div>
+  <div class="two">
+   <div><label>Tot en met</label><input id="exTo" type="date" value="${today()}"></div>
+   <div><label>Rapport</label><select id="exType"><option value="details">Details per registratie</option><option value="summary">Samenvatting per werknemer</option></select></div>
+  </div>
+  <button class="btn green" id="previewExportBtn">Voorbeeld tonen</button>
+  <div class="two">
+   <button class="btn" id="pdfExportBtn">📄 PDF maken</button>
+   <button class="btn light" id="csvExportBtn">📊 Excel/CSV downloaden</button><button class="btn light" id="copyCsvBtn">📋 CSV kopiëren</button>
+  </div>
+ </div><div id="exportDownloadLink"></div><div id="exportPreview"></div><p class="warn">PDF opent een printvenster. Kies daar “Bewaar als PDF”. CSV opent in Excel/Numbers.</p>`);
+ $('previewExportBtn').onclick=renderExportPreview;
+ $('pdfExportBtn').onclick=printPdfReport;
+ $('csvExportBtn').onclick=downloadCsvReport;
+ $('copyCsvBtn').onclick=copyCsvReport;
+ renderExportPreview();
+}
+function exportSelection(){
+ return {uid:$('exUser')?.value||'all',from:$('exFrom')?.value||'1900-01-01',to:$('exTo')?.value||'2999-12-31',type:$('exType')?.value||'details'};
+}
+function summaryByEmployee(rows){
+ let map={};
+ rows.forEach(r=>{if(!map[r.werknemer])map[r.werknemer]={werknemer:r.werknemer,worked:0,balance:0,days:0};map[r.werknemer].worked+=r.worked;map[r.werknemer].balance+=r.balance;if(r.worked>0)map[r.werknemer].days+=1});
+ return Object.values(map).sort((a,b)=>a.werknemer.localeCompare(b.werknemer));
+}
+function exportHtml(rows,type){
+ if(type==='summary'){
+  let sum=summaryByEmployee(rows);
+  return `<table class="table"><tr><th>Werknemer</th><th>Werkdagen</th><th>Gewerkt</th><th>Saldo</th></tr>${sum.map(s=>`<tr><td>${s.werknemer}</td><td>${s.days}</td><td>${dur(s.worked)}</td><td>${sal(s.balance)}</td></tr>`).join('')}</table>`;
+ }
+ return `<table class="table"><tr><th>Datum</th><th>Werknemer</th><th>Type</th><th>In</th><th>Uit</th><th>Schoft</th><th>Gewerkt</th><th>Saldo</th></tr>${rows.map(r=>`<tr><td>${r.datum}</td><td>${r.werknemer}</td><td>${r.type}</td><td>${r.in}</td><td>${r.uit}</td><td>${r.schoft}</td><td>${r.gewerkt}</td><td>${r.saldo}</td></tr>`).join('')}</table>`;
+}
+function renderExportPreview(){
+ let s=exportSelection(), rows=exportRows(s.uid,s.from,s.to);
+ let worked=rows.reduce((a,r)=>a+r.worked,0), balance=rows.reduce((a,r)=>a+r.balance,0);
+ $('exportPreview').innerHTML=`<div class="exportSummary"><div class="mini"><span>Periode</span><b>${s.from} → ${s.to}</b></div><div class="mini"><span>Regels</span><b>${rows.length}</b></div><div class="mini"><span>Gewerkt</span><b>${dur(worked)}</b></div><div class="mini"><span>Saldo</span><b>${sal(balance)}</b></div></div>${exportHtml(rows,s.type)}`;
+}
+
+function copyCsvReport(){
+ let s=exportSelection(), rows=exportRows(s.uid,s.from,s.to);
+ let lines=[['Datum','Werknemer','Type','In','Uit','Schoft','Gewerkt','Saldo'].map(csvEscape).join(';')];
+ rows.forEach(r=>lines.push([r.datum,r.werknemer,r.type,r.in,r.uit,r.schoft,r.gewerkt,r.saldo].map(csvEscape).join(';')));
+ navigator.clipboard?.writeText(lines.join('\n')).then(()=>msg('CSV gekopieerd. Plak dit in Excel/Numbers.')).catch(()=>msg('Kopiëren niet gelukt.'));
+}
+
+function reportDocumentHtml(rows,s){
+ let worked=rows.reduce((a,r)=>a+r.worked,0), balance=rows.reduce((a,r)=>a+r.balance,0);
+ return `<!doctype html><html><head><meta charset="utf-8"><title>Tuinafsluiter urenrapport</title><style>
+ body{font-family:Arial,sans-serif;color:#092820;margin:28px}
+ h1{margin:0;color:#004132}.small{color:#49665c;font-size:12px}
+ .reportHeader{display:flex;justify-content:space-between;border-bottom:2px solid #004132;padding-bottom:12px;margin-bottom:18px}
+ table{width:100%;border-collapse:collapse;font-size:12px}th{background:#004132;color:white;text-align:left}td,th{padding:7px;border-bottom:1px solid #d8e5de}
+ .summary{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:12px 0}.box{border:1px solid #d8e5de;border-radius:8px;padding:8px}.box b{display:block;font-size:16px;color:#004132}
+ @media print{button{display:none}body{margin:12mm}}
+ 
+/* v1.3 startklaar fixes */
+#liveSql{
+  white-space:pre!important;
+  font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace!important;
+  font-size:13px!important;
+  line-height:1.35!important;
+}
+#exportDownloadLink{margin:12px 0}
+#exportDownloadLink a{display:inline-block;text-decoration:none}
+
+</style></head><body>
+ <div class="reportHeader"><div><h1>Tuinafsluiter Hub</h1><div class="small">Urenrapport</div></div><div class="small">Aangemaakt: ${new Date().toLocaleString('nl-BE')}<br>Periode: ${s.from} t.e.m. ${s.to}</div></div>
+ <div class="summary"><div class="box">Regels<b>${rows.length}</b></div><div class="box">Gewerkt<b>${dur(worked)}</b></div><div class="box">Saldo<b>${sal(balance)}</b></div><div class="box">Rapport<b>${s.type==='summary'?'Samenvatting':'Details'}</b></div></div>
+ ${exportHtml(rows,s.type)}
+ </body></html>`;
+}
+function printPdfReport(){
+ let s=exportSelection(), rows=exportRows(s.uid,s.from,s.to);
+ let w=window.open('','_blank');
+ if(!w)return msg('Popup geblokkeerd. Sta popups toe voor PDF.');
+ w.document.open();w.document.write(reportDocumentHtml(rows,s));w.document.close();
+ setTimeout(()=>w.print(),450);
+}
+function csvEscape(v){return '"'+String(v??'').replace(/"/g,'""')+'"'}
+function downloadCsvReport(){
+ let s=exportSelection(), rows=exportRows(s.uid,s.from,s.to);
+ if(!rows.length){msg('Geen regels gevonden voor deze export.');return;}
+ let lines=[['Datum','Werknemer','Type','In','Uit','Schoft','Gewerkt','Saldo'].map(csvEscape).join(';')];
+ rows.forEach(r=>lines.push([r.datum,r.werknemer,r.type,r.in,r.uit,r.schoft,r.gewerkt,r.saldo].map(csvEscape).join(';')));
+ let csv="\ufeff"+lines.join('\n');
+ let filename=`tuinafsluiter-uren-${s.from}-tot-${s.to}.csv`;
+ let blob=new Blob([csv],{type:'text/csv;charset=utf-8'});
+ let url=URL.createObjectURL(blob);
+ let holder=$('exportDownloadLink');
+ if(holder){
+   holder.innerHTML=`<a class="btn green" id="realCsvLink" download="${filename}">Download Excel/CSV bestand</a><p class="warn">Klik op de groene downloadknop. Op iPhone komt dit bij Downloads.</p>`;
+   $('realCsvLink').href=url;
+ }
+ let a=document.createElement('a');
+ a.href=url;a.download=filename;
+ document.body.appendChild(a);
+ try{a.click();msg('Excel/CSV export gestart. Kijk bij Downloads.');}catch(e){msg('Klik op de groene downloadknop in het venster.');}
+ setTimeout(()=>{a.remove();},1000);
+ setTimeout(()=>{URL.revokeObjectURL(url);},120000);
+}
+
+function liveSqlText(){
+ return [
+'-- Tuinafsluiter Hub live start reset',
+'-- LET OP: eerst backup/export maken.',
+'-- Wist testberichten, mededelingen en activiteitenlog.',
+'delete from hub_items;',
+'',
+'-- Optioneel: wis ALLE testregistraties.',
+'-- Gebruik dit alleen als je zeker bent dat alle uren testdata zijn.',
+'-- delete from urenregistratie;',
+'',
+'-- Veiliger: wis alleen registraties vóór officiële startdatum.',
+"-- delete from urenregistratie where datum < '2026-06-24';",
+'',
+"-- Werknemers, pincodes en beginsaldo's blijven behouden."
+ ].join('\n');
+}
+function liveStartModal(){
+ openModal('Live start voorbereiden',`
+ <div class="two">
+  <div>
+   <h3>Checklist vóór echte start</h3>
+   <div class="warn">
+    ✅ Test met Jos, Jordy, Lars en Rhani<br>
+    ✅ Open registraties afsluiten<br>
+    ✅ Beginsaldo's controleren<br>
+    ✅ PDF/Excel-export maken als backup<br>
+    ✅ Daarna pas testdata wissen
+   </div>
+   <h3>Reset uitvoeren</h3>
+   <div class="form">
+    <label>Officiële startdatum</label>
+    <input id="resetStartDate" type="date" value="${today()}">
+    <button class="btn green" id="resetHubBtn">Wis chat/mededelingen/activiteitenlog</button>
+    <button class="btn light" id="resetOldRecordsBtn">Wis testregistraties vóór startdatum</button>
+    <button class="btn" id="resetAllRecordsBtn">Wis ALLE registraties</button>
+   </div>
+   <p class="warn">Werknemers, pincodes en beginsaldo's worden niet gewist. Gebruik “ALLE registraties” alleen vlak vóór de echte start als alles testdata is.</p>
+  </div>
+  <div>
+   <h3>Supabase reset SQL</h3>
+   <textarea id="liveSql" rows="14"></textarea>
+   <button class="btn green" id="copyLiveSql">Kopieer SQL</button>
+   <p class="warn">Je kan resetten via de knoppen links, of deze SQL kopiëren naar Supabase.</p>
+  </div>
+ </div>`);
+ $('liveSql').value=liveSqlText();
+ $('copyLiveSql').onclick=()=>{navigator.clipboard?.writeText($('liveSql').value);msg('SQL gekopieerd.')}
+ $('resetHubBtn').onclick=resetHubItems;
+ $('resetOldRecordsBtn').onclick=resetOldRecords;
+ $('resetAllRecordsBtn').onclick=resetAllRecords;
+}
+async function resetHubItems(){
+ if(!confirm('Zeker? Dit wist teamchat, mededelingen en activiteitenlog.'))return;
+ await sb('/hub_items?type=not.is.null',{method:'DELETE',headers:{Prefer:'return=representation'}});
+ await load();
+ actionBanner('✅ TESTBERICHTEN GEWIST','Chat, mededelingen en activiteitenlog zijn leeg','ok','Charlie heeft opgeruimd.');
+ liveStartModal();
+}
+async function resetOldRecords(){
+ let d=$('resetStartDate').value||today();
+ if(!confirm('Zeker? Dit wist alle registraties vóór '+d+'.'))return;
+ await sb('/urenregistratie?datum=lt.'+d,{method:'DELETE',headers:{Prefer:'return=representation'}});
+ await load();
+ actionBanner('✅ TESTREGISTRATIES GEWIST','Alles vóór '+d+' is verwijderd','ok','Charlie heeft de start klaargezet.');
+ liveStartModal();
+}
+async function resetAllRecords(){
+ if(!confirm('LAATSTE CONTROLE: alle urenregistraties wissen? Werknemers blijven bestaan.'))return;
+ if(!confirm('Ben je 100% zeker? Dit kan niet via de app ongedaan gemaakt worden.'))return;
+ await sb('/urenregistratie?id=not.is.null',{method:'DELETE',headers:{Prefer:'return=representation'}});
+ await load();
+ actionBanner('✅ ALLE REGISTRATIES GEWIST','Klaar voor officiële start','ok','Charlie begint met een propere lei.');
+ liveStartModal();
+}
+
+if($('lockBtn'))$('lockBtn').onclick=()=>lockApp('App handmatig vergrendeld.');if($('liveStartBtn'))$('liveStartBtn').onclick=liveStartModal;if($('holidayBalanceBtn'))$('holidayBalanceBtn').onclick=()=>holidayBalanceModal();if($('myHolidayBalanceBtn'))$('myHolidayBalanceBtn').onclick=()=>holidayBalanceModal(current.id);
+load().then(()=>setCharlieQuote('open')).catch(e=>msg('Supabase fout: '+err(e)));
+
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.getRegistrations?.().then(rs=>rs.forEach(r=>r.unregister())).catch(()=>{});
+}
+</script></body></html>
