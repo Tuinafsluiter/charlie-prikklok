@@ -1,18 +1,21 @@
-# Tuinafsluiter Hub v2.1 Badges
+# Tuinafsluiter Hub v2.2 Activiteitenlog
 
 Volgende veilige stap.
 
 Nieuw:
-- Ongelezen teller op Teamchat
-- Ongelezen teller op Mededelingen
-- Charlie-banner bij nieuwe meldingen
-- App-badge voorbereiding als de iPhone/PWA dit ondersteunt
-- Geen pushdienst, geen extra kosten
+- Activiteitenlog verder uitgebreid
+- Registratie-aanpassingen worden gelogd
+- Verlof/ziekte/recup-registraties worden gelogd
+- Teamchatberichten worden gelogd
+- Mededelingen worden gelogd
+- Handig voor Jos/Rhani-controle zonder extra kosten
 
 Upload/overschrijf:
 - index.html
 - README.md
 
 Supabase:
-- de tabel hub_items bestaat al en blijft nodig.
-- Geen nieuwe SQL nodig.
+- gebruikt de bestaande hub_items tabel
+- geen nieuwe SQL nodig
+
+Bestaande uren blijven behouden.
