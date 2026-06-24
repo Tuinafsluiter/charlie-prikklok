@@ -12,7 +12,7 @@ function sign(payload){
   return crypto.createHmac('sha256', SESSION_SECRET).update(payload).digest('base64').replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
 }
 function makeToken(user){
-  const payload = b64url(JSON.stringify({id:user.id, naam:user.naam, rol:user.rol, exp:Date.now()+1000*60*60*24*14}));
+  const payload = b64url(JSON.stringify({id:user.id, naam:user.naam, rol:user.rol, exp:Date.now()+1000*60*60*8}));
   return payload + '.' + sign(payload);
 }
 function parseCookies(req){

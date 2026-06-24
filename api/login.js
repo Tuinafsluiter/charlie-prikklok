@@ -10,7 +10,7 @@ module.exports = async function handler(req,res){
     const users=JSON.parse(out.text||'[]');
     if(!users[0]) return res.status(401).send('Ongeldige pincode');
     const user=sanitizeUser(users[0]);
-    res.setHeader('Set-Cookie', cookie('th_session', makeToken(user), 'Max-Age=1209600'));
+    res.setHeader('Set-Cookie', cookie('th_session', makeToken(user), 'Max-Age=28800'));
     return res.status(200).json({user});
   }catch(e){return res.status(500).send(String(e.message||e))}
 }

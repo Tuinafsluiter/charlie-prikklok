@@ -836,8 +836,8 @@ if(a==='breakStop'){if(!r)return msg('Geen actieve werkdag.');let ps=localStorag
 if(a==='out'){if(!r)return msg('Je bent nog niet ingecheckt.');let ps=localStorage.getItem('pause_'+r.id),pause=Number(r.pauze_minuten||0);if(ps){pause+=Math.max(0,mins(ps,iso()));localStorage.removeItem('pause_'+r.id)}let out=iso(),worked=Math.max(0,mins(r.inkloktijd,out)-pause);await sb('/urenregistratie?id=eq.'+r.id,{method:'PATCH',headers:{Prefer:'return=representation'},body:JSON.stringify({uitkloktijd:out,pauze_minuten:pause,totaal_minuten:worked})});setCharlieQuote(worked>=540?'longDay':'out');actionBanner('🏁 UITGECHECKT','Netto gewerkt: '+dur(worked),'stop',pick(worked>=540?CHARLIE_QUOTES.longDay:CHARLIE_QUOTES.out));msg('Uitgecheckt. Netto: '+dur(worked)+(r.datum!==today()?' (open registratie van '+r.datum+' afgesloten)':''))}await load()}catch(e){msg('Databasefout: '+err(e))}}
 document.querySelectorAll('[data-action]').forEach(b=>b.onclick=()=>action(b.dataset.action));$('logoutBtn').onclick=async()=>{try{await fetch('/api/logout',{method:'POST',credentials:'include'})}catch(e){}current=null;activeEntry=null;$('workView').classList.add('hidden');$('loginView').classList.remove('hidden');msg('Uitgelogd.')};
 
-function lockApp(reason='Vergrendeld. Voer opnieuw uw pincode in.'){
-  if(!current)return;
+async function lockApp(reason='Vergrendeld. Voer opnieuw uw pincode in.'){
+  try{await fetch('/api/logout',{method:'POST',credentials:'include'})}catch(e){}
   current=null;activeEntry=null;pin='';
   drawDots();
   $('workView').classList.add('hidden');
@@ -1130,7 +1130,7 @@ $('workersBtn').onclick=()=>workersModal();
 if($('registrationsBtn'))$('registrationsBtn').onclick=()=>registrationsModal();
 
 if($('settingsBtn'))$('settingsBtn').onclick=()=>settingsModal();
-function settingsModal(){let rows=users.filter(u=>!isAdminUser(u)).map(u=>{let start=userRecs(u.id).filter(r=>Number(r.pauze_minuten)===9999).reduce((s,r)=>s+Number(r.totaal_minuten||0),0);return `<tr><td>${u.naam}</td><td>${sal(start)}</td><td><button class="btn light" onclick="editStartSaldo(${u.id})">Wijzig</button></td></tr>`}).join('');openModal('Instellingen',`<div class="two"><div><h3>Basisinstellingen</h3><table class="table"><tr><th>Instelling</th><th>Waarde</th></tr><tr><td>Standaard werkdag</td><td>8u00</td></tr><tr><td>Volledige recupdag</td><td>-8u00</td></tr><tr><td>Halve recupdag</td><td>-4u00</td></tr><tr><td>Quotes</td><td>Charlie quotes actief</td></tr><tr><td>Versie</td><td>Tuinafsluiter Hub v2.4 Security Backend</td></tr></table><h3>Beginsaldo plus/minuren</h3><table class="table"><tr><th>Werknemer</th><th>Beginsaldo</th><th></th></tr>${rows}</table><p class="warn">Vul hier de bestaande plus- of minuren in. Charlie rekent daarna verder vanaf dit saldo.</p></div><div><h3>App status</h3><button class="btn green" onclick="enableLocalNotifications()">🔔 Meldingen op dit toestel aanzetten</button><p class="warn">Let op: dit zijn lokale browsermeldingen. Echte iPhone-pushmeldingen naar Jos zonder de app te openen maken we als aparte koppeling.</p><div class="warn">✅ Prikklok actief<br>✅ Supabase gekoppeld<br>✅ Plusuren actief<br>✅ Excel-export actief<br>✅ Registraties beheren actief<br>✅ Mobiele weergave verbeterd<br>✅ Rhani meekijkrol voorbereid<br>✅ Ongelezen tellers actief<br>✅ Automatische app-vergrendeling actief<br>✅ Open registraties van vorige dag worden correct afgehandeld<br>✅ Verlofaanvraag meldingbadge actief<br>✅ Live start checklist toegevoegd<br>✅ Vakantiesaldo toegevoegd<br>✅ Duidelijke actiebanners toegevoegd<br>✅ Pincode sneller en gevoeliger op gsm<br>✅ Werknemer-dashboard toegevoegd<br>✅ Scrollen op gsm versoepeld<br>✅ Live Start popup hersteld<br>✅ Ruwe tekst buiten app verwijderd<br>✅ Sluiten-knop definitief hersteld<br>✅ Scrollen op gsm extra soepel gemaakt<br>✅ Officieel app-icoon toegevoegd<br>✅ Klaar voor domeinnaam<br>✅ PDF/Excel export verbeterd<br>✅ Excel/CSV download gefixt<br>✅ Live reset-knoppen toegevoegd<br>✅ Startklaar voor morgen<br>✅ Maand- en totaalsaldo toegevoegd<br>✅ Pincode via toetsenbord op pc<br>✅ Live Start reset gefixt<br>✅ Beginsaldo invoeren in uren/minuten<br>✅ Verlof en Vaste ADV/rustdagen apart instelbaar<br>✅ Activiteitenlog uitgebreid<br>✅ Verlofaanvragen actief<br>✅ Meldingen voor Jos actief</div></div></div>`)}
+function settingsModal(){let rows=users.filter(u=>!isAdminUser(u)).map(u=>{let start=userRecs(u.id).filter(r=>Number(r.pauze_minuten)===9999).reduce((s,r)=>s+Number(r.totaal_minuten||0),0);return `<tr><td>${u.naam}</td><td>${sal(start)}</td><td><button class="btn light" onclick="editStartSaldo(${u.id})">Wijzig</button></td></tr>`}).join('');openModal('Instellingen',`<div class="two"><div><h3>Basisinstellingen</h3><table class="table"><tr><th>Instelling</th><th>Waarde</th></tr><tr><td>Standaard werkdag</td><td>8u00</td></tr><tr><td>Volledige recupdag</td><td>-8u00</td></tr><tr><td>Halve recupdag</td><td>-4u00</td></tr><tr><td>Quotes</td><td>Charlie quotes actief</td></tr><tr><td>Versie</td><td>Tuinafsluiter Hub v2.5 Altijd Pincode</td></tr></table><h3>Beginsaldo plus/minuren</h3><table class="table"><tr><th>Werknemer</th><th>Beginsaldo</th><th></th></tr>${rows}</table><p class="warn">Vul hier de bestaande plus- of minuren in. Charlie rekent daarna verder vanaf dit saldo.</p></div><div><h3>App status</h3><button class="btn green" onclick="enableLocalNotifications()">🔔 Meldingen op dit toestel aanzetten</button><p class="warn">Let op: dit zijn lokale browsermeldingen. Echte iPhone-pushmeldingen naar Jos zonder de app te openen maken we als aparte koppeling.</p><div class="warn">✅ Prikklok actief<br>✅ Supabase gekoppeld<br>✅ Plusuren actief<br>✅ Excel-export actief<br>✅ Registraties beheren actief<br>✅ Mobiele weergave verbeterd<br>✅ Rhani meekijkrol voorbereid<br>✅ Ongelezen tellers actief<br>✅ Automatische app-vergrendeling actief<br>✅ Open registraties van vorige dag worden correct afgehandeld<br>✅ Verlofaanvraag meldingbadge actief<br>✅ Live start checklist toegevoegd<br>✅ Vakantiesaldo toegevoegd<br>✅ Duidelijke actiebanners toegevoegd<br>✅ Pincode sneller en gevoeliger op gsm<br>✅ Werknemer-dashboard toegevoegd<br>✅ Scrollen op gsm versoepeld<br>✅ Live Start popup hersteld<br>✅ Ruwe tekst buiten app verwijderd<br>✅ Sluiten-knop definitief hersteld<br>✅ Scrollen op gsm extra soepel gemaakt<br>✅ Officieel app-icoon toegevoegd<br>✅ Klaar voor domeinnaam<br>✅ PDF/Excel export verbeterd<br>✅ Excel/CSV download gefixt<br>✅ Live reset-knoppen toegevoegd<br>✅ Startklaar voor morgen<br>✅ Maand- en totaalsaldo toegevoegd<br>✅ Pincode via toetsenbord op pc<br>✅ Live Start reset gefixt<br>✅ Beginsaldo invoeren in uren/minuten<br>✅ Verlof en Vaste ADV/rustdagen apart instelbaar<br>✅ Activiteitenlog uitgebreid<br>✅ Verlofaanvragen actief<br>✅ Meldingen voor Jos actief</div></div></div>`)}
 function editStartSaldo(uid){
  let u=users.find(x=>Number(x.id)===Number(uid));
  let start=userRecs(uid).filter(r=>Number(r.pauze_minuten)===9999).reduce((s,r)=>s+Number(r.totaal_minuten||0),0);
@@ -1667,24 +1667,15 @@ if($('lockBtn'))$('lockBtn').onclick=()=>lockApp('App handmatig vergrendeld.');i
 
 setInterval(()=>{try{if(current&&isAdmin&&isAdmin())renderAdminHome()}catch(e){}},60000);
 
-async function restoreSession(){
- try{
-  let res=await fetch('/api/session',{credentials:'include'});
-  if(res.ok){
-    let data=await res.json();current=data.user;
-    $('loginView').classList.add('hidden');$('workView').classList.remove('hidden');
-    $('hello').textContent=current.naam;
-    let admin=isAdmin();
-    $('roleBadge').classList.toggle('hidden',!admin);
-    $('roleBadge').textContent=isViewer()&&!isOwner()?'Meekijken':'Beheerder';
-    $('employeePanel').classList.toggle('hidden',admin);
-    $('adminPanel').classList.toggle('hidden',!admin);
-    await load();
-  }
-  setCharlieQuote('open');
- }catch(e){setCharlieQuote('open')}
+async function startLocked(){
+ try{await fetch('/api/logout',{method:'POST',credentials:'include'})}catch(e){}
+ current=null;activeEntry=null;pin='';
+ drawDots();
+ $('workView').classList.add('hidden');
+ $('loginView').classList.remove('hidden');
+ setCharlieQuote('open');
 }
-restoreSession();
+startLocked();
 
 if('serviceWorker' in navigator){
   navigator.serviceWorker.getRegistrations?.().then(rs=>rs.forEach(r=>r.unregister())).catch(()=>{});
