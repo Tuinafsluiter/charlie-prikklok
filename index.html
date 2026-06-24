@@ -513,6 +513,12 @@ html,body{
  .calLegend{font-size:12px!important}
 }
 
+
+/* v2.3 actief tijd dashboard */
+.mini small{display:block;margin-top:3px;color:#b8ddd0;font-weight:850;font-size:13px}
+.emp.activeEmp{border-color:rgba(45,181,107,.65)!important;background:rgba(45,181,107,.12)!important}
+.emp.activeEmp .avatar{background:#2db56b!important;color:white!important}
+
 </style>
 
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png?v=final">
@@ -761,17 +767,38 @@ function renderEmployeeDashboard(){
   </div>`;
 }
 
+function liveWorkedMinutes(r){
+ if(!r||!r.inkloktijd)return 0;
+ let pause=Number(r.pauze_minuten||0);
+ let end=r.uitkloktijd||iso();
+ return Math.max(0,mins(r.inkloktijd,end)-pause);
+}
+function openDurationLabel(r){
+ if(!r||!r.inkloktijd)return '';
+ let live=liveWorkedMinutes(r);
+ return 'Bezig: '+dur(live)+' sinds '+hm(r.inkloktijd);
+}
 function renderAdminHome(){
  let list=users.filter(u=>!isAdminUser(u));
  let todayRows=records.filter(r=>r.datum===today());
- let active=uniqueEmployeeCount(todayRows.filter(r=>r.inkloktijd&&!r.uitkloktijd));
+ let activeRows=todayRows.filter(r=>r.inkloktijd&&!r.uitkloktijd);
+ let active=uniqueEmployeeCount(activeRows);
  let checked=uniqueEmployeeCount(todayRows.filter(r=>r.inkloktijd&&r.uitkloktijd));
  let verlof=uniqueEmployeeCount(todayRows.filter(r=>calc(r).type==='Verlof'));
  let ziek=uniqueEmployeeCount(todayRows.filter(r=>calc(r).type==='Ziekte'));
- let worked=todayRows.reduce((s,r)=>s+calc(r).worked,0);
+ let worked=todayRows.reduce((s,r)=>s+(r.inkloktijd&&!r.uitkloktijd?liveWorkedMinutes(r):calc(r).worked),0);
  let pendingReq=records.filter(r=>Number(r.pauze_minuten)===PENDING_LEAVE).length;
- if($('adminStats')){let uc=typeof unreadHubCounts==='function'?unreadHubCounts():{total:0};$('adminStats').innerHTML=`${uc.total?`<div class="hubNotice">🐕 Charlie heeft ${uc.total} nieuwe melding${uc.total===1?'':'en'} voor jou.</div>`:''}<div class="mini"><span>Actief</span><b>${active}</b></div><div class="mini"><span>Uitgecheckt</span><b>${checked}</b></div><div class="mini"><span>Verlof / ziek</span><b>${verlof}/${ziek}</b></div><div class="mini"><span>Aanvragen</span><b>${pendingReq}</b></div><div class="mini"><span>Vandaag gewerkt</span><b>${dur(worked)}</b></div>`;}
- $('adminToday').innerHTML=list.map(u=>{let open=userRecs(u.id).find(r=>!r.uitkloktijd&&r.inkloktijd);let special=userRecs(u.id).find(r=>r.datum===today()&&!r.inkloktijd&&r.totaal_minuten!==null);let status=open?(open.datum===today()?'Aan het werk':'Open sinds '+open.datum):special?calc(special).type:'Vandaag';let w=dayWork(u.id);let s=monthSaldo(u.id);return `<div class="emp"><div class="avatar">${u.naam[0]}</div><div><b>${u.naam}</b><small>${status}</small><small>Saldo maand</small></div><div><b>${dur(w)}</b><small class="${s>=0?'plus':'minus'}">${sal(s)}</small></div></div>`}).join('')||'<div class="emp">Geen werknemers gevonden</div>'}
+ let activeNow=activeRows.reduce((s,r)=>s+liveWorkedMinutes(r),0);
+ if($('adminStats')){let uc=typeof unreadHubCounts==='function'?unreadHubCounts():{total:0};$('adminStats').innerHTML=`${uc.total?`<div class="hubNotice">🐕 Charlie heeft ${uc.total} nieuwe melding${uc.total===1?'':'en'} voor jou.</div>`:''}<div class="mini"><span>Actief</span><b>${active}</b><small>${active?dur(activeNow):''}</small></div><div class="mini"><span>Uitgecheckt</span><b>${checked}</b></div><div class="mini"><span>Verlof / ziek</span><b>${verlof}/${ziek}</b></div><div class="mini"><span>Aanvragen</span><b>${pendingReq}</b></div><div class="mini"><span>Vandaag gewerkt</span><b>${dur(worked)}</b></div>`;}
+ $('adminToday').innerHTML=list.map(u=>{
+   let open=userRecs(u.id).find(r=>!r.uitkloktijd&&r.inkloktijd);
+   let special=userRecs(u.id).find(r=>r.datum===today()&&!r.inkloktijd&&r.totaal_minuten!==null);
+   let status=open?(open.datum===today()?openDurationLabel(open):'Open sinds '+open.datum):special?calc(special).type:'Vandaag';
+   let w=open?liveWorkedMinutes(open):dayWork(u.id);
+   let s=monthSaldo(u.id);
+   return `<div class="emp ${open?'activeEmp':''}"><div class="avatar">${u.naam[0]}</div><div><b>${u.naam}</b><small>${status}</small><small>Saldo maand</small></div><div><b>${dur(w)}</b><small class="${s>=0?'plus':'minus'}">${sal(s)}</small></div></div>`
+ }).join('')||'<div class="emp">Geen werknemers gevonden</div>'
+}
 async function action(a){try{let r=await getActive(current.id);if(a==='in'){
  if(r){
    if(r.datum!==today()){
@@ -1083,7 +1110,7 @@ $('workersBtn').onclick=()=>workersModal();
 if($('registrationsBtn'))$('registrationsBtn').onclick=()=>registrationsModal();
 
 if($('settingsBtn'))$('settingsBtn').onclick=()=>settingsModal();
-function settingsModal(){let rows=users.filter(u=>!isAdminUser(u)).map(u=>{let start=userRecs(u.id).filter(r=>Number(r.pauze_minuten)===9999).reduce((s,r)=>s+Number(r.totaal_minuten||0),0);return `<tr><td>${u.naam}</td><td>${sal(start)}</td><td><button class="btn light" onclick="editStartSaldo(${u.id})">Wijzig</button></td></tr>`}).join('');openModal('Instellingen',`<div class="two"><div><h3>Basisinstellingen</h3><table class="table"><tr><th>Instelling</th><th>Waarde</th></tr><tr><td>Standaard werkdag</td><td>8u00</td></tr><tr><td>Volledige recupdag</td><td>-8u00</td></tr><tr><td>Halve recupdag</td><td>-4u00</td></tr><tr><td>Quotes</td><td>Charlie quotes actief</td></tr><tr><td>Versie</td><td>Tuinafsluiter Hub v2.2 iPhone Kalender</td></tr></table><h3>Beginsaldo plus/minuren</h3><table class="table"><tr><th>Werknemer</th><th>Beginsaldo</th><th></th></tr>${rows}</table><p class="warn">Vul hier de bestaande plus- of minuren in. Charlie rekent daarna verder vanaf dit saldo.</p></div><div><h3>App status</h3><button class="btn green" onclick="enableLocalNotifications()">🔔 Meldingen op dit toestel aanzetten</button><p class="warn">Let op: dit zijn lokale browsermeldingen. Echte iPhone-pushmeldingen naar Jos zonder de app te openen maken we als aparte koppeling.</p><div class="warn">✅ Prikklok actief<br>✅ Supabase gekoppeld<br>✅ Plusuren actief<br>✅ Excel-export actief<br>✅ Registraties beheren actief<br>✅ Mobiele weergave verbeterd<br>✅ Rhani meekijkrol voorbereid<br>✅ Ongelezen tellers actief<br>✅ Automatische app-vergrendeling actief<br>✅ Open registraties van vorige dag worden correct afgehandeld<br>✅ Verlofaanvraag meldingbadge actief<br>✅ Live start checklist toegevoegd<br>✅ Vakantiesaldo toegevoegd<br>✅ Duidelijke actiebanners toegevoegd<br>✅ Pincode sneller en gevoeliger op gsm<br>✅ Werknemer-dashboard toegevoegd<br>✅ Scrollen op gsm versoepeld<br>✅ Live Start popup hersteld<br>✅ Ruwe tekst buiten app verwijderd<br>✅ Sluiten-knop definitief hersteld<br>✅ Scrollen op gsm extra soepel gemaakt<br>✅ Officieel app-icoon toegevoegd<br>✅ Klaar voor domeinnaam<br>✅ PDF/Excel export verbeterd<br>✅ Excel/CSV download gefixt<br>✅ Live reset-knoppen toegevoegd<br>✅ Startklaar voor morgen<br>✅ Maand- en totaalsaldo toegevoegd<br>✅ Pincode via toetsenbord op pc<br>✅ Live Start reset gefixt<br>✅ Beginsaldo invoeren in uren/minuten<br>✅ Verlof en Vaste ADV/rustdagen apart instelbaar<br>✅ Activiteitenlog uitgebreid<br>✅ Verlofaanvragen actief<br>✅ Meldingen voor Jos actief</div></div></div>`)}
+function settingsModal(){let rows=users.filter(u=>!isAdminUser(u)).map(u=>{let start=userRecs(u.id).filter(r=>Number(r.pauze_minuten)===9999).reduce((s,r)=>s+Number(r.totaal_minuten||0),0);return `<tr><td>${u.naam}</td><td>${sal(start)}</td><td><button class="btn light" onclick="editStartSaldo(${u.id})">Wijzig</button></td></tr>`}).join('');openModal('Instellingen',`<div class="two"><div><h3>Basisinstellingen</h3><table class="table"><tr><th>Instelling</th><th>Waarde</th></tr><tr><td>Standaard werkdag</td><td>8u00</td></tr><tr><td>Volledige recupdag</td><td>-8u00</td></tr><tr><td>Halve recupdag</td><td>-4u00</td></tr><tr><td>Quotes</td><td>Charlie quotes actief</td></tr><tr><td>Versie</td><td>Tuinafsluiter Hub v2.3 Actief Tijd</td></tr></table><h3>Beginsaldo plus/minuren</h3><table class="table"><tr><th>Werknemer</th><th>Beginsaldo</th><th></th></tr>${rows}</table><p class="warn">Vul hier de bestaande plus- of minuren in. Charlie rekent daarna verder vanaf dit saldo.</p></div><div><h3>App status</h3><button class="btn green" onclick="enableLocalNotifications()">🔔 Meldingen op dit toestel aanzetten</button><p class="warn">Let op: dit zijn lokale browsermeldingen. Echte iPhone-pushmeldingen naar Jos zonder de app te openen maken we als aparte koppeling.</p><div class="warn">✅ Prikklok actief<br>✅ Supabase gekoppeld<br>✅ Plusuren actief<br>✅ Excel-export actief<br>✅ Registraties beheren actief<br>✅ Mobiele weergave verbeterd<br>✅ Rhani meekijkrol voorbereid<br>✅ Ongelezen tellers actief<br>✅ Automatische app-vergrendeling actief<br>✅ Open registraties van vorige dag worden correct afgehandeld<br>✅ Verlofaanvraag meldingbadge actief<br>✅ Live start checklist toegevoegd<br>✅ Vakantiesaldo toegevoegd<br>✅ Duidelijke actiebanners toegevoegd<br>✅ Pincode sneller en gevoeliger op gsm<br>✅ Werknemer-dashboard toegevoegd<br>✅ Scrollen op gsm versoepeld<br>✅ Live Start popup hersteld<br>✅ Ruwe tekst buiten app verwijderd<br>✅ Sluiten-knop definitief hersteld<br>✅ Scrollen op gsm extra soepel gemaakt<br>✅ Officieel app-icoon toegevoegd<br>✅ Klaar voor domeinnaam<br>✅ PDF/Excel export verbeterd<br>✅ Excel/CSV download gefixt<br>✅ Live reset-knoppen toegevoegd<br>✅ Startklaar voor morgen<br>✅ Maand- en totaalsaldo toegevoegd<br>✅ Pincode via toetsenbord op pc<br>✅ Live Start reset gefixt<br>✅ Beginsaldo invoeren in uren/minuten<br>✅ Verlof en Vaste ADV/rustdagen apart instelbaar<br>✅ Activiteitenlog uitgebreid<br>✅ Verlofaanvragen actief<br>✅ Meldingen voor Jos actief</div></div></div>`)}
 function editStartSaldo(uid){
  let u=users.find(x=>Number(x.id)===Number(uid));
  let start=userRecs(uid).filter(r=>Number(r.pauze_minuten)===9999).reduce((s,r)=>s+Number(r.totaal_minuten||0),0);
@@ -1440,6 +1467,12 @@ function reportDocumentHtml(rows,s){
  .calLegend{font-size:12px!important}
 }
 
+
+/* v2.3 actief tijd dashboard */
+.mini small{display:block;margin-top:3px;color:#b8ddd0;font-weight:850;font-size:13px}
+.emp.activeEmp{border-color:rgba(45,181,107,.65)!important;background:rgba(45,181,107,.12)!important}
+.emp.activeEmp .avatar{background:#2db56b!important;color:white!important}
+
 </style></head><body>
  <div class="reportHeader"><div><h1>Tuinafsluiter Hub</h1><div class="small">Urenrapport</div></div><div class="small">Aangemaakt: ${new Date().toLocaleString('nl-BE')}<br>Periode: ${s.from} t.e.m. ${s.to}</div></div>
  <div class="summary"><div class="box">Regels<b>${rows.length}</b></div><div class="box">Gewerkt<b>${dur(worked)}</b></div><div class="box">Saldo<b>${sal(balance)}</b></div><div class="box">Rapport<b>${s.type==='summary'?'Samenvatting':'Details'}</b></div></div>
@@ -1611,6 +1644,9 @@ async function resetAllRecords(){
 }
 
 if($('lockBtn'))$('lockBtn').onclick=()=>lockApp('App handmatig vergrendeld.');if($('liveStartBtn'))$('liveStartBtn').onclick=liveStartModal;if($('holidayBalanceBtn'))$('holidayBalanceBtn').onclick=()=>holidayBalanceModal();if($('myHolidayBalanceBtn'))$('myHolidayBalanceBtn').onclick=()=>holidayBalanceModal(current.id);
+
+setInterval(()=>{try{if(current&&isAdmin&&isAdmin())renderAdminHome()}catch(e){}},60000);
+
 load().then(()=>setCharlieQuote('open')).catch(e=>msg('Supabase fout: '+err(e)));
 
 if('serviceWorker' in navigator){
