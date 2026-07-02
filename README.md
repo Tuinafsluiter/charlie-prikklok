@@ -16,3 +16,5 @@ Na upload:
 2. App openen.
 3. Controle: je moet altijd opnieuw pincode ingeven.
 4. Inloggen als Jos/Jordy testen.
+
+- Mobiel: Face ID, Vergrendel en Uitloggen staan nu onder de naam over de volledige breedte, zodat Vergrendel niet buiten beeld valt.
