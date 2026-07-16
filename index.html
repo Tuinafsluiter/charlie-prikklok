@@ -559,6 +559,22 @@ html,body{
  .workActions .logout{display:block!important;width:100%!important;max-width:100%!important;text-align:center!important;white-space:normal!important;overflow:visible!important;padding:11px 12px!important;font-size:15px!important;line-height:1.15!important}
 }
 
+
+
+/* v4.0 mobiele registraties: vaste sluitknop + horizontaal scrollen */
+.modal{padding-top:max(8px,env(safe-area-inset-top))!important;padding-bottom:max(8px,env(safe-area-inset-bottom))!important;overflow:hidden!important}
+.modal.show{display:flex!important;align-items:flex-start!important;justify-content:center!important}
+.modalBox{display:flex!important;flex-direction:column!important;width:min(1100px,calc(100vw - 16px))!important;max-width:calc(100vw - 16px)!important;max-height:calc(100dvh - 16px - env(safe-area-inset-top) - env(safe-area-inset-bottom))!important;margin:0 auto!important;padding:14px!important;overflow:hidden!important}
+.modalHead{position:sticky!important;top:0!important;z-index:20!important;display:flex!important;align-items:center!important;flex:0 0 auto!important;gap:10px!important;padding:0 0 10px!important;background:#f6faf8!important}
+.modalHead h2{flex:1 1 auto!important;min-width:0!important;margin:0!important}
+#closeModal{position:relative!important;z-index:21!important;flex:0 0 auto!important;min-width:82px!important;min-height:44px!important;touch-action:manipulation!important}
+#modalContent{flex:1 1 auto!important;min-height:0!important;width:100%!important;max-width:100%!important;overflow-y:auto!important;overflow-x:hidden!important;-webkit-overflow-scrolling:touch!important;overscroll-behavior:contain!important}
+.registrationTableScroll{display:block!important;width:100%!important;max-width:100%!important;overflow-x:auto!important;overflow-y:visible!important;-webkit-overflow-scrolling:touch!important;touch-action:pan-x pan-y!important;overscroll-behavior-x:contain!important;border-radius:14px!important;margin-top:14px!important;padding-bottom:6px!important}
+.registrationTable{width:max-content!important;min-width:900px!important;margin-top:0!important}
+.registrationTable th,.registrationTable td{white-space:nowrap!important}
+.registrationTable td:nth-child(5){white-space:normal!important;min-width:150px!important}
+@media(max-width:780px){.modalBox{width:calc(100vw - 10px)!important;max-width:calc(100vw - 10px)!important;padding:10px!important;max-height:calc(100dvh - 10px - env(safe-area-inset-top) - env(safe-area-inset-bottom))!important}.modalHead h2{font-size:21px!important;line-height:1.1!important;max-width:none!important}#closeModal{min-width:76px!important;padding:10px 12px!important}.registrationTable{min-width:820px!important;font-size:12px!important}.registrationTable th,.registrationTable td{padding:7px 6px!important}}
+@media(orientation:landscape) and (max-height:600px){.modal{padding-top:4px!important;padding-bottom:4px!important}.modalBox{width:calc(100vw - 8px)!important;max-width:calc(100vw - 8px)!important;max-height:calc(100dvh - 8px)!important;padding:8px!important}.modalHead{padding-bottom:6px!important}.modalHead h2{font-size:18px!important}#closeModal{min-height:38px!important;padding:7px 11px!important}}
 </style>
 
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png?v=final">
@@ -955,6 +971,15 @@ function closeModal(){
  $('adminModal').classList.remove('show');
  document.body.classList.remove('modalOpen');
 }
+function keepModalUsableOnMobile(){
+ if(!$('adminModal')?.classList.contains('show'))return;
+ requestAnimationFrame(()=>{
+  const box=document.querySelector('#adminModal .modalBox');
+  if(box)box.scrollTop=0;
+ });
+}
+window.addEventListener('orientationchange',()=>setTimeout(keepModalUsableOnMobile,180));
+window.addEventListener('resize',keepModalUsableOnMobile);
 document.addEventListener('click',function(e){
  if(e.target&&e.target.closest&&e.target.closest('#closeModal')){e.preventDefault();closeModal();return;}
  if(e.target&&e.target.id==='adminModal'){closeModal();return;}
