@@ -1272,7 +1272,7 @@ function renderRegistrationsList(){
  let uid=$('regUser')?.value||'all', from=$('regFrom')?.value||'1900-01-01';
  let userById=Object.fromEntries(users.map(u=>[Number(u.id),u.naam]));
  let list=records.filter(r=>(uid==='all'||Number(r.medewerker_id)===Number(uid))&&String(r.datum||'')>=from).sort((a,b)=>String(b.datum||'').localeCompare(String(a.datum||'')) || String(b.inkloktijd||'').localeCompare(String(a.inkloktijd||''))).slice(0,80);
- $('regList').innerHTML=`<table class="table"><tr><th>Datum</th><th>Werknemer</th><th>Gewerkt</th><th>Saldo dag</th><th>Type</th><th>In</th><th>Uit</th><th>Schoft</th><th>Acties</th></tr>${list.map(r=>{let c=calc(r);return `<tr><td>${r.datum||''}</td><td>${userById[Number(r.medewerker_id)]||r.medewerker_id}</td><td>${dur(c.worked)}</td><td class="${c.balance>=0?'plus':'minus'}">${sal(c.balance)}</td><td>${c.type}</td><td>${hm(r.inkloktijd)}</td><td>${displayOut(r,c)}</td><td>${dur(c.pause)}</td><td><button class="btn light" onclick="editRegistration(${r.id})">✏️</button> <button class="btn light" onclick="deleteRegistration(${r.id})">🗑️</button></td></tr>`}).join('')}</table>`;
+ $('regList').innerHTML=`<div class="registrationTableScroll" role="region" aria-label="Registraties" tabindex="0"><table class="table registrationTable"><tr><th>Datum</th><th>Werknemer</th><th>Gewerkt</th><th>Saldo dag</th><th>Type</th><th>In</th><th>Uit</th><th>Schoft</th><th>Acties</th></tr>${list.map(r=>{let c=calc(r);return `<tr><td>${r.datum||''}</td><td>${userById[Number(r.medewerker_id)]||r.medewerker_id}</td><td>${dur(c.worked)}</td><td class="${c.balance>=0?'plus':'minus'}">${sal(c.balance)}</td><td>${c.type}</td><td>${hm(r.inkloktijd)}</td><td>${displayOut(r,c)}</td><td>${dur(c.pause)}</td><td><button class="btn light" onclick="editRegistration(${r.id})">✏️</button> <button class="btn light" onclick="deleteRegistration(${r.id})">🗑️</button></td></tr>`}).join('')}</table></div>`;
 }
 function timeVal(x){return x?new Date(x).toTimeString().slice(0,5):''}
 function localIso(date,time){if(!date||!time)return null;return new Date(date+'T'+time+':00').toISOString()}
@@ -1617,6 +1617,70 @@ function reportDocumentHtml(rows,s){
  .workActions .logout{display:block!important;width:100%!important;max-width:100%!important;text-align:center!important;white-space:normal!important;overflow:visible!important;padding:11px 12px!important;font-size:15px!important;line-height:1.15!important}
 }
 
+
+
+/* v3.9 mobiele registraties + altijd bereikbare sluitknop */
+.modal{
+  padding-top:max(10px,env(safe-area-inset-top))!important;
+  padding-bottom:max(10px,env(safe-area-inset-bottom))!important;
+}
+.modalBox{
+  display:flex!important;
+  flex-direction:column!important;
+  width:min(1100px,calc(100vw - 24px))!important;
+  max-width:calc(100vw - 24px)!important;
+  max-height:calc(100dvh - max(20px,env(safe-area-inset-top)) - max(20px,env(safe-area-inset-bottom)))!important;
+  margin:0 auto!important;
+  overflow:hidden!important;
+}
+.modalHead{
+  position:relative!important;
+  top:auto!important;
+  flex:0 0 auto!important;
+  padding:0 0 10px!important;
+}
+#modalContent{
+  flex:1 1 auto!important;
+  min-height:0!important;
+  overflow-y:auto!important;
+  overflow-x:hidden!important;
+  -webkit-overflow-scrolling:touch!important;
+  overscroll-behavior:contain!important;
+}
+.registrationTableScroll{
+  width:100%;
+  max-width:100%;
+  overflow-x:auto;
+  overflow-y:hidden;
+  -webkit-overflow-scrolling:touch;
+  overscroll-behavior-x:contain;
+  border-radius:14px;
+  margin-top:14px;
+}
+.registrationTable{
+  min-width:900px!important;
+  margin-top:0!important;
+}
+.registrationTable th,.registrationTable td{white-space:nowrap}
+.registrationTable td:nth-child(5){white-space:normal;min-width:150px}
+@media(max-width:780px){
+  .modalBox{
+    width:calc(100vw - 16px)!important;
+    max-width:calc(100vw - 16px)!important;
+    max-height:calc(100dvh - max(16px,env(safe-area-inset-top)) - max(16px,env(safe-area-inset-bottom)))!important;
+    padding:12px!important;
+  }
+  .modalHead{align-items:center!important}
+  .modalHead h2{max-width:none!important;min-width:0!important;flex:1 1 auto!important;font-size:22px!important}
+  #closeModal{flex:0 0 auto!important;min-height:44px!important;padding:10px 13px!important}
+  .registrationTable{font-size:12px!important;min-width:820px!important}
+  .registrationTable th,.registrationTable td{padding:7px 6px!important}
+}
+@media(orientation:landscape) and (max-height:520px){
+  .modalBox{max-height:calc(100dvh - 12px)!important}
+  .modalHead{padding-bottom:6px!important}
+  #closeModal{min-height:38px!important;padding:8px 12px!important}
+}
 </style></head><body>
  <div class="reportHeader"><div><h1>Tuinafsluiter Hub</h1><div class="small">Urenrapport</div></div><div class="small">Aangemaakt: ${new Date().toLocaleString('nl-BE')}<br>Periode: ${s.from} t.e.m. ${s.to}</div></div>
  <div class="summary"><div class="box">Regels<b>${rows.length}</b></div><div class="box">Gewerkt<b>${dur(worked)}</b></div><div class="box">Saldo<b>${sal(balance)}</b></div><div class="box">Rapport<b>${s.type==='summary'?'Samenvatting':'Details'}</b></div></div>
