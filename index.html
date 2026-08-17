@@ -1296,8 +1296,8 @@ async function saveWorker(id){try{let body={naam:$('editName').value.trim(),pinc
 
 function registrationsModal(){
  let options='<option value="all">Alle werknemers</option>'+users.filter(u=>!isAdminUser(u)).map(u=>`<option value="${u.id}">${u.naam}</option>`).join('');
- openModal('Registraties beheren',`<div class="form"><div class="two"><div><label>Werknemer</label><select id="regUser">${options}</select></div><div><label>Vanaf datum</label><input id="regFrom" type="date" value="${today().slice(0,8)}01"></div></div><button class="btn green" id="regFilterBtn">Filter toepassen</button></div><div id="regList"></div><p class="warn">Gebruik dit voor vergeten uitklokken, verkeerde pauzes of testregistraties. Wijzigingen tellen meteen mee in plusuren en export.</p>`);
- $('regFilterBtn').onclick=renderRegistrationsList; renderRegistrationsList();
+ openModal('Registraties beheren',`<div class="form"><button class="btn green" id="addRegBtn">＋ Ontbrekende registratie toevoegen</button><div class="two"><div><label>Werknemer</label><select id="regUser">${options}</select></div><div><label>Vanaf datum</label><input id="regFrom" type="date" value="${today().slice(0,8)}01"></div></div><button class="btn green" id="regFilterBtn">Filter toepassen</button></div><div id="regList"></div><p class="warn"><b>Beheerder:</b> voeg hier ook een volledig ontbrekende werkregistratie toe wanneer iemand vergeten is in te tikken. Bestaande registraties worden daarbij niet overschreven. Wijzigingen tellen meteen mee in plusuren en export.</p>`);
+ $('addRegBtn').onclick=addRegistrationModal; $('regFilterBtn').onclick=renderRegistrationsList; renderRegistrationsList();
 }
 function renderRegistrationsList(){
  let uid=$('regUser')?.value||'all', from=$('regFrom')?.value||'1900-01-01';
@@ -1307,6 +1307,29 @@ function renderRegistrationsList(){
 }
 function timeVal(x){return x?new Date(x).toTimeString().slice(0,5):''}
 function localIso(date,time){if(!date||!time)return null;return new Date(date+'T'+time+':00').toISOString()}
+function addRegistrationModal(){
+ let opts=users.filter(u=>!isAdminUser(u)&&u.actief!==false).map(u=>`<option value="${u.id}">${u.naam}</option>`).join('');
+ openModal('Ontbrekende registratie toevoegen',`<div class="form"><label>Werknemer</label><select id="nUser">${opts}</select><label>Datum</label><input id="nDate" type="date" value="${today()}"><div class="two"><div><label>Incheck</label><input id="nIn" type="time"></div><div><label>Uitcheck</label><input id="nOut" type="time"></div></div><label>Schoft / pauze minuten</label><input id="nPause" type="number" min="0" value="0"><label>Soort werkdag</label><select id="nWorkMode"><option value="normal">Gewone werkdag (8u norm)</option><option value="overtime">Overuren / weekendwerk (alle uren plus)</option><option value="shifted">Vervangende werkdag (bv. zaterdag i.p.v. maandag)</option></select><button class="btn green" id="createRegBtn">Registratie toevoegen</button><button class="btn light" id="backRegBtn">Terug naar registraties</button></div><p class="warn"><b>Handmatige correctie door beheerder.</b> Gebruik dit wanneer een werknemer helemaal vergeten is in te tikken. Er wordt een nieuwe klokregel toegevoegd; bestaande klokregels blijven ongewijzigd.</p>`);
+ $('createRegBtn').onclick=createRegistration; $('backRegBtn').onclick=registrationsModal;
+}
+async function createRegistration(){
+ try{
+  let uid=Number($('nUser').value),date=$('nDate').value,tin=$('nIn').value,tout=$('nOut').value,pause=Number($('nPause').value||0),mode=$('nWorkMode').value;
+  if(!uid||!date||!tin||!tout)return msg('Werknemer, datum, incheck en uitcheck zijn verplicht.');
+  if(pause<0)return msg('Pauze kan niet negatief zijn.');
+  let inIso=localIso(date,tin),outIso=localIso(date,tout);
+  if(!inIso||!outIso||new Date(outIso)<=new Date(inIso))return msg('Uitcheck moet later zijn dan incheck op dezelfde dag.');
+  let overlapping=records.some(r=>Number(r.medewerker_id)===uid&&r.datum===date&&r.inkloktijd&&r.uitkloktijd&&new Date(inIso)<new Date(r.uitkloktijd)&&new Date(outIso)>new Date(r.inkloktijd));
+  if(overlapping&&!confirm('Er bestaat al een overlappende registratie op deze dag. Toch toevoegen?'))return;
+  let total=Math.max(0,mins(inIso,outIso)-pause);
+  let created=await sb('/urenregistratie',{method:'POST',headers:{Prefer:'return=representation'},body:JSON.stringify({medewerker_id:uid,datum:date,inkloktijd:inIso,uitkloktijd:outIso,pauze_minuten:pause,totaal_minuten:total})});
+  await saveWorkClassification(uid,date,mode);
+  let newId=Array.isArray(created)&&created[0]?created[0].id:null;
+  await safeAudit('Ontbrekende registratie handmatig toegevoegd door '+(current?.naam||'beheerder'),{actie:'registratie_handmatig_toegevoegd',id:newId,medewerker_id:uid,datum:date,incheck:tin,uitcheck:tout,pauze_minuten:pause,classificatie:mode});
+  actionBanner('＋ REGISTRATIE TOEGEVOEGD','Handmatige correctie opgeslagen','ok','Bestaande registraties zijn niet gewijzigd.');
+  msg('Ontbrekende registratie toegevoegd. De uren zijn opnieuw berekend.'); await load(); registrationsModal();
+ }catch(e){msg('Opslagfout: '+err(e))}
+}
 function editRegistration(id){
  let r=records.find(x=>Number(x.id)===Number(id)); if(!r)return msg('Registratie niet gevonden.');
  let opts=users.filter(u=>!isAdminUser(u)).map(u=>`<option value="${u.id}" ${Number(u.id)===Number(r.medewerker_id)?'selected':''}>${u.naam}</option>`).join('');
