@@ -934,13 +934,21 @@ function renderAdminHome(){
    $('adminStats').innerHTML=`${uc.total?`<div class="hubNotice">🐕 Charlie heeft ${uc.total} nieuwe melding${uc.total===1?'':'en'} voor jou.</div>`:''}<div class="mini"><span>Actief</span><b>${active}</b><small>${active?dur(activeNow):''}</small></div><div class="mini"><span>Uitgecheckt</span><b>${checked}</b></div><div class="mini"><span>Verlof / ziek</span><b>${verlof}/${ziek}</b></div><div class="mini"><span>Aanvragen</span><b>${pendingReq}</b></div><div class="mini"><span>Vandaag gewerkt</span><b>${dur(worked)}</b></div>${saldoCards}`;
  }
  $('adminToday').innerHTML=list.map(u=>{
-   let open=userRecs(u.id).find(r=>!r.uitkloktijd&&r.inkloktijd);
-   let special=userRecs(u.id).find(r=>r.datum===today()&&!r.inkloktijd&&r.totaal_minuten!==null);
+   let allUserRows=userRecs(u.id);
+   let userTodayRows=allUserRows.filter(r=>r.datum===today());
+   let timedTodayRows=userTodayRows.filter(r=>r.inkloktijd);
+   let open=allUserRows.find(r=>!r.uitkloktijd&&r.inkloktijd);
+   let special=userTodayRows.find(r=>!r.inkloktijd&&r.totaal_minuten!==null);
    let status=open?(open.datum===today()?openDurationLabel(open):'Open sinds '+open.datum):special?calc(special).type:'Vandaag';
+   let firstStart=timedTodayRows.length?timedTodayRows.reduce((a,r)=>!a||new Date(r.inkloktijd)<new Date(a)?r.inkloktijd:a,null):null;
+   let hasOpenToday=timedTodayRows.some(r=>!r.uitkloktijd);
+   let closedTodayRows=timedTodayRows.filter(r=>r.uitkloktijd);
+   let lastEnd=closedTodayRows.length?closedTodayRows.reduce((a,r)=>!a||new Date(r.uitkloktijd)>new Date(a)?r.uitkloktijd:a,null):null;
+   let timeLine=special?'Start: — · Einde: —':`Start: ${firstStart?hm(firstStart):'—'} · Einde: ${hasOpenToday?'—':(lastEnd?hm(lastEnd):'—')}`;
    let w=todayWorkedLive(u.id);
    let dayS=todaySaldoLive(u.id);
    let monthS=monthSaldo(u.id);
-   return `<div class="emp ${open?'activeEmp':''}"><div class="avatar">${u.naam[0]}</div><div><b>${u.naam}</b><small>${status}</small><small>Vandaag: ${dur(w)} · saldo dag: <span class="${dayS>=0?'plus':'minus'}">${sal(dayS)}</span></small><small>Saldo maand: <span class="${monthS>=0?'plus':'minus'}">${sal(monthS)}</span></small></div><div><b>${dur(w)}</b><small class="${dayS>=0?'plus':'minus'}">${sal(dayS)}</small></div></div>`
+   return `<div class="emp ${open?'activeEmp':''}"><div class="avatar">${u.naam[0]}</div><div><b>${u.naam}</b><small>${status}</small><small>${timeLine}</small><small>Vandaag: ${dur(w)} · saldo dag: <span class="${dayS>=0?'plus':'minus'}">${sal(dayS)}</span></small><small>Saldo maand: <span class="${monthS>=0?'plus':'minus'}">${sal(monthS)}</span></small></div><div><b>${dur(w)}</b><small class="${dayS>=0?'plus':'minus'}">${sal(dayS)}</small></div></div>`
  }).join('')||'<div class="emp">Geen werknemers gevonden</div>'
 }
 async function action(a){try{let r=await getActive(current.id);if(a==='in'){
