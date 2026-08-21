@@ -597,7 +597,7 @@ const SUPABASE_URL='https://uwtkopnjwewkodozvkxi.supabase.co';
 const SUPABASE_ANON_KEY='sb_publishable_-YUPSJu3IeIID2mS1rhgIA_nngfTjWA';
 const API=SUPABASE_URL+'/rest/v1';
 const HEADERS={apikey:SUPABASE_ANON_KEY,Authorization:'Bearer '+SUPABASE_ANON_KEY,'Content-Type':'application/json'};
-const NORM=480, PENDING_LEAVE=7777, DENIED_LEAVE=7779;let pin='',lastGoodPin='',current=null,users=[],records=[],activeEntry=null,hubItems=[];
+const NORM=480, PENDING_LEAVE=7777, DENIED_LEAVE=7779;let pin='',lastGoodPin='',current=null,users=[],workerAdminUsers=[],records=[],activeEntry=null,hubItems=[];
 const $=id=>document.getElementById(id);
 const CHARLIE_QUOTES={
   open:[
@@ -1305,10 +1305,26 @@ async function saveStartSaldo(uid){
   settingsModal();
  }catch(e){msg('Opslagfout: '+err(e))}
 }
-function workersModal(){let rows=users.map(u=>`<tr><td>${u.naam}</td><td>${u.pincode||''}</td><td>${u.rol||''}</td><td>${u.actief?'Actief':'Inactief'}</td><td><button class="btn light" onclick="editWorker(${u.id})">Wijzig</button></td></tr>`).join('');openModal('Werknemers beheren',`<div class="two"><div><h3>Bestaande werknemers</h3><table class="table"><tr><th>Naam</th><th>Pincode</th><th>Rol</th><th>Status</th><th></th></tr>${rows}</table></div><div><h3>Nieuwe werknemer</h3><div class="form"><input id="newName" placeholder="Naam"><input id="newPin" placeholder="Pincode, bv. 1234" maxlength="4"><select id="newRole"><option value="chauffeur">chauffeur</option><option value="magazijnier">magazijnier</option><option value="admin">admin</option><option value="meekijk">meekijk</option></select><button class="btn green" id="addWorkerBtn">Toevoegen</button></div><p class="warn">Pincode moet uniek zijn. Zet werknemers liever op inactief dan te verwijderen. Inactieve werknemers kunnen niet meer inloggen.</p></div></div>`);$('addWorkerBtn').onclick=addWorker}
-async function addWorker(){try{let naam=$('newName').value.trim(),pincode=$('newPin').value.trim(),rol=$('newRole').value;if(!naam||!pincode)return msg('Naam en pincode zijn verplicht.');await sb('/werknemers',{method:'POST',headers:{Prefer:'return=representation'},body:JSON.stringify({naam,pincode,rol,actief:true})});msg('Werknemer toegevoegd.');await audit('Werknemer toegevoegd: '+naam,{actie:'werknemer_toegevoegd'});await load();workersModal()}catch(e){msg('Opslagfout: '+err(e))}}
-function editWorker(id){let u=users.find(x=>Number(x.id)===Number(id));if(!u)return;openModal('Werknemer wijzigen',`<div class="form"><label>Naam</label><input id="editName" value="${u.naam||''}"><label>Pincode</label><input id="editPin" value="${u.pincode||''}" maxlength="4"><label>Rol</label><select id="editRole"><option ${u.rol==='chauffeur'?'selected':''} value="chauffeur">chauffeur</option><option ${u.rol==='magazijnier'?'selected':''} value="magazijnier">magazijnier</option><option ${u.rol==='admin'?'selected':''} value="admin">admin</option></select><label>Status</label><select id="editActive"><option value="true" ${u.actief?'selected':''}>Actief</option><option value="false" ${!u.actief?'selected':''}>Inactief</option></select><button class="btn green" id="saveWorkerBtn">Opslaan</button><button class="btn light" id="backWorkersBtn">Terug naar lijst</button></div>`);$('saveWorkerBtn').onclick=()=>saveWorker(id);$('backWorkersBtn').onclick=workersModal}
-async function saveWorker(id){try{let body={naam:$('editName').value.trim(),pincode:$('editPin').value.trim(),rol:$('editRole').value,actief:$('editActive').value==='true'};if(!body.naam||!body.pincode)return msg('Naam en pincode zijn verplicht.');await sb('/werknemers?id=eq.'+id,{method:'PATCH',headers:{Prefer:'return=representation'},body:JSON.stringify(body)});msg('Werknemer opgeslagen.');await audit('Werknemer aangepast: '+body.naam+(body.actief?'':' (inactief gezet)'),{actie:'werknemer_aangepast'});await load();workersModal()}catch(e){msg('Opslagfout: '+err(e))}}
+async function workersModal(){
+ try{
+  workerAdminUsers=await sb('/werknemers?select=*&order=id.asc');
+  let rows=workerAdminUsers.map(u=>`<tr><td>${u.naam}</td><td>••••</td><td>${u.rol||''}</td><td><b class="${u.actief?'plus':'minus'}">${u.actief?'Actief':'Inactief'}</b></td><td><button class="btn light" onclick="editWorker(${u.id})">Wijzig</button></td></tr>`).join('');
+  openModal('Werknemers beheren',`<div class="two"><div><h3>Bestaande werknemers</h3><table class="table"><tr><th>Naam</th><th>Pincode</th><th>Rol</th><th>Status</th><th></th></tr>${rows}</table></div><div><h3>Nieuwe werknemer</h3><div class="form"><input id="newName" placeholder="Naam"><input id="newPin" placeholder="Pincode, bv. 1234" maxlength="4" inputmode="numeric"><select id="newRole"><option value="chauffeur">chauffeur</option><option value="magazijnier">magazijnier</option><option value="admin">admin</option><option value="meekijk">meekijk</option></select><button class="btn green" id="addWorkerBtn">Toevoegen</button></div><p class="warn">Zet werknemers die uit dienst gaan op <b>Inactief</b>. Hun uren en historiek blijven bewaard, maar hun pincode geeft geen toegang meer.</p></div></div>`);
+  $('addWorkerBtn').onclick=addWorker;
+ }catch(e){msg('Werknemers laden mislukt: '+err(e))}
+}
+async function addWorker(){try{let naam=$('newName').value.trim(),pincode=$('newPin').value.trim(),rol=$('newRole').value;if(!naam||!pincode)return msg('Naam en pincode zijn verplicht.');if(!/^\d{4}$/.test(pincode))return msg('Gebruik een pincode van exact 4 cijfers.');await sb('/werknemers',{method:'POST',headers:{Prefer:'return=representation'},body:JSON.stringify({naam,pincode,rol,actief:true})});msg('Werknemer toegevoegd.');await audit('Werknemer toegevoegd: '+naam,{actie:'werknemer_toegevoegd'});await load();await workersModal()}catch(e){msg('Opslagfout: '+err(e))}}
+function editWorker(id){let u=workerAdminUsers.find(x=>Number(x.id)===Number(id));if(!u)return;openModal('Werknemer wijzigen',`<div class="form"><label>Naam</label><input id="editName" value="${u.naam||''}"><label>Nieuwe pincode <small>(leeg laten = huidige behouden)</small></label><input id="editPin" value="" placeholder="Alleen invullen om pincode te wijzigen" maxlength="4" inputmode="numeric"><label>Rol</label><select id="editRole"><option ${u.rol==='chauffeur'?'selected':''} value="chauffeur">chauffeur</option><option ${u.rol==='magazijnier'?'selected':''} value="magazijnier">magazijnier</option><option ${u.rol==='admin'?'selected':''} value="admin">admin</option><option ${u.rol==='meekijk'?'selected':''} value="meekijk">meekijk</option></select><label>Status</label><select id="editActive"><option value="true" ${u.actief?'selected':''}>Actief</option><option value="false" ${!u.actief?'selected':''}>Inactief — kan niet meer inloggen</option></select><button class="btn green" id="saveWorkerBtn">Opslaan</button><button class="btn light" id="backWorkersBtn">Terug naar lijst</button></div><p class="warn">Inactief zetten verwijdert niets. Alle bestaande uren, verlof, recup en historiek blijven bewaard.</p>`);$('saveWorkerBtn').onclick=()=>saveWorker(id);$('backWorkersBtn').onclick=workersModal}
+async function saveWorker(id){try{
+ let naam=$('editName').value.trim(),newPin=$('editPin').value.trim(),body={naam,rol:$('editRole').value,actief:$('editActive').value==='true'};
+ if(!body.naam)return msg('Naam is verplicht.');
+ if(newPin && !/^\d{4}$/.test(newPin))return msg('Gebruik een pincode van exact 4 cijfers.');
+ if(newPin)body.pincode=newPin;
+ await sb('/werknemers?id=eq.'+id,{method:'PATCH',headers:{Prefer:'return=representation'},body:JSON.stringify(body)});
+ await audit('Werknemer aangepast: '+body.naam+(body.actief?' actief':' inactief gezet'),{actie:'werknemer_aangepast',werknemer_id:id,actief:body.actief});
+ msg(body.actief?'Werknemer opgeslagen.':'Werknemer staat nu inactief en kan niet meer inloggen.');
+ await load();await workersModal();
+}catch(e){msg('Opslagfout: '+err(e))}}
 
 
 function registrationsModal(){

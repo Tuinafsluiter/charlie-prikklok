@@ -28,6 +28,11 @@ module.exports = async function handler(req,res){
     if(req.method!=='POST') return res.status(405).send('Method not allowed');
     const user=getSession(req);
     if(!user) return res.status(401).send('Geen geldige sessie');
+    // Een reeds ingelogde werknemer die intussen inactief werd gezet,
+    // mag zijn oude sessie niet blijven gebruiken. Controleer dit op elke API-call.
+    const activeCheck=await pg('/werknemers?select=id,actief&id=eq.'+encodeURIComponent(user.id)+'&actief=eq.true&limit=1');
+    const activeRows=JSON.parse(activeCheck.text||'[]');
+    if(!activeRows[0]) return res.status(401).send('Account is inactief');
     let {path,method='GET',headers={},body=null}=req.body || {};
     if(!path || typeof path!=='string') return res.status(400).send('Path ontbreekt');
     method=String(method||'GET').toUpperCase();
