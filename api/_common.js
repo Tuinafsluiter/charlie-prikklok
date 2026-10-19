@@ -24,7 +24,9 @@ function getSession(req){
   const token=parseCookies(req).th_session;
   if(!token) return null;
   const [payload,sig]=token.split('.');
-  if(!payload||!sig||sign(payload)!==sig) return null;
+  if(!payload||!sig) return null;
+  const expected=Buffer.from(sign(payload)), given=Buffer.from(sig);
+  if(expected.length!==given.length || !crypto.timingSafeEqual(expected,given)) return null;
   try{
     const data=JSON.parse(Buffer.from(payload.replace(/-/g,'+').replace(/_/g,'/'),'base64').toString());
     if(!data.exp || data.exp<Date.now()) return null;
@@ -53,4 +55,12 @@ async function pg(path, options={}){
   if(!res.ok) throw new Error(text || res.statusText);
   return {status:res.status, text};
 }
-module.exports={makeToken,getSession,cookie,clearCookie,isOwner,isViewer,sanitizeUser,tableFromPath,appendFilter,pg};
+// Datum (YYYY-MM-DD) zoals in België, ongeacht de tijdzone van de server.
+function brusselsDate(d=new Date()){
+  return new Intl.DateTimeFormat('sv-SE',{timeZone:'Europe/Brussels',year:'numeric',month:'2-digit',day:'2-digit'}).format(d);
+}
+function clientIpHash(req){
+  const ip=String(req.headers['x-forwarded-for']||req.headers['x-real-ip']||req.socket?.remoteAddress||'onbekend').split(',')[0].trim();
+  return crypto.createHash('sha256').update('th-ip:'+ip+':'+SESSION_SECRET).digest('hex').slice(0,24);
+}
+module.exports={brusselsDate,clientIpHash,makeToken,getSession,cookie,clearCookie,isOwner,isViewer,sanitizeUser,tableFromPath,appendFilter,pg};
