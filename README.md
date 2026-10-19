@@ -1,3 +1,9 @@
+# Tuinafsluiter Hub v2.7 Eenvoudiger menu (19/10/2026)
+
+Alleen index.html gewijzigd. Geen databasewijzigingen.
+- Beheerder: 6 knoppen i.p.v. 16 (Meldingen, Uren, Saldo's, Afwezigheid, Rapport, Beheer). Alle functies blijven bereikbaar.
+- Teamchat verwijderd (oude berichten blijven bewaard in de database).
+
 # Tuinafsluiter Hub v2.6 Veilig & volledig (19/10/2026)
 
 Gewijzigde bestanden: index.html, api/_common.js, api/login.js, api/supabase.js.
