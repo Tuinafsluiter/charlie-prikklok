@@ -1,3 +1,11 @@
+# Tuinafsluiter Hub v2.8 Charlie (19/10/2026)
+
+Alleen index.html gewijzigd. Geen databasewijzigingen.
+- Charlie praat in een duidelijk leesbare tekstballon op de foto.
+- Nieuwe, grappigere teksten (ook voor maandag, vrijdag, weekend en heel vroeg).
+- Tik op Charlie voor een grapje; om de 30 seconden zegt hij iets nieuws.
+- Charlie spreekt werknemers aan met hun voornaam; op vrijdag bij uittikken een (0.0-)pintje-grap.
+
 # Tuinafsluiter Hub v2.7 Eenvoudiger menu (19/10/2026)
 
 Alleen index.html gewijzigd. Geen databasewijzigingen.

@@ -576,6 +576,13 @@ html,body{
 @media(max-width:780px){.modalBox{width:calc(100vw - 10px)!important;max-width:calc(100vw - 10px)!important;padding:10px!important;max-height:calc(100dvh - 10px - env(safe-area-inset-top) - env(safe-area-inset-bottom))!important}.modalHead h2{font-size:21px!important;line-height:1.1!important;max-width:none!important}#closeModal{min-width:76px!important;padding:10px 12px!important}.registrationTable{min-width:820px!important;font-size:12px!important}.registrationTable th,.registrationTable td{padding:7px 6px!important}}
 @media(orientation:landscape) and (max-height:600px){.modal{padding-top:4px!important;padding-bottom:4px!important}.modalBox{width:calc(100vw - 8px)!important;max-width:calc(100vw - 8px)!important;max-height:calc(100dvh - 8px)!important;padding:8px!important}.modalHead{padding-bottom:6px!important}.modalHead h2{font-size:18px!important}#closeModal{min-height:38px!important;padding:7px 11px!important}}
 .menuGrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}.menuGrid .btn{min-height:64px;font-size:17px;margin:0}@media(max-width:520px){.menuGrid{grid-template-columns:1fr}}
+.dogline{left:16px!important;right:16px!important;bottom:16px!important;background:rgba(255,255,255,.96);color:#0b3b2c!important;text-shadow:none!important;border-radius:20px;padding:14px 18px!important;font-size:19px!important;line-height:1.3!important;font-weight:800;box-shadow:0 10px 28px rgba(0,0,0,.35)}
+.dogline:after{content:"";position:absolute;left:34px;top:-12px;border:12px solid transparent;border-top:0;border-bottom-color:rgba(255,255,255,.96)}
+.dogline .dogIcon{display:none!important}#charlieQuote:before{content:"🐕  "}
+.dogline.pop{animation:charliePop .35s ease-out}
+@keyframes charliePop{0%{transform:scale(.92);opacity:.4}100%{transform:scale(1);opacity:1}}
+@media(max-width:700px){.dogline{font-size:16px!important;padding:11px 14px!important;bottom:12px!important;left:12px!important;right:12px!important}}
+.actionBanner small{display:block;margin-top:10px!important;padding:10px 14px;background:rgba(255,255,255,.95);color:#0b3b2c!important;border-radius:14px;font-size:17px!important;font-weight:800!important;line-height:1.3}
 </style>
 
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png?v=final">
@@ -585,10 +592,10 @@ html,body{
 
 </head>
 <body><div class="app loginMode"><div class="shell">
-<header><div class="brand"><img class="brandLogo" src="assets/tuinafsluiter-rebrand.svg?v=46" alt="Tuinafsluiter"><div class="brandTextFallback"><div class="brandName">Tuinafsluiter</div><div class="brandSub">Urenregistratie • Verlof • Teamcommunicatie</div></div></div><div class="clock"><div class="time" id="time">--:--</div><div class="date" id="date">--</div><div class="online"><span class="dot"></span><span id="mode">Online</span></div></div></header>
+<header><div class="brand"><img class="brandLogo" src="assets/tuinafsluiter-rebrand.svg?v=46" alt="Tuinafsluiter"><div class="brandTextFallback"><div class="brandName">Tuinafsluiter</div><div class="brandSub">Urenregistratie • Verlof • Plus- en minuren</div></div></div><div class="clock"><div class="time" id="time">--:--</div><div class="date" id="date">--</div><div class="online"><span class="dot"></span><span id="mode">Online</span></div></div></header>
 <main><section class="hero"><div class="heroMark"></div><img src="assets/charlie.png" alt="Charlie"><div class="dogline"><span class="dogIcon"></span><span id="charlieQuote">Charlie waakt over uw uren</span></div></section>
 <section class="panel">
- <div id="loginView"><div class="loginLogo"><img src="assets/logo.png" alt="Tuinafsluiter"><div class="slogan">Tuinafsluiter Hub<br><span style="font-size:18px;color:#d8eee4">Urenregistratie • Verlof • Teamcommunicatie</span></div></div><div class="glass"><div class="pinText">Voer uw pincode in</div><div class="dots" id="dots"><span>–</span><span>–</span><span>–</span><span>–</span></div><div class="keypad" id="keypad"></div><button class="bigbtn" id="loginBtn">Aanmelden</button><button class="biobtn hidden" id="bioLoginBtn" type="button">🔐 Face ID / Touch ID gebruiken</button><div class="biohint" id="bioHint">Tip: log één keer in met pincode en zet Face ID aan op dit toestel.</div></div></div>
+ <div id="loginView"><div class="loginLogo"><img src="assets/logo.png" alt="Tuinafsluiter"><div class="slogan">Tuinafsluiter Hub<br><span style="font-size:18px;color:#d8eee4">Urenregistratie • Verlof • Plus- en minuren</span></div></div><div class="glass"><div class="pinText">Voer uw pincode in</div><div class="dots" id="dots"><span>–</span><span>–</span><span>–</span><span>–</span></div><div class="keypad" id="keypad"></div><button class="bigbtn" id="loginBtn">Aanmelden</button><button class="biobtn hidden" id="bioLoginBtn" type="button">🔐 Face ID / Touch ID gebruiken</button><div class="biohint" id="bioHint">Tip: log één keer in met pincode en zet Face ID aan op dit toestel.</div></div></div>
  <div id="workView" class="hidden"><div class="workHead"><div><p class="subtitle">Welkom</p><h1 class="title" id="hello">Jos</h1><span class="role hidden" id="roleBadge">Beheerder</span></div><div class="workActions"><button class="logout bioSetupBtn" id="bioSetupBtn" type="button">🔐 Face ID</button><button class="logout" id="lockBtn">🔒 Vergrendel</button><button class="logout" id="logoutBtn">↪ Uitloggen</button></div></div><div id="employeePanel"><div id="employeeDashboard"></div><div class="actions"><button class="action" data-action="in"><span class="ico">↪</span><span><h3>Inchecken</h3><p>Start uw werkdag</p></span></button><button class="action" data-action="breakStart"><span class="ico">☕</span><span><h3>Schoft starten</h3><p>Begin uw pauze</p></span></button><button class="action" data-action="breakStop"><span class="ico">▶</span><span><h3>Schoft stoppen</h3><p>Einde van uw pauze</p></span></button><button class="action red" data-action="out"><span class="ico">↩</span><span><h3>Uitchecken</h3><p>Einde werkdag</p></span></button><button class="action" id="requestLeaveBtn"><span class="ico">🌴</span><span><h3>Verlof aanvragen</h3><p>Vraag een dag of periode aan</p></span></button><button class="action" id="myHolidayBalanceBtn"><span class="ico">🏖️</span><span><h3>Mijn verlofsaldo</h3><p>Bekijk opgenomen en resterend verlof</p></span></button><button class="action" id="announcementsEmployeeBtn"><span class="ico">📢</span><span><h3>Mededelingen</h3><p>Belangrijke info van Tuinafsluiter</p></span></button></div><div class="statusGrid" id="statusGrid"></div></div><div id="adminPanel" class="adminCards hidden"><div class="adminStats" id="adminStats"></div><div class="overview"><h3>Teamoverzicht Vandaag</h3><div id="adminToday"></div></div><div class="adminBtns"><button class="tile" id="notificationsBtn">🔔 Meldingen</button><button class="tile" id="registrationsBtn">👷 Uren</button><button class="tile" id="plusBtn">📊 Saldo's</button><button class="tile" id="absenceBtn">🌴 Afwezigheid</button><button class="tile" id="exportBtn">📄 Rapport</button><button class="tile" id="beheerBtn">⚙️ Beheer</button></div><div id="legacyBtns" hidden><button id="saldoOverviewBtn"></button><button id="recupBtn"></button><button id="verlofBtn"></button><button id="holidayBalanceBtn"></button><button id="ziekteBtn"></button><button id="workersBtn"></button><button id="teamchatBtn"></button><button id="announcementsBtn"></button><button id="activityBtn"></button><button id="settingsBtn"></button><button id="liveStartBtn"></button></div></div></div>
  <div id="message" class="msg hidden"></div>
 </section></main><footer></footer></div></div>
@@ -600,28 +607,39 @@ const API=SUPABASE_URL+'/rest/v1';
 const HEADERS={apikey:SUPABASE_ANON_KEY,Authorization:'Bearer '+SUPABASE_ANON_KEY,'Content-Type':'application/json'};
 const NORM=480, PENDING_LEAVE=7777, DENIED_LEAVE=7779;let pin='',lastGoodPin='',current=null,users=[],allUsers=[],workerAdminUsers=[],records=[],activeEntry=null,hubItems=[];
 const $=id=>document.getElementById(id);
+// {naam} wordt vervangen door de voornaam van wie ingelogd is.
 const CHARLIE_QUOTES={
   open:[
-    'Charlie waakt over uw uren',
-    'Charlie staat paraat. Jij ook?',
-    'Nieuwe werkdag, nieuwe kansen.',
-    'Charlie bewaakt ondertussen het team.',
-    'Elke minuut telt. Charlie noteert mee.',
-    'Goed begonnen is half gewerkt.',
-    'Tuinafsluitingen zonder gedoe, uren zonder discussie.'
+    "Woef! Ik bewaak de uren, jullie bewaken de tuinen.",
+    "Ik heb de hele nacht de klok in het oog gehouden. Er is geen minuut ontsnapt.",
+    "Geen koekje, geen uren. Grapje. Tik maar je pincode.",
+    "Ik kan niet lezen, maar uren tellen kan ik als de beste.",
+    "Ik ben de enige collega die nooit te laat komt. Ik slaap hier gewoon.",
+    "Hekken plaatsen is jullie job. Erover springen is de mijne.",
+    "Wie een poort plaatst, verdient een pootje.",
+    "Elke paal die vandaag de grond in gaat, krijgt van mij een snuffel.",
+    "Ik heb een neus voor plusuren. Letterlijk.",
+    "Mijn baasje zegt dat ik een waakhond ben. Ik zeg: urenhond."
   ],
-  monday:['Nieuwe week. Charlie is er klaar voor.','Maandagmodus aan. Charlie houdt toezicht.'],
-  friday:['Het weekend is dichterbij dan maandag.','Nog even doorbijten. De zetel roept al.','Vrijdaggevoel gespot. Charlie houdt de klok in het oog.'],
-  login:['Charlie heeft u herkend.','Welkom terug. Charlie is alert.','De werkdag kan beginnen.'],
-  in:['Ingecheckt. Charlie noteert het.','Werkdag gestart. Veel succes!','Charlie ziet dat ge eraan begint.'],
-  breakStart:['Schoft gestart. Even opladen.','Charlie bewaakt ondertussen de uren.','Pauze verdiend. Koffie mag.'],
-  breakStop:['Schoft voorbij. Terug in actie.','Charlie heeft de pauze genoteerd.','We zijn weer vertrokken.'],
-  out:['Goed gewerkt. Tijd voor de zetel.','Werkdag afgesloten. Charlie neemt de wacht over.','De uren zijn veilig opgeborgen.'],
-  longDay:['Sterke werkdag. Charlie geeft een pootje. 🐾','Meer dan 9 uur gewerkt. Charlie is onder de indruk.','Plusuren gespaard. Charlie noteert het.'],
-  request:['Verlofaanvraag verstuurd. Charlie legt ze bij Jos.','Aanvraag verzonden. Charlie bewaakt de agenda.','Verlof gevraagd. Jos krijgt een melding.']
+  monday:["Maandag? Ik heb er ook niet om gevraagd. Woef.","Nieuwe week, nieuwe palen. Mijn staart is al opgewarmd.","Maandag. Ik heb het hele weekend aan de deur gewacht. Niemand kwam."],
+  friday:["Vrijdag! Mijn staart kwispelt al sinds donderdag.","Het weekend ruikt al. En ik kan het weten, ik heb een goeie neus.","Vrijdag! Wie tikt er vandaag als eerste uit voor een 0.0-pintje?"],
+  early:["Zo vroeg al? Zelfs de merels slapen nog.","Vroege vogel! Of vroege hond, in mijn geval."],
+  weekend:["Weekendwerk? Dat noteer ik extra goed. Respect.","Zaterdag en toch hier? Ik geef je een extra snuffel."],
+  login:["Snuffel snuffel... {naam}! Ik rook je al van aan de poort.","Ha {naam}! Ik herkende je al aan je pincode. En aan je schoenen.","Welkom {naam}. Juiste pincode. Koekje niet inbegrepen.","{naam}! Eindelijk iemand om tegen te praten. De palen zeggen niet veel terug."],
+  in:["Ingecheckt, {naam}! Ik zet de klok op scherp. Woef.","Daar gaat {naam}! Palen, kijk maar uit.","{naam} is binnen. De concurrentie mag beven.","Ingecheckt. Ik zie alles, {naam}. Behalve achter de bestelwagen.","Goeiemorgen {naam}! Koffie al op? Ik niet, ik mag geen koffie."],
+  breakStart:["Schoft, {naam}! Als er een boterham over is: je weet waar ik woon.","Pauze gestart. Ik bewaak je koffie, {naam}. Min of meer.","{naam} pakt een schoft. Ik ook, ik lig hier toch al.","Schoft. Deel je je koek, {naam}? Nee? Oké, ik noteer het."],
+  breakStop:["Schoft voorbij. Ik zag kruimels, {naam}, maar ik zeg niks.","Terug aan de slag, {naam}! Die hekken plaatsen zichzelf niet.","Pauze genoteerd. Ik had trouwens ook honger, voor de duidelijkheid.","Allez {naam}, nog een paar palen en dan is het weer schoft."],
+  out:["Uitgecheckt! Zetel, voeten omhoog, {naam}. Ik neem de wacht over.","Goed gewerkt, {naam}. Ik zou je een pootje geven als ik mocht.","Salut {naam}! Ik blijf hier, iemand moet de app bewaken.","Uren veilig opgeborgen, {naam}. Dieper dan mijn beste bot.","{naam} is weg. Eindelijk kan ik in de zetel van de chef liggen."],
+  fridayOut:["Weekend, {naam}! Tijd voor een pint. Een 0.0, want ik ben geen slechte invloed.","Vrijdag gedaan! {naam}, breng je er eentje voor mij mee? Een bakje water volstaat.","Proost {naam}! Een alcoholvrij pintje, en de palen laten we tot maandag staan.","{naam} tikt uit op vrijdag. Ik ruik frietjes en een frisse pint. 0.0, natuurlijk.","Fijn weekend, {naam}! Een pintje mag, maar niet op de werf. Afgesproken?"],
+  longDay:["Meer dan 9 uur, {naam}? Zelfs ik ben moe van het kijken. Respect! 🐾","{naam}, je bent officieel de beste hond van de dag. Plusuren gespaard!","Lange dag, {naam}! Ik zou je een bot geven, maar die ligt al begraven."],
+  request:["Verlof gevraagd! Ik leg het op het bureau van Jos. Met mijn neus.","Aanvraag verstuurd, {naam}. Neem je mij mee op vakantie?","Verlof aangevraagd. Stuur je een kaartje, {naam}? Ik kan niet lezen, maar toch."],
+  tap:["Hé {naam}, niet aan mijn oren zitten! Oké, eventjes dan.","Woef! Wat? Ik was gewoon aan het opletten. Echt waar.","Ik ben een waakhond, geen knuffelbeer. Maar ga gerust door.","Tik tik tik. Ben ik een knop of wat?","Nog eens aaien en ik tel er een minuut bij. Grapje. Of niet?","Als je mij zo blijft aaien, schrijf ik het in als pauze.","Aai, {naam}, aai. Achter mijn oor graag."]
 };
+function charlieFill(t){let naam=String(current?.naam||'').trim().split(/\s+/)[0]||'collega';return String(t).replace(/\{naam\}/g,naam)}
+function charlieSay(type){return charlieFill(pick(CHARLIE_QUOTES[type]||CHARLIE_QUOTES.open))}
+function outQuoteType(worked){return worked>=540?'longDay':(new Date().getDay()===5?'fridayOut':'out')}
 function pick(arr){return arr[Math.floor(Math.random()*arr.length)]}
-function setCharlieQuote(type='open',extra=null){let d=new Date(),arr=[...(CHARLIE_QUOTES[type]||CHARLIE_QUOTES.open)];if(type==='open'&&users?.length){let count=users.filter(u=>!isAdminUser(u)).length;if(count)arr.unshift(`Charlie bewaakt ondertussen ${count} medewerker${count===1?'':'s'}.`)}if(type==='open'&&d.getDay()===5)arr=[...CHARLIE_QUOTES.friday,...arr];if(type==='open'&&d.getDay()===1)arr=[...CHARLIE_QUOTES.monday,...arr];if(extra)arr.unshift(extra);let el=$('charlieQuote');if(el)el.textContent=pick(arr)}
+function setCharlieQuote(type='open',extra=null){let d=new Date(),arr=[...(CHARLIE_QUOTES[type]||CHARLIE_QUOTES.open)];if(type==='open'&&users?.length){let count=users.filter(u=>!isAdminUser(u)).length;if(count)arr.unshift(`Charlie bewaakt ondertussen ${count} medewerker${count===1?'':'s'}.`)}if(type==='open'&&d.getDay()===5)arr=[...CHARLIE_QUOTES.friday,...arr];if(type==='open'&&d.getDay()===1)arr=[...CHARLIE_QUOTES.monday,...arr];if(type==='open'&&(d.getDay()===0||d.getDay()===6))arr=[...CHARLIE_QUOTES.weekend,...arr];if(type==='open'&&d.getHours()<6)arr=[...CHARLIE_QUOTES.early,...arr];if(extra)arr.unshift(extra);let el=$('charlieQuote');if(el){el.textContent=charlieFill(pick(arr));let b=el.closest('.dogline');if(b){b.classList.remove('pop');void b.offsetWidth;b.classList.add('pop')}}window._charlieAt=Date.now()}
 
 function tick(){let d=new Date();$('time').textContent=d.toLocaleTimeString('nl-BE',{hour:'2-digit',minute:'2-digit'});$('date').textContent=d.toLocaleDateString('nl-BE',{weekday:'long',day:'numeric',month:'long',year:'numeric'})}setInterval(tick,1000);tick();
 function localDate(d=new Date()){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}function today(){return localDate()}function iso(){return new Date().toISOString()}function mins(a,b){return Math.round((new Date(b)-new Date(a))/60000)}
@@ -699,6 +717,9 @@ function updateHubBadges(){
 function msg(t){$('message').textContent=t;$('message').classList.remove('hidden');setTimeout(()=>$('message').classList.add('hidden'),5200)}function actionBanner(title,detail='',type='ok',charlie=''){
  let old=document.querySelector('.actionBanner');if(old)old.remove();
  let div=document.createElement('div');div.className='actionBanner '+type;
+ // Charlie praat in zijn eigen ballon als die zichtbaar is; anders in de melding zelf.
+ let bubble=$('charlieQuote');
+ if(charlie&&bubble&&bubble.offsetParent&&!document.body.classList.contains('modalOpen')){bubble.textContent=charlie;let b=bubble.closest('.dogline');if(b){b.classList.remove('pop');void b.offsetWidth;b.classList.add('pop')}window._charlieAt=Date.now();charlie=''}
  div.innerHTML=`<h2>${title}</h2>${detail?`<p>${detail}</p>`:''}${charlie?`<small>🐕 ${charlie}</small>`:''}`;
  document.body.appendChild(div);
  setTimeout(()=>{div.style.opacity='0';div.style.transition='opacity .25s';setTimeout(()=>div.remove(),280)},5200);
@@ -849,7 +870,7 @@ async function login(){
   $('roleBadge').textContent=isViewer()&&!isOwner()?'Meekijken':'Beheerder';
   $('employeePanel').classList.toggle('hidden',admin);
   $('adminPanel').classList.toggle('hidden',!admin);
-  await load();setCharlieQuote('login');msg('🐕 '+pick(CHARLIE_QUOTES.login)+' Welkom '+current.naam+'.')
+  await load();setCharlieQuote('login');msg('🐕 '+$('charlieQuote').textContent)
  }catch(e){msg('Loginfout: '+err(e))}
 }
 function isOwner(){let r=String(current?.rol||'').toLowerCase();return r.includes('admin')||r.includes('beheerder')||current?.naam?.toLowerCase()==='jos'}
@@ -979,11 +1000,11 @@ async function action(a){try{let r=await getActive(current.id);if(a==='in'){
      return msg('Je bent al ingecheckt.');
    }
  }
- await sb('/urenregistratie',{method:'POST',headers:{Prefer:'return=representation'},body:JSON.stringify({medewerker_id:current.id,datum:today(),inkloktijd:iso(),pauze_minuten:0})});setCharlieQuote('in');actionBanner('✅ INGECHECKT', new Date().toLocaleTimeString('nl-BE',{hour:'2-digit',minute:'2-digit'})+' geregistreerd','ok',pick(CHARLIE_QUOTES.in));msg('Ingecheckt.')
+ await sb('/urenregistratie',{method:'POST',headers:{Prefer:'return=representation'},body:JSON.stringify({medewerker_id:current.id,datum:today(),inkloktijd:iso(),pauze_minuten:0})});setCharlieQuote('in');actionBanner('✅ INGECHECKT', new Date().toLocaleTimeString('nl-BE',{hour:'2-digit',minute:'2-digit'})+' geregistreerd','ok',charlieSay('in'));msg('Ingecheckt.')
 }
-if(a==='breakStart'){if(!r)return msg('Eerst inchecken.');localStorage.setItem('pause_'+r.id,iso());setCharlieQuote('breakStart');actionBanner('☕ PAUZE GESTART', new Date().toLocaleTimeString('nl-BE',{hour:'2-digit',minute:'2-digit'})+' geregistreerd','warn',pick(CHARLIE_QUOTES.breakStart));msg('Pauze gestart.')}
-if(a==='breakStop'){if(!r)return msg('Geen actieve werkdag.');let ps=localStorage.getItem('pause_'+r.id);if(!ps)return msg('Geen actieve schoft gevonden.');let add=Math.max(0,mins(ps,iso()));await sb('/urenregistratie?id=eq.'+r.id,{method:'PATCH',headers:{Prefer:'return=representation'},body:JSON.stringify({pauze_minuten:Number(r.pauze_minuten||0)+add})});localStorage.removeItem('pause_'+r.id);setCharlieQuote('breakStop');actionBanner('▶️ PAUZE GESTOPT','Pauze: '+dur(add),'ok',pick(CHARLIE_QUOTES.breakStop));msg('Pauze gestopt: '+dur(add))}
-if(a==='out'){if(!r)return msg('Je bent nog niet ingecheckt.');let ps=localStorage.getItem('pause_'+r.id),pause=Number(r.pauze_minuten||0);if(ps){pause+=Math.max(0,mins(ps,iso()));localStorage.removeItem('pause_'+r.id)}let out=iso(),worked=Math.max(0,mins(r.inkloktijd,out)-pause);await sb('/urenregistratie?id=eq.'+r.id,{method:'PATCH',headers:{Prefer:'return=representation'},body:JSON.stringify({uitkloktijd:out,pauze_minuten:pause,totaal_minuten:worked})});setCharlieQuote(worked>=540?'longDay':'out');actionBanner('🏁 UITGECHECKT','Netto gewerkt: '+dur(worked),'stop',pick(worked>=540?CHARLIE_QUOTES.longDay:CHARLIE_QUOTES.out));msg('Uitgecheckt. Netto: '+dur(worked)+(r.datum!==today()?' (open registratie van '+r.datum+' afgesloten)':''))}await load()}catch(e){msg('Databasefout: '+err(e))}}
+if(a==='breakStart'){if(!r)return msg('Eerst inchecken.');localStorage.setItem('pause_'+r.id,iso());setCharlieQuote('breakStart');actionBanner('☕ PAUZE GESTART', new Date().toLocaleTimeString('nl-BE',{hour:'2-digit',minute:'2-digit'})+' geregistreerd','warn',charlieSay('breakStart'));msg('Pauze gestart.')}
+if(a==='breakStop'){if(!r)return msg('Geen actieve werkdag.');let ps=localStorage.getItem('pause_'+r.id);if(!ps)return msg('Geen actieve schoft gevonden.');let add=Math.max(0,mins(ps,iso()));await sb('/urenregistratie?id=eq.'+r.id,{method:'PATCH',headers:{Prefer:'return=representation'},body:JSON.stringify({pauze_minuten:Number(r.pauze_minuten||0)+add})});localStorage.removeItem('pause_'+r.id);setCharlieQuote('breakStop');actionBanner('▶️ PAUZE GESTOPT','Pauze: '+dur(add),'ok',charlieSay('breakStop'));msg('Pauze gestopt: '+dur(add))}
+if(a==='out'){if(!r)return msg('Je bent nog niet ingecheckt.');let ps=localStorage.getItem('pause_'+r.id),pause=Number(r.pauze_minuten||0);if(ps){pause+=Math.max(0,mins(ps,iso()));localStorage.removeItem('pause_'+r.id)}let out=iso(),worked=Math.max(0,mins(r.inkloktijd,out)-pause);await sb('/urenregistratie?id=eq.'+r.id,{method:'PATCH',headers:{Prefer:'return=representation'},body:JSON.stringify({uitkloktijd:out,pauze_minuten:pause,totaal_minuten:worked})});setCharlieQuote(outQuoteType(worked));actionBanner('🏁 UITGECHECKT','Netto gewerkt: '+dur(worked),'stop',charlieSay(outQuoteType(worked)));msg('Uitgecheckt. Netto: '+dur(worked)+(r.datum!==today()?' (open registratie van '+r.datum+' afgesloten)':''))}await load()}catch(e){msg('Databasefout: '+err(e))}}
 document.querySelectorAll('[data-action]').forEach(b=>b.onclick=()=>action(b.dataset.action));$('logoutBtn').onclick=async()=>{try{await fetch('/api/logout',{method:'POST',credentials:'include'})}catch(e){}current=null;activeEntry=null;$('workView').classList.add('hidden');$('loginView').classList.remove('hidden');showLoginMode(true);msg('Uitgelogd.')};
 
 async function lockApp(reason='Vergrendeld. Voer opnieuw uw pincode in.'){
@@ -1229,7 +1250,7 @@ async function saveLeaveRequest(){
   let rows=ds.map(date=>({medewerker_id:current.id,datum:date,pauze_minuten:PENDING_LEAVE,totaal_minuten:0,uitkloktijd:iso()}));
   await sb('/urenregistratie',{method:'POST',headers:{Prefer:'return=representation'},body:JSON.stringify(rows)});
   setCharlieQuote('request');
-  actionBanner('📨 VERLOFAANVRAAG VERZONDEN','Verlof '+ds.length+' dag(en)','info',pick(CHARLIE_QUOTES.request));
+  actionBanner('📨 VERLOFAANVRAAG VERZONDEN','Verlof '+ds.length+' dag(en)','info',charlieSay('request'));
   msg('Verlofaanvraag verzonden.');
   await audit(current.naam+' diende een verlofaanvraag in ('+ds.length+' dag(en))',{actie:'verlofaanvraag',type:'verlof',dagen:ds.length});
   closeModal();await load()
@@ -1920,6 +1941,7 @@ function beheerMenu(){menuModal('Beheer',[
 ])}
 if($('absenceBtn'))$('absenceBtn').onclick=absenceMenu;
 if($('beheerBtn'))$('beheerBtn').onclick=beheerMenu;
+(function(){let h=document.querySelector('.hero');if(h){h.style.cursor='pointer';h.title='Aai Charlie';h.onclick=()=>setCharlieQuote('tap')}setInterval(()=>{if(Date.now()-(window._charlieAt||0)>30000)setCharlieQuote('open')},30000)})();
 if($('lockBtn'))$('lockBtn').onclick=()=>lockApp('App handmatig vergrendeld.');if($('liveStartBtn'))$('liveStartBtn').onclick=liveStartModal;if($('holidayBalanceBtn'))$('holidayBalanceBtn').onclick=()=>holidayBalanceModal();if($('myHolidayBalanceBtn'))$('myHolidayBalanceBtn').onclick=()=>holidayBalanceModal(current.id);
 
 setInterval(()=>{try{if(current&&isAdmin&&isAdmin())renderAdminHome()}catch(e){}},60000);
